@@ -2,14 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>我的網頁選單</title>
+    <title>動態切換展示</title>
 </head>
 <body>
-    <h1>請選擇你要檢視的網頁</h1>
-    <ul>
-        <li><a href="貨幣銀行學.html">貨幣銀行學</a></li>
-        <li><a href="投資學.html">投資學</a></li>
-        <li><a href="1、4.html">工作項目01、04</a></li>
-    </ul>
+    <div style="margin-bottom: 20px;">
+        <button onclick="changePage('page1.html')">顯示網頁一</button>
+        <button onclick="changePage('page2.html')">顯示網頁二</button>
+        <button onclick="changePage('page3.html')">顯示網頁三</button>
+    </div>
+
+    <iframe id="displayFrame" src="page1.html" width="100%" height="600px" style="border: 1px solid #ccc;"></iframe>
+
+    <script>
+        // 理論邏輯：透過操控 DOM 節點的 src 屬性來抽換顯示內容
+        function changePage(url) {
+            document.getElementById('displayFrame').src = url;
+        }
+    </script>
 </body>
 </html>
