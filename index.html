@@ -1,23 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>動態切換展示</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的網頁選單</title>
+    <style>
+        /* 1. 頁面基底與完美置中設定 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang TC', '微軟正黑體', sans-serif;
+            background-color: #f4f4f9; /* 淺灰底色，降低高對比帶來的視覺疲勞 */
+            color: #333;
+            /* Flexbox 排版系統 */
+            display: flex;
+            justify-content: center; /* X軸水平置中 */
+            align-items: center;     /* Y軸垂直置中 */
+            min-height: 100vh;       /* 讓 body 高度至少填滿 100% 的視窗高度 */
+        }
+
+        /* 2. 視覺容器 (卡片設計) */
+        .menu-container {
+            background-color: #ffffff;
+            padding: 40px 60px;
+            border-radius: 12px; /* 邊角圓滑化 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* 陰影：建立 Z 軸深度錯覺 */
+            text-align: center; /* 讓內部文字水平置中 */
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        /* 3. 清單與按鈕排版 */
+        ul {
+            list-style-type: none; /* 移除預設的項目黑點 */
+            padding: 0;
+            margin: 0;
+            /* 讓按鈕垂直排列並設定固定間距 */
+            display: flex;
+            flex-direction: column;
+            gap: 16px; 
+        }
+
+        /* 4. 將超連結按鈕化與互動回饋 */
+        a {
+            display: block;
+            padding: 14px 24px;
+            background-color: #3498db; /* 預設主色調 */
+            color: #ffffff;
+            text-decoration: none; /* 移除超連結底線 */
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            /* 設定屬性變更時的過渡動畫時間，讓視覺不突兀 */
+            transition: background-color 0.2s ease, transform 0.1s ease; 
+        }
+
+        /* 狀態：滑鼠懸停 */
+        a:hover {
+            background-color: #2980b9; /* 顏色加深 */
+        }
+
+        /* 狀態：滑鼠點擊的瞬間 */
+        a:active {
+            transform: scale(0.97); /* 按鈕等比例微縮 3%，模擬真實按壓物理回饋 */
+        }
+    </style>
 </head>
 <body>
-    <div style="margin-bottom: 20px;">
-        <button onclick="changePage('貨幣銀行學.html')">貨幣銀行學</button>
-        <button onclick="changePage('投資學.html')">投資學</button>
-        <button onclick="changePage('1、4.html')">工作項目01、04</button>
+    <div class="menu-container">
+        <h1>請選擇你要檢視的網頁</h1>
+        <ul>
+            <li><a href="貨幣銀行學.html">貨幣銀行學</a></li>
+            <li><a href="投資學.html">投資學</a></li>
+            <li><a href="1、4.html">工作項目01、04</a></li>
+        </ul>
     </div>
-
-    <iframe id="displayFrame" src="page1.html" width="100%" height="600px" style="border: 1px solid #ccc;"></iframe>
-
-    <script>
-        // 理論邏輯：透過操控 DOM 節點的 src 屬性來抽換顯示內容
-        function changePage(url) {
-            document.getElementById('displayFrame').src = url;
-        }
-    </script>
 </body>
 </html>
