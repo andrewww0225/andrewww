@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>線上測驗系統</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            line-height: 1.6;
+        }
+        .question-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .options li {
+            margin-bottom: 8px;
+        }
+        .options label {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .submit-btn:hover {
+            background-color: #004494;
+        }
+        .restart-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .restart-btn:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .correct-text { color: green; }
+        .incorrect-text { color: red; }
+    </style>
+</head>
+<body>
+
+    <h1>測驗練習（隨機 50 題）</h1>
+    <div id="quiz-container"></div>
+    
+    <div>
+        <button class="submit-btn" onclick="submitQuiz()">交卷並計算成績</button>
+        <button class="restart-btn" onclick="initQuiz()">重新抽題測驗</button>
+    </div>
+    
+    <div id="result"></div>
+
+    <script>
+        // ==========================================
+        // 請將產生的題庫陣列貼在下方的 allQuestions 中
+        // ==========================================
+        const allQuestions = [
+            // 範例資料（貼上你的資料後可將此兩筆刪除）：
+            {q: "下列儲存記憶體中， 何者無法存入只能讀取？", opts: ["隨身碟", "RAM", "ROM", "磁帶"], a: "ROM"},
+        {q: "在數據通訊( Data Communication) 系統中，線路兩端的電腦， 彼此可同時交互傳送及接受資料的型態稱為", opts: ["單工", "半雙工", "全雙工", "線上雙工"], a: "全雙工"},
+        {q: "在布林運算中， 下列何者有誤？", opts: ["A+A' =1", "AA' =0", "A+A'B' =A+B'", "A(A' +B) =A'B"], a: "A(A' +B) =A'B"},
+        {q: "如果電腦的位址匯流排(Address Bus) 有 17 條線， 則其儲存位置空間最多可達多少 Bytes？", opts: ["64K", "128K", "256 K", "512K"], a: "128K"},
+        {q: "下列敘述何者有誤？", opts: ["一部電腦中， 有兩個以上 CPU 同時執行不同的程式，我們稱作是一種平行處理( Parallel Processing)", "掃描器(Scanner) 適用於影像處理應用( ImageProcessing)", "C 語言可以撰寫Recursive 程式，故適於大量資料處理應用", "CPU 中的控制單元乃負責各單元之間通道的建立"], a: "C 語言可以撰寫Recursive 程式，故適於大量資料處理應用"},
+        {q: "電腦的五大單元中， 何者專門負責整體系統的指揮控制？", opts: ["輸入單元", "算術/ 邏輯單元", "記憶單元", "控制單元"], a: "控制單元"},
+        {q: "下列記憶體中， 何者能讀取亦能寫入？", opts: ["PROM", "CD-ROM", "RAM", "EEROM"], a: "RAM"},
+        {q: "下列敘述中，何者不是橋接器對電腦網路的貢獻？", opts: ["協助排除網路中的局部當機區域，使網路功能不停頓", "克服網路架構纜線距離的限制", "讓傳輸媒介或纜線可以混接", "提供多重路徑的協定"], a: "提供多重路徑的協定"},
+        {q: "下列敘述何者錯誤？", opts: ["數據機( MODEM) 可以將類比信號轉成數位信號、或將數位號轉變成類比信號", "資料傳輸時，若線路兩端可以在同一時間互相傳送資料，此種方式稱為全雙工( Full Duplex)", "X. 25 是一個國際公認的分封交換( Packet Switching) 通訊標準", "經由數據機傳送至電話線上的信號為數位信號"], a: "經由數據機傳送至電話線上的信號為數位信號"},
+        {q: "下列何者在網際網路( Internet) 上屬於單一性不可重複？", opts: ["Subnet Mask", "IP Address", "Default Gateway", "Password"], a: "IP Address"},
+        {q: "下列關於「分封交換( Packet Switching)」的敘述中，何者錯誤？", opts: ["分封交換可彈性機動選擇資料傳送的路徑， 減少遲延的現象", "在不同的傳輸速率或通信協定下，均可相互轉換傳送", "通信使用時間較分散的用戶適於使用", "分封交換的每個封包的長度是可變動的"], a: "分封交換的每個封包的長度是可變動的"},
+        {q: "下列有關「光纖」的敘述中， 何者錯誤？", opts: ["只適於傳送數位化的信號", "可使用的頻寬，比同軸電纜高出許多", "由玻璃纖維所組成， 不受電磁干擾", "傳輸速率高，體積細小"], a: "只適於傳送數位化的信號"},
+        {q: "下列敘述中，何者錯誤？", opts: ["乙太網路( Ethernet) 採用匯流排網路結構及基頻(Baseband) 傳輸技術", "10BASE 5 和 10BASET 都採用 50 歐姆同軸電纜作為傳輸媒介", "10BASE 5 和 10BASET 的資料傳輸速率都是10Mbps", "在乙太網路中， 10BASE 2 的每段最長之長度為 200 公尺"], a: "10BASE 5 和 10BASET 都採用 50 歐姆同軸電纜作為傳輸媒介"},
+        {q: "下列關於「環狀(Ring)網路」的敘述中， 何者錯誤？", opts: ["環狀網路中，每一個端點的電腦是透過 Repeater 連接到封閉式環狀網路上", "資料在傳輸媒介上傳遞時，是單向傳送", "Repeater 上分為聆聽、傳送與迂迴(Bypass)三種狀態", "環狀網路內由於傳輸距離較長，所以連接上網的端點站數也沒有限制"], a: "環狀網路內由於傳輸距離較長，所以連接上網的端點站數也沒有限制"},
+        {q: "在排序的過程中，若由於資料量太大，而無法完全放在主記憶體中，必須借用輔助記憶體， 此種排序方式稱之為", opts: ["陣列排序( Sort of Array)", "內部排序( Internal Sorting)", "外部排序( External Sorting)", "快速排序(Quick Sorting)"], a: "外部排序( External Sorting)"},
+        {q: "下列傳輸媒介中，何者在單位時間內的資料傳輸量最大？", opts: ["電話線", "同軸電纜", "光纖", "雙絞線"], a: "光纖"},
+        {q: "下列關於「RS-232」的敘述中，何者不正確？", opts: ["為一種美國 ETA 規格", "可將電腦連接起來，以傳送資料", "屬於界面的硬體規格", "是並列式傳送"], a: "是並列式傳送"},
+        {q: "在 CPU 中，下一個要被執行指令的位址是存放在", opts: ["位址暫存器", "緩衝暫存器", "指令暫存器", "程式計數器"], a: "程式計數器"},
+        {q: "在「網路上的芳鄰」中，若要讓別人知道我的電腦名稱是「GOODMAN」，該在哪裡作設定？", opts: ["「控制台/ 網路」", "電腦名稱", "存取控制", "撥號網路"], a: "電腦名稱"},
+        {q: "下列何者不是作業系統的主要功能？", opts: ["設備管理", "排序", "記憶體管理", "資源分配"], a: "排序"},
+        {q: "下列儲存裝置中，何者存取速度最快？", opts: ["硬式磁碟機( Hard Disk)", "主記憶體( Main Memory)", "唯讀光碟機(CD-ROM)", "快取記憶體(Cache Memory)"], a: "快取記憶體(Cache Memory)"},
+        {q: "下列有關「中斷( Interrupt)」的敘述中， 何者正確？", opts: ["中斷的要求必定來自硬體", "硬體中斷，相對於 CPU 正在執行的程式，乃是一非同步事件(Asynchronous Event)", "當 CPU 在執行中斷時， 就不能再執行其他的中斷", "可遮沒的中斷( Mask Interrupt) 沒有優先權"], a: "硬體中斷，相對於 CPU 正在執行的程式，乃是一非同步事件(Asynchronous Event)"},
+        {q: "下列敘述何者正確？", opts: ["電腦的 CPU 其實只能執行機器語言", "所謂同步傳輸意指一次同時傳送兩個 Bytes 的資料", "即時系統(Real-time)一定是 On- line 系統， 而 On- line 系統也一定是 Real- time 系統", "指令暫存器是用來表示下一個等待執行指令的位址"], a: "電腦的 CPU 其實只能執行機器語言"},
+        {q: "下列關於「行動裝置作業系統」的敘述， 何者不正確？", opts: ["i Phone 與 iPad 均使用 iOS 作業系統", "Android 是一種以 Linux 為基礎的開放原始碼作業系統", "Windows Phone 是微軟視⑤作業系統的行動裝置版本", "受限於硬體的能力，行動裝置作業系統一定是單工的作業系統"], a: "受限於硬體的能力，行動裝置作業系統一定是單工的作業系統"},
+        {q: "(本題刪題)若收到一個副檔名為.class 的 Java Applet 程式，您該如何啟動它？", opts: ["直接可在 IE 執行", "需重新編譯方能執行", "需要連上 WWW伺服器方可執行", "要另存副檔名為.bat 的新檔案方可被執行"], a: "直接可在 IE 執行"},
+        {q: "下列何者不是資料庫管理系統的目的？", opts: ["可保持資料的重複性", "可確保資料的安全性", "可保持資料的一致性", "可提升資料處理的效率"], a: "可保持資料的重複性"},
+        {q: "採用存轉式( Store-and-Forward)傳輸資訊的方式是", opts: ["資料交換(Data Switching)", "電路交換(Circuit Switching)", "分封交換(Packet Switching)", "信號交換( Signal Switching)"], a: "分封交換(Packet Switching)"},
+        {q: "編譯程式(Compiler) 可以檢查出程式的", opts: ["資料錯誤", "邏輯錯誤", "執行錯誤", "語法錯誤"], a: "語法錯誤"},
+        {q: "下列關於多工( Multitasking) 作業系統的敘述中，何者錯誤？", opts: ["需要有中斷處理的能力", "需要有排程( Scheduling) 的能力", "需要有平行處理(Parallel Processing) 的能力", "可以用分時(Time Sharing) 處理技術達成"], a: "需要有平行處理(Parallel Processing) 的能力"},
+        {q: "(本題刪題)下列哪一種工具無法讓您由 FTP 伺服器下傳檔案？", opts: ["Telnet客戶端", "FTP 客戶端", "Internet Explorer", "Outlook Express"], a: "Outlook Express"},
+        {q: "所謂「流程圖(Flow Chart)」乃是指", opts: ["程式之輸出或輸入的一種表現方法", "以各種次常式來描述程式的一種方法", "以圖型化的演繹邏輯來表達程式操作順序的方法", "程式編譯後的結果"], a: "以圖型化的演繹邏輯來表達程式操作順序的方法"},
+        {q: "電腦 CPU 內部的「定址模式(Addressing Mode)」是用來當作什麼功用的？", opts: ["指令解碼", "運算執行", "指令提取", "運算元提取"], a: "運算元提取"},
+        {q: "下列何者不是控制單元的工作？", opts: ["運算執行", "時序控制", "指令提取", "指令解碼"], a: "運算執行"},
+        {q: "下列關於「Microsoft SQL Server 2008 資料類型」的敘述，何者不正確？", opts: ["字元資料的長度如果可能大於 8000 位元組，則欄位不宜宣告成 char 資料類型", "如果欄位的字元資料長度差異很大，則欄位通常宣告成 char 資料類型， 而非 varchar 資料類型", "設計用來儲存日期的欄位可以宣告成 smalldatetime 資料類型", "宣告成 geography 資料類型的欄位所儲存的經緯度資料，可以應用 STDistance 方法來計算兩資料之間的最短距離"], a: "如果欄位的字元資料長度差異很大，則欄位通常宣告成 char 資料類型， 而非 varchar 資料類型"},
+        {q: "在「關聯式(Relational) 資料庫」中，其擷取資料的方式為何？", opts: ["以資料的內容", "以資料的位址", "以資料的指標", "以資料的大小"], a: "以資料的內容"},
+        {q: "當 CPU 從主記憶體中提取指令、解碼、決定 Operands 的位址、以及下一個指令的位址，這些動作是屬於", opts: ["程式週期", "記憶週期", "執行週期", "指令週期"], a: "指令週期"},
+        {q: "在資料庫中，將資料的重複降低到最少的過程稱為", opts: ["結構化", "正規化", "模組化", "關聯化"], a: "正規化"},
+        {q: "在作業系統中， 下列何者負責處理程式中斷？", opts: ["監督程式", "啟動載入程式", "輸出入控制程式", "工作控制程式"], a: "監督程式"},
+        {q: "下列關於「結構化程式設計」的敘述中， 何者不正確？", opts: ["應盡量採用模組化設計", "應減少 GO TO 指令的使用", "入口要少、出口要多", "包含循序(Sequence)、選擇( Selection) 及重複(Repetition) 三種結構"], a: "入口要少、出口要多"},
+        {q: "能使電腦執行比主記憶體還大的程式時， 可用以下哪一種技術？", opts: ["分時( Time Sharing)", "快取記憶(Cache Memory)", "虛擬記憶(Virtual Memory)", "多工作業( Multi-tasking)"], a: "虛擬記憶(Virtual Memory)"},
+        {q: "下列有關「網際網路( Internet) 應用」之敘述中，何者錯誤？", opts: ["E- mail收件人的位址格式為 Lucky@server", "Internet 使用之通訊協定為TCP/IP", "HiNet 為中華電信公司所建立的網路系統", "目前各大專院校內常使用之網路系統為 Seed Net"], a: "目前各大專院校內常使用之網路系統為 Seed Net"},
+        {q: "下列關於 Compiler 的敘述中，何者錯誤？", opts: ["可檢查程式邏輯錯誤", "可檢查程式語法( Syntax)錯誤", "可將程式原始碼變成目的碼", "無法產生執行檔"], a: "可檢查程式邏輯錯誤"},
+        {q: "在磁碟容量的規格中，下列何者的容量最小？", opts: ["磁軌(Track)", "磁柱", "磁區", "叢集(Cluster)"], a: "磁區"},
+        {q: "下列有關 WWW 之敘述中，何者錯誤？", opts: ["「全球資訊網」是 World Wide Web 之縮寫", "讓企業可以將自己的產品或服務項目等訊息提供給大眾知道", "為使網路資訊自由流通， 使用者在其上建立首頁(HomePage) 時，可以不受智慧財產保護相關法令約束", "WWW 上之資訊不僅可顯示文字、圖形，還可以顯示聲音、影像"], a: "為使網路資訊自由流通， 使用者在其上建立首頁(HomePage) 時，可以不受智慧財產保護相關法令約束"},
+        {q: "在「OSI 通訊協定」中，提供檔案傳輸的是哪一層？", opts: ["應用層", "網路層", "實體層", "表達層"], a: "應用層"},
+        {q: "在「OSI 通訊協定」中，提供電子郵遞服務的是哪一層？", opts: ["應用層", "網路層", "實體層", "表達層"], a: "應用層"},
+        {q: "在「OSI 通訊協定」中，哪一層可安排資料傳輸路徑？", opts: ["應用層", "網路層", "實體層", "表達層"], a: "網路層"},
+        {q: "「程式計數器(Program Counter)」是屬於以下哪一單元？", opts: ["控制單元", "輸出入單元", "算術邏輯單元", "記憶單元"], a: "控制單元"},
+        {q: "「程式計數器(Program Counter)」的功能為何？", opts: ["記錄程式中執行完畢的指令", "記錄程式執行中的狀態", "記錄程式執行完成的時間", "記錄下一個指令的位址"], a: "記錄下一個指令的位址"},
+        {q: "在資料庫管理系統中，用以定義資料型態、長度及關係的是", opts: ["工作控制語言(Job Control Language)", "資料控制語言(Data Control Language)", "資料定義語言(Data Definition Language)", "資料處理語言( Data Manipulation Language)"], a: "資料定義語言(Data Definition Language)"},
+        {q: "在個人電腦中， 控制 CPU 和輸出入設備間信號傳輸的為何？", opts: ["Data Bus", "Cache", "BIOS", "Operating System"], a: "BIOS"},
+        {q: "由全世界大大小小的網路連接而成的全球性網路稱為？", opts: ["區域網路", "企業網路", "網際網路", "環狀網路"], a: "網際網路"},
+        {q: "下列有關搜尋(Search)的敘述中， 何者不正確？", opts: ["循序搜尋法(Sequential Search) 的儲存空間最有效率， 方法容易，但平均搜尋速度較慢", "在二分搜尋法(Binary Search) 中， 被搜尋的檔案需先排序( Sort)好", "在區段搜尋法(Block Search) 中， 第 n 個 Block 中所有的資料項值，必須全部小於第 n+1 個 Block 中的所有資料項值，而每個 Block 中的資料也必須 Sort 好", "內插搜尋(Interpolation Search) 的搜尋速度完全受鍵值分布的影響"], a: "在區段搜尋法(Block Search) 中， 第 n 個 Block 中所有的資料項值，必須全部小於第 n+1 個 Block 中的所有資料項值，而每個 Block 中的資料也必須 Sort 好"},
+        {q: "下列何者不是「載入程式( Loader)」的功能？", opts: ["緊結(Binding)", "連結 (Linking)", "重定位(Relocation)", "載入( Loading)"], a: "緊結(Binding)"},
+        {q: "下列敘述何者正確？", opts: ["一個連線( On-Line) 系統一定是即時系統( Real- Time)", "一個多程式( Multiprogramming) 執行系統一定具有分時( Time-Sharing) 功能", "一個分時( Time-Sharing) 系統一定是多程式執行系統 ( Multiprogramming)", "一個多重處理器系統一定是多程式( Multiprogramming) 執行系統"], a: "一個分時( Time-Sharing) 系統一定是多程式執行系統 ( Multiprogramming)"},
+        {q: "在作業系統( Operating System) 處理程序執行順序排程( Process Scheduling) 中， 下列何者不屬於 Process Scheduling 的方法？", opts: ["First In First Out", "Shortest Job First", "Round Robin", "Race Condition"], a: "Race Condition"},
+        {q: "在電腦中，負責管理 CPU 及 I/ O 設備的為何？", opts: ["作業系統", "公用程式", "載入程式", "編譯程式"], a: "作業系統"},
+        {q: "下列何者不是網際網路( Internet) 所提供的功能？", opts: ["OLTP(連線交易處理)", "E- Mail(電子郵件)", "TELNET( 遠程終端模擬)", "FTP( 檔案傳輸)"], a: "OLTP(連線交易處理)"},
+        {q: "「全球資訊網(World Wide Web)」在程式架構上是採取什麼架構？", opts: ["Master Slave", "Peer to Peer", "Client Server", "File Sharing"], a: "Client Server"},
+        {q: "「快取記憶體(Cache Memory)」的主要功能是", opts: ["作為輔助記憶體", "可以降低主記憶體的負擔和成本", "可以增進程式的整體執行速度", "可以減少輔助記憶體的空間需求"], a: "可以增進程式的整體執行速度"},
+        {q: "結構化程式的缺點是", opts: ["較浪費主記憶體空間", "開發程式的成本較高", "流程複雜，別人不易看懂", "程式測試不容易"], a: "較浪費主記憶體空間"},
+        {q: "下列敘述何者不正確？", opts: ["電腦中的加法器為組合電路", "載入程式(Loader)可以將原始程式轉成可執行程式", "電腦內部對於整數和實數是以不同的方式儲存", "寫程式時，其實可以完全不用到 GO TO 指令"], a: "載入程式(Loader)可以將原始程式轉成可執行程式"},
+        {q: "何種網路協定可以自動設定使用者電腦的 IP Address？", opts: ["RIP", "TCP/IP", "DHCP", "IPX/SPX"], a: "DHCP"},
+        {q: "資料儲存的功能是由下列哪一單元來執行？", opts: ["算術邏輯單元", "記憶單元", "控制單元", "輸出入單元"], a: "記憶單元"},
+        {q: "哪一種服務可以存取 SQL 伺服器或 Access 的資料庫界面？", opts: ["Gopher Service", "WWW Service", "FTP Service", "Proxy Service"], a: "WWW Service"},
+        {q: "下列有關「載入程式( Loader)」的敘述中， 何者是正確的？", opts: ["可檢查原始程式是否有語法( Syntax)上的錯誤", "將原始程式編譯成目的程式", "將目的程式載入主記憶體中", "執行目的程式"], a: "將目的程式載入主記憶體中"},
+        {q: "下列何者不是資料庫的資料結構之一？", opts: ["關聯式(Relational)", "網路式(Network)", "階層式( Hierachical)", "星狀式( Star)"], a: "星狀式( Star)"},
+        {q: "下列哪一項設定可以讓你使用 Chrome 瀏覽網站時，減少連外網路的負荷？", opts: ["設定 History", "設定 Proxy 伺服器", "使用 Auto complete", "設定我的最愛"], a: "設定 Proxy 伺服器"},
+        {q: "下列有關「PC 中匯流排(Bus)」的敘述中，何者有誤？", opts: ["匯流排一般分為資料匯流排(Data Bus)，位址匯流排(Address Bus)和控制匯流排(Control Bus) 三種", "Data Bus 是在 CPU 和 Memory 之間傳送資料，所以是雙向性", "Address Bus 可用來標明 Memory 或 I/ O Port 位址的地方", "Data Bus 的長度和 Address Bus 的長度必須一樣"], a: "Data Bus 的長度和 Address Bus 的長度必須一樣"},
+        {q: "下列敘述何者錯誤？", opts: ["動態隨機存取記憶體(DRAM)消耗功率比靜態隨機存取記憶體(SRAM)大", "SRAM 乃由正反器( Flip-Flop)構成基本記憶單元", "可程式唯讀記憶體( PROM)只能讓使用者自行規劃、並燒錄程式一次", "可抹除可程式唯讀記憶體( EPROM) 中所寫入之程式，能夠用紫外線照射將之抹除"], a: "動態隨機存取記憶體(DRAM)消耗功率比靜態隨機存取記憶體(SRAM)大"},
+        {q: "下列有關「乙太網路( Ethernet)10Base- T」的敘述中，何者錯誤？", opts: ["屬於分享式網路， 採用 CSMA/CD 的碰撞處理方式傳輸資料", "網絡上用戶多時， 頻寬會損失，傳輸速率會變慢", "佈線完成後必需要加上 50 歐姆的終端電阻", "相較其他網路技術， 其使用成本較便宜"], a: "佈線完成後必需要加上 50 歐姆的終端電阻"},
+        {q: "下列有關「非同步傳輸模式(ATM)」的敘述中，何者錯誤？", opts: ["屬於一種星狀架構，以交換方式存取資料", "屬於一種高速網路， 但是不同的速度無法相容", "屬於一種專屬網路， 每一用戶端都可以享用自己全部的頻寬", "可以傳輸多媒體資料"], a: "屬於一種高速網路， 但是不同的速度無法相容"},
+        {q: "下列有關「路由器(Router)」的敘述中， 何者錯誤？", opts: ["它主要是 OSI 通訊協定標準第三層， 亦即網路層的設備", "能夠整合不同的網路系統，例如讓乙太網路和記號環網路相連", "俱備了廣域網路的連線能力", "無法取代橋接器(Bridge)的功能"], a: "無法取代橋接器(Bridge)的功能"},
+        {q: "下列有關「全球資訊網(WWW)」的敘述中，何者錯誤？", opts: ["WWW 裡的文件都是用 HTML(Hyper Text Markup Language) 撰寫的", "在網路存取上則採用 URL(Uniform Resource Locator) 來定義資料所在的位置", "使用者一般都用瀏覽器( Browser) 閱讀資料", "無法傳遞多媒體資料"], a: "無法傳遞多媒體資料"},
+        {q: "下列哪一種是用於電子郵件的通訊協定？", opts: ["SMTP", "HTTP", "FTP", "Telnet"], a: "SMTP"},
+        {q: "下列所述之輔助記憶體中，何者之存取速度最快？", opts: ["軟碟機", "硬碟機", "光碟機", "磁帶機"], a: "硬碟機"},
+        {q: "(本題刪題)使用 IE 瀏覽全球資訊網(WWW) 時，無法以網域名稱連接，而改以 IP 位址連接則正常，該如何解決？", opts: ["檢查客戶端的 DNS 伺服器設定", "檢查客戶端的 IP 位址是否相衝", "檢查客戶端的預放通訊欄是否設定錯誤", "檢查連線是否有問題"], a: "檢查客戶端的 DNS 伺服器設定"},
+        {q: "關於「全球資訊網 WWW(World Wide Web)」的敘述中，以下哪一項正確？", opts: ["只能在 Internet 中使用", "圖形和文件資源都可被連結在 web 網頁內", "它只能使用以圖形為介面的瀏灠器", "它不能加入表格"], a: "圖形和文件資源都可被連結在 web 網頁內"},
+        {q: "收到一個副檔名為.asp 的程式，該如何啟動它？", opts: ["可直接在瀏覽器執行", "需重新編譯方能執行", "需要連上具執行程式能力的網站伺服器方可執行", "要另存副檔名為.bat 的新檔案方可被執行"], a: "需要連上具執行程式能力的網站伺服器方可執行"},
+        {q: "下列四個 SQL 指令， 何者不正確？", opts: ["INSERT INTO Table1 (fa, fb, fc)(1, 20, 30);", "DELETE FROM Table1 WHERE fa=1;", "UPDATE Table 1 SET fb=fb*2 WHERE fa=1;", "SELECT * FROM Table1;"], a: "INSERT INTO Table1 (fa, fb, fc)(1, 20, 30);"},
+        {q: "下列設備何者通常作為輸入裝置？", opts: ["Printer", "Speaker", "Plotter", "Mouse"], a: "Mouse"},
+        {q: "公司的員工希望可以接收電子郵件(E- Mail)，你要幫他設定哪一種伺服器？", opts: ["LDAP", "NNTP", "POP3", "DNS"], a: "POP3"},
+        {q: "在設定網路連線時，「SMTP 伺服器」是指哪一種伺服器？", opts: ["收信伺服器", "寄信伺服器", "檔案伺服器", "網站伺服器"], a: "寄信伺服器"},
+        {q: "「WWW 伺服器」預設使用 TCP 的哪一個 port number 傳送資料？", opts: ["21", "80", "70", "110"], a: "80"},
+        {q: "使用瀏覽器瀏覽一部名為「www. myweb.com.tw」電腦，其「port number 為 8000」的 Web 虛擬主機，位址應如何輸入？", opts: ["http://www.myweb.com.tw/", "http://www. myweb.com.tw/default.htm", "http://www.myweb.com.tw: 8000/", "http://www.myweb.com.tw/8000"], a: "http://www.myweb.com.tw: 8000/"},
+        {q: "開機時螢幕電源指示燈已亮， 但螢幕卻無畫面出現，則下列何者非檢查要項？", opts: ["螢幕訊號轉接頭不良", "主機板故障", "鍵盤接觸不良", "顯示卡故障"], a: "鍵盤接觸不良"},
+        {q: "拆裝電腦時應先", opts: ["進入測試軟體後再拆裝", "螢幕關機後再開機", "按Reset 鍵後再拆裝", "關閉電腦電源後再拆裝"], a: "關閉電腦電源後再拆裝"},
+        {q: "網際網路的傳送訊息封包成許多小包，下列何者不是其目的？", opts: ["改善網路傳遞時的速率", "保証資料傳遞正確沒有錯誤", "傳輸時間耗費較少", "便於檢查每一封包的正確性"], a: "傳輸時間耗費較少"},
+        {q: "程式設計時，若同一段敘述要重覆執行若干次，則採用？", opts: ["循序結構", "迴路結構", "選擇結構", "樹狀結構"], a: "迴路結構"},
+        {q: "CPU 的位址線匯流排對 CPU 而言為", opts: ["僅能輸入", "僅能輸出", "輸出入皆可", "不能輸出入"], a: "僅能輸出"},
+        {q: "電腦的電源在關機( Off) 後，下列何種記憶體之內容不會消失", opts: ["DRAM", "SRAM", "BIOS", "Virtual Disk"], a: "BIOS"},
+        {q: "下列何者不是結構化程式設計所採用的基本結構？", opts: ["重覆結構", "選擇結構", "跳躍結構", "循序結構"], a: "跳躍結構"},
+        {q: "下列何者不是數據通訊之傳輸媒體？", opts: ["同軸電纜", "微波", "數據機", "光纖"], a: "數據機"},
+        {q: "在資料通訊系統中， 資料傳輸時，為了避免資料被竊取， 因而使資料外洩應做何種防範措施？", opts: ["將資料做錯誤檢查", "將資料加密", "將資料解密", "將資料解壓縮"], a: "將資料加密"},
+        {q: "在 TCP/ IP 網路裏， 每一主機都有一個 IP 位址，而每個 IP 位址是幾個位元的資訊？", opts: ["8 位元", "16 位元", "32 位元", "64 位元"], a: "32 位元"},
+        {q: "下列何者不是影響 PC(個人電腦)系統功能的因素？", opts: ["CPU 的時鐘頻率", "CPU 的主儲存體容量", "CPU 所能提供的指令集", "CPU 的配置模式"], a: "CPU 的配置模式"},
+        {q: "下列哪個敘述是錯的？", opts: ["任何十進位整數都可用二進位表示", "任何十進位小數都可用二進位表示", "任何二進位整數都可用十進位表示", "任何二進位小數都可用十進位表示"], a: "任何十進位小數都可用二進位表示"},
+        {q: "若考慮正負號， 1 個 Byte 的長度， 它可以儲存的最大值？", opts: ["255", "127", "512", "36727"], a: "127"},
+        {q: "若不考慮正負號， 1 個 Byte 的長度，它可以儲存的最大值？", opts: ["255", "512", "128", "1024"], a: "255"},
+        {q: "在實作副程式(Subroutine) 呼叫時， 需使用何種資料結構來處理返回呼叫程式的位址？", opts: ["Queue", "Stack", "Tree", "Linked list"], a: "Stack"},
+	{q: "下列關於「雙核心 CPU」的敘述， 何者正確？", opts: ["雙核心 CPU 就是指加入了 Hyper- Threading 技術的 CPU", "雙核心 CPU 是利用平行運算的概念來提高效能", "雙核心 CPU 就是 32 位元 x2，也就是所謂的 64 位元 CPU", "雙核心 CPU 的時脈是單核心 CPU 時脈的兩倍"], a: "雙核心 CPU 是利用平行運算的概念來提高效能"},
+        {q: "下列關於「雙核心 CPU」的敘述， 何者錯誤？", opts: ["雙核心 CPU 因為有 2個核心， 所以耗電量是單核心 CPU 的 2 倍", "雙核心 CPU 所使用的程式必須經過特別設計，才能發揮效能", "雙核心 CPU 內， 共有 2 組的控制單元和算術/ 邏輯運算單元", "雙核心 CPU 若加上了 Hyper- Threading技術，作業系統會認為擁有四組處理器"], a: "雙核心 CPU 因為有 2個核心， 所以耗電量是單核心 CPU 的 2 倍"},
+        {q: "下列關於「CPU 時脈」敘述， 何者錯誤？", opts: ["一般描述 CPU 的效能時，是以 CPU 運作的「時脈頻率」，也稱為「工作時脈」來描述", "早期其單位為 MHz，如 Celeron 950 與 Duron 800 就是指其時脈頻率分別為 950 MHz 與 800 MHz", "近來則發展到 GHz 的速度， 像是 Pentium4 3.2G、Duron 1.8 G", "時脈頻率愈高不表示執行效能愈快"], a: "時脈頻率愈高不表示執行效能愈快"},
+        {q: "下列何者是 Really Simple Syndication(RSS) 所使用的語言技術？", opts: ["Java", "Object C", "XML", "HTML"], a: "XML"},
+        {q: "下列關於「快取記憶體」的敘述，何者錯誤？", opts: ["配置在暫存器和主記憶體之間", "通常配置容量相當於主記憶體的容量", "由於 CPU 讀取需要的指令或資料時，會先到快取記憶體尋找，若找不到時才會再到主記憶體中讀取", "若 CPU 在快取記憶體就能找到需要的資料， 便無需再到主記憶體讀取，故資料傳送的時間就能大幅縮短"], a: "通常配置容量相當於主記憶體的容量"},
+        {q: "為了避免實體主記憶體不足而無法執行程式，所發展出的技術為何？", opts: ["快取記憶體", "輔助記憶體", "快閃記憶體", "虛擬記憶體"], a: "虛擬記憶體"},
+        {q: "「編譯器」主要的功能為何？", opts: ["將組合語言程式碼轉譯成機器碼", "將程式重新定址", "將高階語言程式碼轉譯成機器碼", "連結互相呼叫的程式"], a: "將高階語言程式碼轉譯成機器碼"},
+        {q: "下列哪一種「排程演算法」， 理論上能得到最短的平均等待時間？", opts: ["先到先做( FCFS)", "最短工作先做( SJF)", "優先權(Priority)", "循環分配 (RR)"], a: "最短工作先做( SJF)"},
+        {q: "下列哪一種「排程演算法」具有時間配額的設計？", opts: ["先到先做(FCFS)", "最短工作先做( SJF)", "優先權( Priority)", "循環分配(RR)"], a: "循環分配(RR)"},
+        {q: "下列哪一種「排程演算法」可以產生共享處理器現象？", opts: ["先到先做 (FCFS)", "最短工作先做( SJF)", "優先權( Priority)", "循環分配(RR)"], a: "循環分配(RR)"},
+        {q: "下列何者不屬於「無線網路」技術規格？", opts: ["802.11a", "Bluetooth", "100Base TX", "WAP"], a: "100Base TX"},
+        {q: "下列何者是動態 IP 位址的特色？", opts: ["連線時才取得 IP 位址", "IP 位址固定不變", "IP 位址為自己專用", "適合用來架站"], a: "連線時才取得 IP 位址"},
+        {q: "在判斷發送端與目的地是否位於相同網路區段時， 會執行下列哪一種邏輯運算？", opts: ["XOR", "OR", "AND", "NOT"], a: "AND"},
+        {q: "「TCP 協定」的主要功用不包含下列哪一項？", opts: ["錯誤處理", "加密", "重送", "控制流量"], a: "加密"},
+        {q: "下列敘述何者正確？", opts: ["IPv4 位址為 64bits", "IPv6 位址為 128 bits", "IPv4 位址通常以「4 段式、16 進位」表示", "「203.74. 205.256 」為正確的 IPv4 位址"], a: "IPv6 位址為 128 bits"},
+        {q: "通常在接收電子郵件時，使用下列哪一種協定？", opts: ["SMTP", "POP3", "FTP", "ARP"], a: "POP3"},
+        {q: "若一個堆疊( Stack) 可存放 5 個元素，連續 push 5 筆資料後， 再繼續 push 1 筆資料會", opts: ["失敗，不能再 push 資料進去", "將第 1 筆資料 pop出來", "將第 5 筆資料 pop 出來", "將第 2 筆資料 pop 出來"], a: "失敗，不能再 push 資料進去"},
+        {q: "下列關於「排序」的敘述，何者錯誤？", opts: ["要排序的資料量會影響排序的速度", "快速排序法使用分而治之的概念", "氣泡排序法不能用來將資料由大排到小", "快速排序法比氣泡排序法有較佳的效率"], a: "氣泡排序法不能用來將資料由大排到小"},
+        {q: "下列何種應用不是使用「佇列(Queue)」資料結構？", opts: ["個人電腦的鍵盤緩衝區", "作業系統的處理工作排程", "呼叫函式時， 儲存返回位址及傳遞參數", "印表機的列印工作排程"], a: "呼叫函式時， 儲存返回位址及傳遞參數"},
+        {q: "「將資料以表格的方式儲存， 並透過參考的關係來查詢相關資料」，是屬於何種資料模型？", opts: ["階層式", "關聯式", "物件導向式", "表格式"], a: "關聯式"},
+        {q: "下列何者不是使用資料庫的優點？", opts: ["減少資料的重複性", "強化資料的保密性及安全性", "減少儲存資料的空間", "不需專人管理及維護資料 庫"], a: "不需專人管理及維護資料 庫"},
+        {q: "下列何者不是建置管理資訊系統的目的？", opts: ["提供企業組織必要的資訊", "支援企業組織的管理及決策", "提供國稅局查核公司預算", "協助企業組織獲取更佳的績效"], a: "提供國稅局查核公司預算"},
+        {q: "下列何者為 WWW 的通訊協定？", opts: ["HTTP( Hyper Text Transfer Protocol)", "SMTP(Simple Mail Transfer Protocol)", "FTP(File Transfer Protocol)", "PPP(Point to Point Protocol)"], a: "HTTP( Hyper Text Transfer Protocol)"},
+        {q: "下列何者為規範網際網路上電子郵件傳遞的通訊協定？", opts: ["HTTP(Hyper Text Transfer Protocol)", "SMTP( Simple Mail Transfer Protocol)", "FTP(File Transfer Protocol)", "PPP( Point to Point Protocol)"], a: "SMTP( Simple Mail Transfer Protocol)"},
+        {q: "在電子商務中， 確認訊息來源的服務機制是？", opts: ["對稱式加密", "數位簽章", "Unicode", "資料探勘(Data Mining)"], a: "數位簽章"},
+        {q: "下列何者是數位浮水印技術的主要應用範圍？", opts: ["上網撥接", "電子商務的安全查核", "網域名稱查詢", "使用者管理"], a: "電子商務的安全查核"},
+        {q: "當接收到一密文(ciphertext) 為「YBIR」， 而且知道它是將明文(plaintext) 的英文字母所對應之次序數字( 如 A 的字母次序數字為 1，B次序數字為 2，...， Z 次序數字為 26 )， 經過以下公式： 密文的字母次序數字＝((明文的字母次序數字＋ 13) mod 26 )，來得到新的英文字母所對應之次序數字，其中 mod 為兩個整數作除法所得到之餘數， 請問原來的明文訊息(message)應該為哪一個？", opts: ["LIKE", "LOVE", "LONG", "LOST"], a: "LOVE"},
+        {q: "下列何種機制使得 Java 能夠完成跨平台(Cross Platform) 運作？", opts: ["例外處理", "物件導向", "虛擬機器", "多執行緒( Multi-thread)"], a: "虛擬機器"},
+        {q: "下列何者之功能是網路防火牆( Firewall) 所無法提供的？", opts: ["流量管理稽核", "集中安全控管", "用戶身分管理", "阻絕異常存取"], a: "用戶身分管理"},
+        {q: "下列何者不提供日誌( Journaling) 功能的檔案系統？", opts: ["Ext2", "Ext3", "Ext4", "ReiserFS"], a: "Ext2"},
+        {q: "下列關於「網路服務」所通用的埠號( Port)之敘述，何者有誤？", opts: ["HTTP 使用 port 80", "Telnet 使用 port 161", "POP3 使用 port 110", "SMTP 使用 port 25"], a: "Telnet 使用 port 161"},
+        {q: "下列可以偵測錯誤的編碼方法中，何者具錯誤更正能力？", opts: ["漢明碼 (Hamming Code)", "同位元檢查( Parity Bit Check)", "循環冗餘檢查碼 (Cyclic Redundancy Check Code)", "檢查和(Checksum)"], a: "漢明碼 (Hamming Code)"},
+        {q: "下列「排序演算法」中，哪一種的平均速度最快？", opts: ["泡沫排序", "選擇排序", "快速排序", "插入排序"], a: "快速排序"},
+        {q: "對於 SQL 語法的使用，下列何者有誤？", opts: ["透過 Like 運算子，可以查詢某一字串或字元的一部分", "使用四則運算在 SQL 查詢語法中是可行的", "就字串資料型態而言，「||」在查詢中可被用來串接兩個字串值", "使用 DESC 關鍵字可以達到查詢結果的遞增排序的效果"], a: "使用 DESC 關鍵字可以達到查詢結果的遞增排序的效果"},
+        {q: "一般而言，路由表(Routing Table) 中不會出現何種資訊？", opts: ["Next hop address", "MAC address", "Network address", "Metrics"], a: "MAC address"},
+        {q: "「路由器將鏈結狀態( link state) 的資訊，送往相鄰路由器」，該遞送的過程稱為", opts: ["flooding", "forwarding", "informing", "converging"], a: "flooding"},
+        {q: "電腦 A 經由乙太網路直接送一個 IP 封包給電腦 B，但電腦 B 的網路卡當掉無法運作， 則該封包最有可能的下場為何？", opts: ["封包內部產生逾時 (time out) 錯誤，自行銷毀", "由電腦負責回收銷毀", "由網路內監控電腦 (monitor) 回收銷毀", "消失在末端的終端機( terminator) 上"], a: "封包內部產生逾時 (time out) 錯誤，自行銷毀"},
+        {q: "下列哪一個指令可以告訴使用者 Ethernet 相關的通訊統計資訊？", opts: ["ipconfig", "tracert", "netstat", "ping"], a: "netstat"},
+        {q: "哪一種 switch 模式會將整個封包的內容全部讀取後，再繼續傳送？", opts: ["Fast Forward", "Tabling", "Cut-through", "Store-and- Forwared"], a: "Store-and- Forwared"},
+        {q: "某電腦的主記憶體為 640KB， 但可執行 2 MB 的程式， 請問該電腦可能使用下列何者？", opts: ["快取記憶體(Cache Memory)", "關聯記憶體(Associate Memory)", "虛擬記憶體(Virtual Memory)", "隨機存取記憶體 (Random Access Memory)"], a: "虛擬記憶體(Virtual Memory)"},
+        {q: "下列何者不是密碼學原理最主要的應用？", opts: ["數位簽章( Digital Signature)", "數位浮水印(Digital Watermarking)", "藍芽(Bluetooth) 技術", "公開金鑰基礎建設( Public Key Infrastructure， PKI)"], a: "藍芽(Bluetooth) 技術"},
+        {q: "下列何者不是網頁上所使用的語言？", opts: ["HTML(Hyper Text Markup Language)", "Java Script", "DHTML(Dynamic HTML)", "UML(Unified Modeling Language)"], a: "UML(Unified Modeling Language)"},
+        {q: "下列何者不是資料結構(Data Structure) 所探討的課題？", opts: ["堆疊(Stack)", "排序(Sorting)", "搜尋( Searching)", "多工( Multitasking)"], a: "多工( Multitasking)"},
+        {q: "資訊系統的轉換方式中，讓舊系統與新系統一起運作，直到新系統證明可靠了才停止舊系統的運作， 是下列哪一種轉換方式？", opts: ["平行式 (parallel) 轉換", "直接式(direct)轉換", "引導式( pilot)轉換", "階段式 (phased) 轉換"], a: "平行式 (parallel) 轉換"},
+        {q: "范紐曼機(von Neumann Machine)CPU 的運作可以區分成四個階段，下列何者不正確？", opts: ["提取( Fetch)", "解碼(Decode)", "重載(Reload)", "寫回 (Writeback)"], a: "重載(Reload)"},
+        {q: "下列關於「分散式電腦系統(Distributed Computer System)」的敘述，何者不正確？", opts: ["將多部獨立電腦以網路匯集而成", "使用者感覺上就像是在使用一部電腦", "具有優於大型主機( Mainframe) 的延展性(Scalability)", "建置成本通常遠高於大型主機( Mainframe)"], a: "建置成本通常遠高於大型主機( Mainframe)"},
+        {q: "下列關於「藍芽(Bluetooth) 技術」的敘述，何者不正確？", opts: ["是一種可以應用在電腦、行動電話、家電用品的無線傳輸技術", "傳輸距離有 50 公尺與 500 公尺兩種", "可以與其他藍芽裝置進行一對多連接", "傳輸無方向性"], a: "傳輸距離有 50 公尺與 500 公尺兩種"},
+        {q: "下列關於「藍光光碟( Blu- ray Disc，簡稱 BD)」的敘述，何者不正確？", opts: ["BD 採用波長 405 奈米的藍色雷射光束來做讀寫", "相對於 DVD，BD的容量大幅提升，將可以容納畫質更高、音效更佳的影音內容", "DVD燒錄機可以進行 BD 的燒錄", "BD 採用 CDFS 檔案系統"], a: "DVD燒錄機可以進行 BD 的燒錄"},
+        {q: "下列關於「DVD(Digital Versatile Disc)」的敘述， 何者不正確？", opts: ["DVD 採用波長 405 奈米的藍色雷射光束來做讀寫", "DVD-9 是單面雙層的 DVD 碟片，標稱容量 8.5GB", "DVD-RAM 是可以重覆寫入的 DVD碟片", "DVD 區域碼( DVD Region Code) 是影音產品經銷商與代理商的權益保障機制"], a: "DVD 採用波長 405 奈米的藍色雷射光束來做讀寫"},
+        {q: "下列關於「關聯代數( Relational Algebra)」的敘述， 何者不正確？", opts: ["關聯代數的運算元(Operand) 皆為關聯(Relation)", "關聯代數的計算結果皆為關聯(Relation)", "和關聯代數具備相同能力的查詢語言可以宣稱具有關聯完整性(Relationally-Complete)", "關聯式計算(Relational Calculus)不具有關聯完整性(Relationally-Complete)"], a: "關聯式計算(Relational Calculus)不具有關聯完整性(Relationally-Complete)"},
+        {q: "關聯代數(Relational  Algebra) 當中，下列哪一個運算子可以從關聯(Relation) 當中挑選出符合條件的值組( Tuple)？", opts: ["選擇( Selection)", "投影( Projection)", "合併(Join)", "除法(Divide)"], a: "選擇( Selection)"},
+        {q: "關聯代數(Relational  Algebra) 當中，下列哪一個運算子可以從關聯(Relation) 當中挑選出特定的屬性( Attribute)？", opts: ["選擇( Selection)", "投影( Projection)", "合併(Join)", "除法(Divide)"], a: "投影( Projection)"},
+        {q: "資料庫的每個交易( Transaction) 都應該具備四項特性，下列何者不正確？", opts: ["自動性(Automaticity)", "一致性(Consistency)", "隔離性(Isolation)", "持續性( Durability)"], a: "自動性(Automaticity)"},
+        {q: "下列關於「資料庫程序(Database  Procedure)」的敘述， 何者不正確？", opts: ["觸發(Trigger) 是事件驅動(Event-Driven) 的資料庫程序， 當指定的事件發生時會自動執行", "需要處理的資料量很大、而資料庫伺服器的負載很小時，是考慮使用資料庫程序的適當時機", "Microsoft SQL Server純量函數( Scalar User-Defined Function) 的回傳值可以是 TABLE 型態", "Microsoft SQL Server 純量函數( Scalar User-Defined Function)的回傳值可以是 INT 型態"], a: "Microsoft SQL Server純量函數( Scalar User-Defined Function) 的回傳值可以是 TABLE 型態"},
+        {q: "下列何者不是「資料倉儲(Data Warehouse)」的主要特性？", opts: ["主題導向 (Subject- Oriented)", "整合性(Integrated)", "時間變動性( Time-Variant)", "揮發性(Volatile)"], a: "揮發性(Volatile)"},
+        {q: "下列何者不是「資料倉儲(Data Warehouse)」的主要資料模型(Data Model)？", opts: ["星狀模型(Star Schema)", "雪花狀模型(Snowflake Schema)", "星座模型(Constellation Schema)", "階層模型(Hierarchical Schema)"], a: "階層模型(Hierarchical Schema)"},
+        {q: "下列關於「資料探勘( Data- Mining)」的敘述，何者不正確？", opts: ["通常直接對交易型資料庫( Transactional Database) 進行資料探勘", "統計方法、人工智慧技術、資料庫技術是核心基礎", "關聯法則分析(Association Rule Analysis) 可以用來瞭解哪些商品經常被一起購買", "序列探索(Sequence Discovery) 可以依據客戶的訂購歷史來預測客戶即將購買的商品"], a: "通常直接對交易型資料庫( Transactional Database) 進行資料探勘"},
+        {q: "針對如下之實體關聯圖( Entity-Relationship Diagram) 所規劃之資料庫，下列敘述何者不正確？", opts: ["資料庫有六個資料表( Table)", "資料庫有三個關係(Relationship)", "家長資料表( Table)有五個欄位( Field)", "課程資料表( Table) 與成績資料表之間的關係是一種一對多的關係"], a: "資料庫有三個關係(Relationship)"},
+        {q: "撰寫結構化查詢語言( SQL) 的 DELETE 陳述式，對關聯式資料庫 (Relational Database) 進行資料刪除作業時，如果沒有加上適當的WHERE 子句將會造成何種結果？", opts: ["目標資料表(Table)的所有資料均被刪除", "目標資料表(Table)只有第一筆資料被刪除", "目標資料表(Table)只有最後一筆資料被刪除", "目標資料表( Table)只有前五筆資料被刪除"], a: "目標資料表(Table)的所有資料均被刪除"},
+        {q: "某個關聯式資料庫(Relational Database) 以客戶資料表( Table)當中的「住址」欄位來保存客戶的完整住址。如果希望撰寫結構化查詢語言 (SQL)的非巢狀 SELECT 陳述式， 來查詢居住在「南投縣」或「台中市」之客戶資料，下列敘述何者不正確？", opts: ["SELECT 陳述式當中應該加上 WHERE 子句", "WHERE 子句當中應該使用 LIKE 運算子", "WHERE 子句當中應該出現 OR 運算子", "WHERE 子句當中應該使用=運算子"], a: "WHERE 子句當中應該使用=運算子"},
+        {q: "針對結構化查詢語言( SQL)陳述式「SELECT * FROM A LEFT OUTER JOIN B ON A.pk=B.pk」的查詢結果，下列敘述何者正確？", opts: ["A 資料表 (Table)的每一筆資料在查詢結果中， 最少會出現一次", "查詢結果的資料筆數等於 A 資料表(Table)的資料筆數與 B 資料表的資料筆數兩者之和", "查詢結果的資料筆數等於 A 資料表( Table) 的資料筆數與 B 資料表的資料筆數兩者之積", "查詢結果的欄位數目與 A 資料表(Table) 相同"], a: "A 資料表 (Table)的每一筆資料在查詢結果中， 最少會出現一次"},
+        {q: "如果 A 資料表(Table) 有 N 筆資料、X 個欄位；資料表 B 有 M 筆資料、 Y 個欄位，則針對結構化查詢語言(SQL) 陳述式「SELECT * FROM A CROSS JOIN B」查詢結果的資料筆數為", opts: ["N×M", "X×Y", "N＋M", "X＋Y"], a: "N×M"},
+        {q: "如果 A 資料表(Table) 有 N 筆資料、X 個欄位；資料表 B 有 M 筆資料、 Y 個欄位，則針對結構化查詢語言(SQL) 陳述式「SELECT * FROM A CROSS JOIN B」查詢結果的欄位數目為", opts: ["N×M", "X×Y", "N＋M", "X＋Y"], a: "X＋Y"},
+        {q: "小明的家裡有十台電腦，但提供網際網路( Internet) 連結服務的電信公司只配給了三個 IP，如果希望這十台電腦能夠同時間上網， 小明還需要 使用何種網路設備？", opts: ["寬頻分享器(Internet Broadband Router)", "集線器(Hub)", "路由器(Router)", "MOD 機上盒"], a: "寬頻分享器(Internet Broadband Router)"},
+        {q: "小明希望在家裡架設無線上網環境， 下列敘述何者不正確？", opts: ["沒有內建無線上網功能的電腦應該添加無線網路卡", "應該在適當地點配置無線基地台(Access Point)", "無線基地台( Access Point)之間無法做無線連接", "印表機可以透過無線網路來遠端使用"], a: "無線基地台( Access Point)之間無法做無線連接"},
+        {q: "小明家裡的電腦突然無法上網，下列敘述何者最不可能是問題所在？", opts: ["ADSL Modem 故障", "IP 分享器故障", "電信公司的機房設備故障", "MOD 機上盒故障"], a: "MOD 機上盒故障"},
+        {q: "小明無法從學校使用行動電話連結家裡的資料庫， 下列敘述何者最不可能是問題所在？", opts: ["行動電話無法順利連結學校的無線基地台( Access Point)", "行動電話從學校配得的 IP 被家裡的寬頻分享器(Internet Broadband Router)封鎖", "資料封包被學校的防火牆過濾掉", "家裡的 FTP Server 無法正常運作"], a: "家裡的 FTP Server 無法正常運作"},
+        {q: "下列關於「無線分散系統(Wireless Distribution System)」的敘述，何者不正確？", opts: ["區分成無線橋接(Bridge)與無線中繼(Repeater) 兩種應用", "相互連結的無線基地台(Access Point) 應該將 SSID 設為不同", "相互連結的無線基地台( Access Point) 應該使用相同的無線網路頻道", "相互連結的無線基地台( Access Point) 應該將安全機制設為相同"], a: "相互連結的無線基地台(Access Point) 應該將 SSID 設為不同"},
+        {q: "在 W3C(World Wide Web Consortium) 所制定的標準中，未包含下列何者？", opts: ["超文字標籤語言(Hyper Text Markup Language)", "文件物件模型 (Document Object Model)", "Java Script", "結構化查詢語言( Structured Query Language)"], a: "結構化查詢語言( Structured Query Language)"},
+        {q: "主要功能為電子書閱讀的設備為何？", opts: ["i Pod", "iPhone", "i Pad", "IEEE"], a: "i Pad"},
+        {q: "一個單層的藍光光碟( Blu- ray Disc) 容量約為", opts: ["800 MB", "4.7GB", "10GB", "25GB"], a: "25GB"},
+        {q: "在高速公路收費站以攝影機拍攝車牌影像，再經由電腦軟體處理，將車牌影像轉換為車牌文字，此為何種應用？", opts: ["影像處理( Image Processing)", "樣式識別( Pattern Recognition)", "人工智慧(Artificial Intelligence)", "電腦圖學(Computer Graphics)"], a: "樣式識別( Pattern Recognition)"},
+        {q: "CAI 是下列何者的英文縮寫？", opts: ["電腦輔助設計", "電腦輔助製造", "電腦輔助教學", "電腦軟體能力成熟度"], a: "電腦輔助教學"},
+        {q: "一張 4 吋×6 吋大小、300dpi 全彩照片檔案，考量不壓縮情形， 約佔用多少儲存空間？", opts: ["2. 5KB", "350KB", "6.5 MB", "20 MB"], a: "6.5 MB"},
+        {q: "下列何者是 Linux 的作業系統？", opts: ["Windows 8.1", "Windows Server 2012", "Windows 7", "CentOS"], a: "CentOS"},
+        {q: "在我們日常生活中所拍攝的黑白照片，其所採用的顏色是由黑到白間不同明亮度的顏色所組成。由黑到白間不同明亮度的顏色所組成的電腦影像圖檔屬於", opts: ["全彩圖", "點陣圖", "灰階圖", "黑白圖"], a: "灰階圖"},
+        {q: "台灣地區的電視播放系統使用何種規格？", opts: ["NTSC", "PAL", "SECAM", "MPEG"], a: "NTSC"},
+        {q: "Dreamweaver 屬於哪一類軟體？", opts: ["網頁設計與編輯軟體", "影像處理與編輯軟體", "聲音與影像播放軟體", "簡報編輯與播放軟體"], a: "網頁設計與編輯軟體"},
+        {q: "下列何者所開發之程式，需要虛擬機器( Virtual Machine) 才能正常執行？", opts: ["C++", "Java", "Assembly", "COBOL"], a: "Java"},
+        {q: "下列何者不屬於高階程式語言？", opts: ["C++", "Java", "Assembly", "C#"], a: "Assembly"},
+        {q: "下列何者不是音訊檔案格式？", opts: ["wav", "mp3", "wma", "cpp"], a: "cpp"},
+        {q: "下列關於「藍光光碟」的敘述，何者不正確？", opts: ["英文名稱是 Blu- ray Disc，簡稱 BD", "可用於大量或高畫質影像的儲存", "因為使用藍色雷射光進行讀寫， 因此稱為藍光光碟", "容量至少 8.5GB"], a: "容量至少 8.5GB"},
+        {q: "下列關於「萬國碼( Unicode)」的敘述，何者不正確？", opts: ["使用 32 位元來代表每個字母、數字或符號", "與 ASCII 編碼相容", "國際字元符號編碼標準之一", "可以容納無限多個字元符號"], a: "可以容納無限多個字元符號"},
+        {q: "下列何種設備具有「儲存指令以協助電腦啟動」的功能", opts: ["螢幕 ( Monitor)", "中央處理器(CPU)", "唯讀記憶體(ROM)", "隨機存取記憶體 (RAM)"], a: "唯讀記憶體(ROM)"},
+        {q: "赫茲(Hertz，Hz)是用來標示螢幕", opts: ["大小", "解析度(Resolution)", "可顯示色彩數目", "畫面更新率(Refresh Rate) 的單位"], a: "畫面更新率(Refresh Rate) 的單位"},
+        {q: "「互動式軟體」的「互動」是指", opts: ["電腦軟體與電腦軟體間的互動", "使用者與電腦軟體間的互動", "使用者與使用者間的互動", "電腦硬體與電腦軟體間的互動"], a: "使用者與電腦軟體間的互動"},
+        {q: "下列關於「點陣圖」的敘述， 何者不正確？", opts: ["與向量圖比較， 需較多的記憶體容量", "放大縮小不會失真", "由一群像素點所組成", "可以是黑白圖，也可以是彩色圖"], a: "放大縮小不會失真"},
+        {q: "一個十進位固定點數表示法(Decimal Fixed- Point Representation)， 總位數為 7、小數位數為 3，下列哪一個數值無法以此法精確表示？", opts: ["12.345", "123.456", "1234.567", "12345.67"], a: "12345.67"},
+        {q: "依照 IEEE 754 的浮點表示法標準， 單倍精準數的第一個位元是符號位元，接下來的 8 個位元則是指數部分的位元，最後的 23 位元則是尾數部分( 共 32 位元)。1640.625 以 IEEE 754 的浮點表示法應為", opts: ["00000101000000000001001101000101", "01000100110011010001010000000000", "11000100110011010001010000000000", "10000101000000000001001101000101"], a: "01000100110011010001010000000000"},
+        {q: "下列何者將網站與使用者的立場對調，讓使用者從資訊搜尋者變成資訊接受者， 當網站有資訊更新時，會主動寄發最新資訊給使用者？", opts: ["RSS", "Blog", "News", "BBS"], a: "RSS"},
+        {q: "P( x) 的陳述( Statement)「x=x 2 」， 其定義域(Domain)是所有的整數，則下列邏輯何者不正確？", opts: ["P( 0) 為真(True)", "P(1 )為真( True)", "x P( x) 為 真( True)，表示存在有一個 x 滿足 P(x)陳述", "x P(x)為真( True)，表示所有的 x 滿足 P( x) 陳述"], a: "x P(x)為真( True)，表示所有的 x 滿足 P( x) 陳述"},
+        {q: "考慮下列邏輯假設：( a)假設今天下午我們去游泳， 就表示天氣放晴。 (b)假使今天下午我們沒去游泳，我們會去泛舟。(c) 假使今天下午我們去泛舟， 會在日落前回家。已知：「今天下午不是晴天， 且比昨天下午還冷」， 則我們無法確定的結論(Conclusion) 是", opts: ["我們會去泛舟", "我們會在日落前回家", "我們會去游泳", "今天下午比昨天下午還冷"], a: "我們會去游泳"},
+        {q: "在 8 個位元的所有組合中，有幾種組合是「從 1 開始」或是「以 00 結尾」?", opts: ["120", "160", "192", "200"], a: "160"},
+        {q: "某電腦系統定義「有效碼(Valid Codeword)」由 0 到 9 的數字所組成，其中必須包含偶數個 0。舉例來說， 0204 是有效碼，而 0928 則是無效碼。下列何者不正確？", opts: ["0 -9 共有 9 個有效碼", "00-99 共有 82 個有效碼", "000 -999 共有 756 個有效碼", "0000- 9999 共有 7050 個有效碼"], a: "0000- 9999 共有 7050 個有效碼"},
+        {q: "IPv4 中 Class A 類別共擁有幾個可供實際配置的 IP 位址？", opts: ["2,130,706,178", "16,777,214", "2, 158,576,178", "12,316,214"], a: "2,130,706,178"},
+        {q: "IPv4 中 Class B 類別共擁有幾個可供實際配置的 IP 位址？", opts: ["16384 × 65536", "16386×65536", "16384×65534", "16386 ×65534"], a: "16384×65534"},
+        {q: "小明班上共有 100 位同學，下列何者保證正確？", opts: ["至少有五位同學是一月份生日", "至少有九位同學是同一個月份生日", "至少有兩位同學同一天生日", "不可能全班同學都是同一天生日"], a: "至少有九位同學是同一個月份生日"},
+        {q: "邏輯式(A+B)' 可用下列哪個邏輯式取代？", opts: ["AB", "A' +B", "A'B'", "B+A'"], a: "A'B'"},
+        {q: "1TB 的記憶容量等於多少 Bytes？", opts: ["2 的 50 次方", "2 的 20 次方", "2 的 30 次方", "2 的 40 次方"], a: "2 的 40 次方"},
+        {q: "十六進位數( AB) 和( 99)作 OR 運算後，其十六進位數之值為何？", opts: ["AB", "BB", "FB", "BF"], a: "BB"},
+  	{q: "二進位數字「11100101」和「01010101」做 AND 運算後， 其十六進位數之值為何？", opts: ["A5", "45", "F5", "55"], a: "45"},
+	{q: "二進位數的「00111011」和「10100001」做 XOR 運算後，其十六進位數之值為何？", opts: ["9A", "BF", "30", "B7"], a: "9A"},
+	{q: "假設電腦的主記憶體有 129KB，則記憶體位址暫存器( Memory Address Register) 中有", opts: ["18 位元", "15 位元", "16 位元", "17 位元"], a: "18 位元"},
+	{q: "若 CPU 可直接存取 1 G Bytes 的記憶體， 則最少需要幾條位址線？", opts: ["10", "20", "30", "40"], a: "30"},
+	{q: "英文字母「F」的 ASCII 值以十進位表示是 70， 其在電腦內被儲存方式是？", opts: ["01000110", "01100010", "01001100", "10001010"], a: "01000110"},
+	{q: "「193.170.1.11 」是屬於哪個 Class 的 IP？", opts: ["A", "B", "C", "D"], a: "C"},
+  	{q: "「十六進位數的 CF.4 」換算成十進位數為何？", opts: ["207.25", "281. 4", "193.25", "201.4"], a: "207.25"},
+  	{q: "若以 19200 bps 的傳輸速度傳送 6000 個 Big- 5 碼中文字，則需花多少時間？", opts: ["5", "10", "0.3125", "0.625 秒"], a: "5"},
+  	{q: "下列四組專有名詞對照，何者錯誤？", opts: ["電子郵件： E- Mail", "區域網路：LAN", "辦公室自動化： OA", "都會型網路： WIMAX"], a: "都會型網路： WIMAX"},
+  	{q: "下列為布林代數的基本關係， 何者錯誤？", opts: ["X+1=1", "X+X' =1", "(X+Y)' =X'Y+XY'", "( X')' =X"], a: "(X+Y)' =X'Y+XY'"},
+  	{q: "「十進位數之 0. 875 」以二進位數表示時應為何？", opts: ["0. 11011", "0.0111", "0.111", "0. 1101"], a: "0.111"},
+  	{q: "若採用奇同位(Odd Parity) 檢查法傳輸資料，下列接收端所收到的各筆資料中， 何者會被判定在傳輸時有錯誤發生？", opts: ["11100011", "10011011", "10000110", "10101010"], a: "10101010"},
+  	{q: "若有一大小為 800× 600 之圖片，每個像素( pixel) 以 3 個 Bytes 的全彩影像儲存於電腦中，則此圖片約需佔用多少儲存空間？", opts: ["1.57 MBytes", "1.17 MBytes", "1.77 MBytes", "1.37 MBytes"], a: "1.37 MBytes"},
+  	{q: "某公司由於辦公室分布在各個不同樓層， 為方便管理起見，欲將內部電腦以 30 部為單位分割成不同之子網域， 試問其內部電腦最小網路遮罩應該設為", opts: ["255.255. 255.128", "255.255.255.192", "255.255. 255. 224", "255.255.255.248"], a: "255.255. 255. 224"},
+  	{q: "二進位資料 10010100101001.11110101 若以十六進位表示，下列何者正確？", opts: ["2529.F5", "94 A1.5F", "94 A1.F5", "2529.5 F"], a: "2529.F5"},
+  	{q: "氣泡排序法(Bubble Sort) 是利用相鄰資料兩兩相比而完成資料由小到大或由大到小排序，假設有六個整數資料要做排序， 最少要做幾次相鄰資料相比較的工作？", opts: ["10", "15", "20", "25"], a: "15"},
+  	{q: "目前所使用的 IPv6 的長度是多少 bits？", opts: ["128", "64", "32", "256"], a: "128"},
+  	{q: "有一個 Class C 網域，今欲切成 32 個子網路，則其網路遮罩應為？", opts: ["255.255.255.0", "255. 255.255.128", "255.255.255.192", "255.255.255.248"], a: "255.255.255.248"},
+  	{q: "假設 X=1001 ，Y=0101，則以下何者不正確？", opts: ["Y+XY=0101", "XY'+Y=1101", "(X+Y)X'=0110", "X'Y+XY' =1100"], a: "(X+Y)X'=0110"},
+  	{q: "已存在公式「Yn + 1 =(7 Yn +1 )mod 6 」，假設 Y0 =3，則以下何者不正確？", opts: ["Y2 =5", "Y3 =0", "Y1 =4", "經此公式， Yn 永遠不會等於 2"], a: "經此公式， Yn 永遠不會等於 2"},
+  	{q: "在 8 個位元的所有組合中，有幾種組合是「從 1 開始」且「以 00 結尾」", opts: ["16", "32", "64", "128"], a: "32"},
+  	{q: "以下哪一個數字使用 IEEE754 浮點表示法儲存時會有誤差？", opts: ["0.5", "0.625", "0.815", "0.5625"], a: "0.815"},
+  	{q: "處理大數據(Big Data) 會使用到資料計量單位 PB。1PB 約等於多少 GB？", opts: ["1, 000", "1,000,000", "1,000,000,000", "1,000,000,000,000"], a: "1,000,000"},
+  	{q: "EB、PB、TB 及 ZB 是大數據經常使用的資料計量單位。這些計量單位之間的大小排列，下列何者正確", opts: ["ZB>EB>PB>TB", "PB>EB>ZB>TB", "ZB>TB>PB>EB", "TB>EB>PB>ZB"], a: "ZB>EB>PB>TB"},
+  	{q: "大數據(Big Data) 增長的挑戰和機遇有三個方向， 合稱 3 Vs。這三個方向為何", opts: ["速度(velocity)、數量(volume)、多樣性(variety)", "多樣性(variety)、真實性(veracity)、可視性(visualization)", "可視性(visualization)、合法性(validity)、速度(velocity)", "數量(volume)、真實性( veracity)、合法性(validity)"], a: "速度(velocity)、數量(volume)、多樣性(variety)"},
+  	{q: "從大數據(Big Data) 的觀點來看，下列關於資料價值的敘述， 何者正確", opts: ["政府公開的資料沒有價值", "臉書( Facebook) 表情符號的點擊數是有價值", "資料擺久一定不會貶值", "資料廢氣(Data Exhaust) 沒有價值"], a: "臉書( Facebook) 表情符號的點擊數是有價值"},
+  	{q: "在 Hadoop 的 MapReduce 工具中使用外部執行檔來建立及執行 Map-Reduce 工作，需要使用下列哪一種技術", opts: ["Virtual Machine", "Streaming", "Pipeline", "Filter"], a: "Streaming"},
+  	{q: "關於 Hadoop 運作的敘述，下列何者正確", opts: ["Hadoop 的 NameNode 會將整個資料，直接轉移到任意一個 Data Node 中", "如果資料檔案太大， Hadoop 就不會儲存資料備份", "與關聯式資料庫相比， Hadoop 輸出的結果比較精準", "資料檔案一旦建立， 就不允許修改"], a: "資料檔案一旦建立， 就不允許修改"},
+  	{q: "有關 Apache Spark 的敘述，下列何者正確", opts: ["Streaming 中的互動式命令列介面，可以降低橫向擴展資料探索的反應時間", "不支援 SQL", "Python 對即時資料串流的處理具有可擴充性及可容錯性等特點", "MLlib是機器學習演算法和 Graphx 圖形處理演算法的高階函式庫"], a: "MLlib是機器學習演算法和 Graphx 圖形處理演算法的高階函式庫"},
+  	{q: "存取大數據(Big Data) 經常採用 NoSQL， 下列何者是 No SQL 的特點", opts: ["採用非同步的複製", "只能使用結構化查詢語言", "資料表的模式須固定", "不能 Scale out 儲存容量"], a: "採用非同步的複製"},
+  	{q: "有關 R 程式語言的敘述，下列何者正確", opts: ["尚未開放程式原始碼", "主要用於統計分析、資料探勘", "源自於 B 程式語言", "不具圖形使用者介面"], a: "主要用於統計分析、資料探勘"},
+  	{q: "下列何者是大數據(Big Data) 的分析技術", opts: ["Encounter", "Angular 2", "Catia", "Data Mining"], a: "Data Mining"},
+  	{q: "大數據(Big Data) 分析工具中，常用一些統計分析、繪圖軟體，以下何者屬於開放原始碼軟體", opts: ["R", "SPSS", "SAS", "MINITAB"], a: "R"},
+  	{q: "Hadoop 是一個分散式系統架構，可提供高傳輸率來存取應用程序的數據，適合做為大數據分析，其中家族成員中，何者是專做分散式儲存系統", opts: ["HDFS", "Hive", "Ambari", "MapReduce"], a: "HDFS"},
+  	{q: "大數據(Big Data) 分析大多分為兩階段分析，第一階段為全數據分析，提取指標數據， 第二階段將提取指標數據進行測試、優化、建模、分析。下列哪項工具適合使用在第一階段", opts: ["Hadoop", "R", "Python", "Mathlab"], a: "Hadoop"},
+  	{q: "大數據分析工具 Hadoop 之資料處理採用映射歸納( Map/Reduce) 方式，以下何者是屬於映射( Mapping) 工作？", opts: ["將所有資料集中做計算", "把工作分散到各節點", "把各節點運算結果收回來歸納整合", "各節點獨立運算"], a: "把工作分散到各節點"},
+  	{q: "下列何者為大數據分析工具 Hadoop 中類似 SQL 的查詢工具", opts: ["Pig", "Hive", "HBase", "Mahout"], a: "Hive"},
+  	{q: "大數據分析工具 Spark 框架之重要特色為所有的運算都在記憶體中執行，這樣的技術稱為", opts: ["Build-In Computing", "Ubiquitous Computing", "Distributed Computing", "In-Memory Computing"], a: "In-Memory Computing"},
+  	{q: "大數據分析工具 Spark 框架的核心將資料抽象化成資料集，以直接在多台機器的記憶體處理資料，這樣的資料集稱為", opts: ["Distributed In- Memory Dataset", "In- Memory Distributed Dataset", "Resilient Distributed Dataset", "In- Memory Dataset"], a: "Resilient Distributed Dataset"},
+  	{q: "大數據(Big Data) 分析的數據多屬於非結構化全數據(Raw Data)，因此大多採用 NoSQL 工具。下列何者是 NoSQL 工具", opts: ["Big Table", "Sybase", "MariaDB", "Access"], a: "Big Table"},
+  	{q: "大數據(Big Data) 分析的數據多屬於非結構化全數據(Raw Data)，很難做到大量資料 Schema 的規劃及異動資料庫的擴展，因此大多採用 NoSQL 工具。No SQL 工具使用哪一種模式來解決這樣的問題？", opts: ["Row Based", "Key-Value", "Column Based", "Multi- Level Fields"], a: "Key-Value"},
+  	{q: "MIT App Inventor 2. 0 中， List 的第一個元素的索引值(index) 為何", opts: ["-1", "0", "1", "可以自行指定"], a: "1"},
+  	{q: "SQL Server 2014 中，何種資料型別支援地理資料的儲存", opts: ["varbinary", "varchar", "float", "geography"], a: "geography"},
+  	{q: "SQL Server 2014 中，下列哪個方法可以判斷兩個 geography 型別的圖資之間是否具有交集", opts: ["STIntersects", "STUnion", "STIs Empty", "STIsValid"], a: "STIntersects"},
+  	{q: "透過 Java Script 程式的撰寫， 可以在 HTML5 的哪一種標籤上繪製一個指定圓心和半徑的圓形", opts: ["＜canvas＞", "＜img＞", "＜div＞", "＜span>"], a: "＜canvas＞"},
+  	{q: "在智慧裝置開發 Web-Based Apps 時，使用下列哪一個 HTML5 標籤，可以讓網頁的版面配置隨著裝置的螢幕大小及功能來做變動", opts: ["＜meta name=\"viewport\"＞", "＜meta name=\"description\" ＞", "＜meta name=\"keywords\" ＞", "＜meta name=\"author\" ＞"], a: "＜meta name=\"viewport\"＞"},
+  	{q: "Android APIs 中，下列哪一個套件提供相機裝置的操控介面", opts: ["android. hardware.camera2", "android.camera2", "android.app.hardware. camera 2", "android.app.camera 2"], a: "android. hardware.camera2"},
+  	{q: "Google APIs for Android 中，下列哪一個套件提供高精確度及低功耗的智慧裝置定位介面", opts: ["com.google.android.gms.location", "com.android.gms.location", "android. location", "android. hardware. location"], a: "com.google.android.gms.location"},
+  	{q: "對於社群媒體及網路輿情分析，下列那一項是延伸的分析項目", opts: ["庫存資料", "產品組合資料", "結合企業外部社群和新聞資料", "公司會計進出貨資料"], a: "結合企業外部社群和新聞資料"},
+  	{q: "下列哪一項技術可以應用於電子支付感應", opts: ["全球定位系统(GPS)", "磁條感應", "磁帶讀取感應", "無線射頻識別(RFID)"], a: "無線射頻識別(RFID)"},
+  	{q: "下列何者以語意網為核心技術", opts: ["Web 1.0", "Web 2. 0", "Web 3.0", "Web 4.0"], a: "Web 3.0"},
+  	{q: "下列何者是第三方支付工具", opts: ["悠遊卡", "Apple Pay", "Google Wallet", "Paypal"], a: "Paypal"},
+  	{q: "下列何者屬於智慧穿戴式裝置", opts: ["手機", "智慧衣", "自動駕駛車", "悠遊卡"], a: "智慧衣"},
+  	{q: "下列哪一項是無人駕駛車最需要的配備", opts: ["車內娛樂設備", "駕駛使用的方向盤", "後照鏡子", "電子導航地圖"], a: "電子導航地圖"},
+  	{q: "在智慧校園應用中， 下列哪一個是最需要使用的行動裝置", opts: ["智慧型手機", "桌上型電腦", "大容量儲存設備", "伺服器主機"], a: "智慧型手機"},
+  	{q: "無所不在的 4.0 智慧生活( 例如： 銀行 4. 0 、零售 4. 0 等)需要下列哪一項資料傳輸技術來搭配使用", opts: ["無線網路存取技術", "ATM 提款機", "傳真機", "電傳打字機"], a: "無線網路存取技術"},
+  	{q: "開發 Fintech 智慧科技應用， 主要分析資料來源為下列哪一項", opts: ["上游供應商進料資料", "銀行存款資料", "製造現場的機器設備狀態紀錄", "傳送與接收的私人電子郵件"], a: "銀行存款資料"},
+  	{q: "在物聯網的概念中， 下列何者屬於網路層的技術？", opts: ["遠端醫療", "智能電網", "雲端運算技術", "射頻辨識標籤"], a: "雲端運算技術"},
+  	{q: "下列何者為感知層的感測元件", opts: ["三軸加速器", "IEEE 802.11", "Intel 8051", "智慧門票"], a: "三軸加速器"},
+  	{q: "感測器（ Sensor） 在物聯網三層級中主要發揮的功能為下列何者", opts: ["偵測通訊情況，確保訊息傳遞無誤", "偵測物聯網機房情況， 確保系統正常運作", "偵測物體所處環境各項資訊，結合網路實現感知層", "蒐集各項資訊， 建構物理模型實現應用層"], a: "偵測物體所處環境各項資訊，結合網路實現感知層"},
+  	{q: "關於智慧電網， 下列敘述何者正確？", opts: ["智慧電網可利用資通訊技術收集供應端與使用端的電力供應狀況， 但無法達到節約能源、降低損耗為目的", "智慧電網包含一個智慧型電表基礎建設（ AMI）， 僅能紀錄系統部分電能的流動", "智慧電網可改善現有輸電網路的效能，且能整合風能、太陽能等新能源", "智慧電網之目的是回歸人工監測，以降低機具故障之風險"], a: "智慧電網可改善現有輸電網路的效能，且能整合風能、太陽能等新能源"},
+  	{q: "關於智慧社區系統， 下列敘述何者正確", opts: ["智慧社區系統， 已包含地 價、房價等交易資訊", "管委會及各住戶可以透過智慧社區系統，確實掌握各戶人員進出情形", "智慧社區系統可以透過智慧物件的資訊交換及互動， 將不必要的電燈關閉，以節省不必要的浪費", "智慧社區系統可以取代社區守衛"], a: "智慧社區系統可以透過智慧物件的資訊交換及互動， 將不必要的電燈關閉，以節省不必要的浪費"},
+  	{q: "下列何者是現階段智慧型手機在近場通訊（ Near Field Communication，NFC）的主要應用", opts: ["在行動支付可縮短交易時間", "在交通運輸過程，可搜尋目的地的確切位置", "在規劃交通路徑，縮短行車時間", "可知餐廳食材之產品履歷，提昇食品安全"], a: "在行動支付可縮短交易時間"},
+  	{q: "藍芽 4.0 可達成的有效傳輸距離為下列何者", opts: ["200 英呎", "300 英呎", "400 英呎", "500 英呎"], a: "200 英呎"},
+  	{q: "IBM 提出下列何種概念，可視為物聯網的雛型", opts: ["感知城市", "感知地球", "智慧城市", "智慧地球"], a: "智慧地球"},
+  	{q: "下列何者為物聯網之感測器發揮的主要功能", opts: ["偵測通訊情況， 確保訊息傳遞無誤", "確保網路正常運作，實現網路層", "偵測物體所處環境之資訊，結合網路實現感知層", "蒐集各項資訊，建構物理模型實現實體層"], a: "偵測物體所處環境之資訊，結合網路實現感知層"},
+  	{q: "下列有關物聯網的特性敘述， 何者正確", opts: ["物件必須有高移動性", "注重跨領域的異質訊流動", "愈多人使用， 訊息價值愈低", "物件與物件之間無法互相通訊"], a: "注重跨領域的異質訊流動"},
+  	{q: "下列何者為 RFID 標籤類別", opts: ["Active, Passive, Semi- Passive", "Passive, Semi- Passive, Hyper- Active", "Active, Semi-Active, Passive", "Active, Passive, Hyper- Active"], a: "Active, Passive, Semi- Passive"},
+  	{q: "歐洲電信標準協會( ETSI)將物聯網分成三個階層， 智慧交通系統的使用者介面屬於下列哪一層？", opts: ["感知層", "應用層", "傳輸層", "網路層"], a: "應用層"},
+  	{q: "有關歐洲電信標準協會( ETSI) 之物聯網三個階層的敘述， 下列何者正確", opts: ["條碼資訊傳播架構屬於感知層", "無線射頻識別屬於應用層", "移動通訊裝置屬於傳輸層", "次世代網路屬於網路層"], a: "次世代網路屬於網路層"},
+  	{q: "有關物聯網的敘述， 下列何者正確", opts: ["IBM 提出的感知地球概念為物聯網之雛型", "美國提出的感知美國概念為物聯網之雛型", "物聯網可賦予物件擁有與其他物件或人溝通的能力", "GPRS 最適合用於物聯網的物件進行資料通訊"], a: "物聯網可賦予物件擁有與其他物件或人溝通的能力"},
+  	{q: "下列何者為網路的安全裝置？", opts: ["ATM( Asynchronous Transfer Mode)", "LBS( Location Based Service)", "IDS(Intrusion Detection System)", "IPS(Intrusion Prevention System)"], a: ["IDS(Intrusion Detection System)", "IPS(Intrusion Prevention System)"]},
+  	{q: "下列何者可保護網路裝置的組態檔案，可降低外部網路安全威脅？", opts: ["使用 SSH 傳輸協定來存取裝置組態檔", "使用防火牆限制外部對網路裝置的存取", "允許主控台進行不受限制的存取", "利用 Telnet 自動加密功能，作為存取裝置的命令列"], a: ["使用 SSH 傳輸協定來存取裝置組態檔", "使用防火牆限制外部對網路裝置的存取"]},
+  	{q: "下列何者屬於私有 IP？", opts: ["172.20. 14.36", "12.0.0.1", "168.172.20 .40", "192.168.32.24"], a: ["172.20. 14.36", "192.168.32.24"]},
+  	{q: "下列通訊協定哪些屬於 OSI 模型的應用層？", opts: ["TFTP", "Telnet", "FTP", "TCP"], a: ["TFTP", "Telnet", "FTP"]},
+  	{q: "有關 ICMP 封包敘述，下列何者正確？", opts: ["ICMP 保證資料封包能確實送達", "ICMP 封裝在 UDP 資料封包內", "ICMP 提供網路問題的資訊給主機", "ICMP 封裝在 IP 資料封包內"], a: ["ICMP 提供網路問題的資訊給主機", "ICMP 封裝在 IP 資料封包內"]},
+  	{q: "下列服務，何者使用 TCP 協定來傳送？", opts: ["SMTP", "FTP", "SNMP", "TFTP"], a: ["SMTP", "FTP"]},
+  	{q: "下列服務，何者使用 UDP 協定來傳送？", opts: ["DHCP", "TFTP", "HTTP", "FTP"], a: ["DHCP", "TFTP"]},
+  	{q: "IEEE 乙太網路的訊框標頭中包含哪些欄位？", opts: ["FCS 欄位", "來源與目的 MAC 及 IP 位址", "來源與目的 IP 位址", "來源與目的 MAC 位址"], a: ["FCS 欄位", "來源與目的 MAC 位址"]},
+  	{q: "乙太網路在發生碰撞後如何才能再傳送？", opts: ["偵測到碰撞的工作站有最高優先權重送遺失的資料", "所有工作站會執行一個隨機的 Backoff 演算法，待 Backoff 的延遲時段終了後，所有工作站均有相等的優先權來傳送資料", "在 CSMA/CD 的碰撞網域中， 工作站須待媒介沒在使用時才能傳送資料", "所有工作站會執行一致的 Backoff 演算法，然後彼此協調後才能傳送資料"], a: ["所有工作站會執行一個隨機的 Backoff 演算法，待 Backoff 的延遲時段終了後，所有工作站均有相等的優先權來傳送資料", "在 CSMA/CD 的碰撞網域中， 工作站須待媒介沒在使用時才能傳送資料"]},
+  	{q: "下列何者為路由器的功能？", opts: ["交換封包", "過濾封包", "轉送廣播封包", "選擇路徑"], a: ["交換封包", "過濾封包", "選擇路徑"]},
+  	{q: "當防火牆日誌檔顯示有人嘗試攻擊網路時，下列何者不是阻擋 DoS 攻擊的方法？", opts: ["增加更多路由器", "設定 Naggle", "使用 Auto Secure 命令", "建置 IDPS(Intrusion Detection and Prevention Systems)"], a: ["增加更多路由器", "設定 Naggle", "使用 Auto Secure 命令"]},
+  	{q: "以橋接器或交換器來分割網路，將產生下列何種結果？", opts: ["增加網域內的廣播主機數目", "減少封包碰撞的機率", "增加網域的數目", "產生較小的網域"], a: ["減少封包碰撞的機率", "增加網域的數目", "產生較小的網域"]},
+  	{q: "交換器在轉送訊框到目的地之前先予以儲存再轉送( Store and Forward)，對於網路效能有何影響？", opts: ["減少延遲", "增加延遲", "可濾掉所有的訊框錯誤", "增加交換器的運作速度"], a: ["增加延遲", "可濾掉所有的訊框錯誤"]},
+  	{q: "第二層乙太網路交換器比集線器優越的地方在於？", opts: ["根據 MAC 位址來過濾訊框", "允許同時的訊框傳輸", "減少碰撞封包的數目", "減少廣播網域的規模"], a: ["根據 MAC 位址來過濾訊框", "允許同時的訊框傳輸", "減少廣播網域的規模"]},
+  	{q: "即時通訊軟體的功能包含哪些？", opts: ["文字通訊", "檔案傳送", "語音對談", "視訊交流"], a: ["文字通訊", "檔案傳送", "語音對談", "視訊交流"]},
+  	{q: "下列何者為影片檔之副檔名？", opts: [".wma", ". wmf", ".wmv", ". rm"], a: [".wmv", ". rm"]},
+  	{q: "下列何者為圖形檔之副檔名？", opts: [".tif", ".ai", ".pdf", ". raw"], a: [".tif", ".ai", ". raw"]},
+  	{q: "(本題刪題)下列有關 IE9 之使用敘述， 何者正確？", opts: ["不想讓小孩上網看到性或暴力的網站， 可使用「工具/ 網際網路選項/ 安全性」功能來設定", "要變更瀏覽歷程紀錄的保存天數， 可在「工具/ 管理附加元件」中設定", "可在「工具/網際網路選項/內容」中查看安裝過的憑證", "利用匯出精靈將「我的最愛」匯出成為 HTML 格式之檔案"], a: ["可在「工具/網際網路選項/內容」中查看安裝過的憑證", "利用匯出精靈將「我的最愛」匯出成為 HTML 格式之檔案"]},
+  	{q: "有關網路網址敘述， 下列何者正確？", opts: ["DHCP 伺服器可讓多台電腦共用有限的 Public IP", "一台主機可以擁有多個網域名稱(Domain Name)", "理論上， IPv 6 位址可容許的位址個數是 IPv4 位址的 2^96 倍", "在 Windows 7 之命令提示字元視窗中輸入 ipconfig 可檢視電腦的 IP 位址"], a: ["DHCP 伺服器可讓多台電腦共用有限的 Public IP", "一台主機可以擁有多個網域名稱(Domain Name)", "理論上， IPv 6 位址可容許的位址個數是 IPv4 位址的 2^96 倍", "在 Windows 7 之命令提示字元視窗中輸入 ipconfig 可檢視電腦的 IP 位址"]},
+  	{q: "有關 SATA 與 IDE 的比較，下列何者正確？", opts: ["SATA 硬碟屬於序列介面，但 IDE 不是", "e- SATA 硬碟支援熱插拔但 IDE 不支援", "SATA 硬碟轉速優於 IDE 硬碟，故傳輸速率較高", "SATA 硬碟排線較 IDE 硬碟為細"], a: ["SATA 硬碟屬於序列介面，但 IDE 不是", "e- SATA 硬碟支援熱插拔但 IDE 不支援", "SATA 硬碟排線較 IDE 硬碟為細"]},
+  	{q: "下列敘述何者正確？", opts: ["資訊展 DM 上寫「CPU 2. 5GHz，2 GB DDR3」， 意指此 CPU 時脈週期為 0.5 ns", "最新的 BIOS ROM 允許資料複寫", "SSD 硬碟是採用 Flash Memory 製作", "藍芽(Bluetooth) 建構於 IEEE 802.11 無線區域網路技術標準"], a: ["最新的 BIOS ROM 允許資料複寫", "SSD 硬碟是採用 Flash Memory 製作"]},
+  	{q: "下列何種網頁程式於伺服器端執行？", opts: ["PHP", "Active Server Page", "Dynamic HTML", "Common Gateway Interface"], a: ["PHP", "Active Server Page", "Common Gateway Interface"]},
+  	{q: "下列何種網頁程式於用戶端執行？", opts: ["VBScript", "JSP", "Java Applet", "JavaScript"], a: ["VBScript", "Java Applet", "JavaScript"]},
+  	{q: "CPU 運作的機器週期（ Machine Cycle）中，包含下列哪些步驟？", opts: ["擷取（Fetch）", "編碼（Encode）", "解碼（ Decode）", "執行（Execute)"], a: ["擷取（Fetch）", "解碼（ Decode）", "執行（Execute)"]},
+  	{q: "下列哪些記憶體的存取速度比硬碟快？", opts: ["隨身碟", "快取記憶體", "光碟", "暫存器"], a: ["快取記憶體", "暫存器"]},
+  	{q: "電腦硬體結構可分為五大單元，下列哪些敘述正確？", opts: ["算術邏輯單元負責 AND、OR、NOT 運算", "記憶單元負責協調電腦各單元的運作", "滑鼠屬於輸入單元", "鍵盤屬於控制單元"], a: ["算術邏輯單元負責 AND、OR、NOT 運算", "滑鼠屬於輸入單元"]},
+  	{q: "有關光纖的敘述，下列哪些正確？", opts: ["只能傳送數位信號", "可使用的頻寬比同軸電纜高", "由銅線所組成，不受電磁干擾", "傳輸速率比雙絞線高"], a: ["可使用的頻寬比同軸電纜高", "傳輸速率比雙絞線高"]},
+  	{q: "DVD 的相關產品中， 下列哪些可以重複讀寫？", opts: ["DVD-RAM", "DVD- RW", "DVD+RW", "DVD-ROM"], a: ["DVD-RAM", "DVD- RW", "DVD+RW"]},
+  	{q: "有關 RAM 的敘述， 下列哪些正確？", opts: ["又稱為非揮發性記憶體", "速度比 ROM 慢", "可分為 SRAM 與 DRAM 兩種", "電源關閉後資料會消失"], a: ["可分為 SRAM 與 DRAM 兩種", "電源關閉後資料會消失"]},
+	{q: "有關通訊媒體的敘述，下列哪些正確？", opts: ["Wi- Fi 是以 802.11 x 協定進行無線傳輸", "紅外線是以直線傳輸的方式傳送資料", "微波（Microwave） 在傳送資料時，可以隨著地表曲線而彎曲進行", "微波（Microwave） 是以藍芽技術（ Bluetooth）進行無線傳輸"], a: ["Wi- Fi 是以 802.11 x 協定進行無線傳輸", "紅外線是以直線傳輸的方式傳送資料"]},
+  	{q: "有關網路傳輸設備的敘述，下列哪些正確？", opts: ["集線器（ Hub） 可連接多個網路節點", "中繼器（Repeater） 主要用於連接兩個區域網路", "路由器（Router）可連接多個網路", "防火牆（ Firewall）主要是用於增強傳輸訊號， 延伸訊號的傳輸距離"], a: ["集線器（ Hub） 可連接多個網路節點", "路由器（Router）可連接多個網路"]},
+  	{q: "有關暫存器（ Register）的敘述， 下列哪些正確？", opts: ["暫存器是 CPU 暫存資料的地方", "CPU 對暫存器的存取速度比主記憶體慢", "暫存器的容量是無限的", "CPU 內有多種暫存器，各有其不同的功能"], a: ["暫存器是 CPU 暫存資料的地方", "CPU 內有多種暫存器，各有其不同的功能"]},
+  	{q: "下列哪些是電腦使用的匯流排？", opts: ["運算匯流排", "資料匯流排", "位址匯流排", "控制匯流排"], a: ["資料匯流排", "位址匯流排", "控制匯流排"]},
+  	{q: "下列哪些是屬於電腦的輸出設備？", opts: ["掃描器", "螢幕", "印表機", "光筆"], a: ["螢幕", "印表機"]},
+  	{q: "下列哪些十進位轉二進位的結果為正確？", opts: ["(48.625 )10 =(110000.101 )2", "(6. 75 )10=(110.11) 2", "( 7.5 )10 =( 1110.010)2", "(5.75 )10=(101. 011 )2"], a: ["(48.625 )10 =(110000.101 )2", "(6. 75 )10=(110.11) 2"]},
+  	{q: "下列哪些屬於無線傳輸？", opts: ["紅外線", "光纖", "微波", "雙絞線"], a: ["紅外線", "微波"]},
+  	{q: "中央處理單元(CPU) 中包含下列哪些項目？", opts: ["暫存器", "控制單元", "算術邏輯單元", "快取記憶體"], a: ["暫存器", "控制單元", "算術邏輯單元", "快取記憶體"]},
+  	{q: "有關硬碟的儲存容量大小，下列哪些相同？", opts: ["0.5 TB", "512PB", "512GB", "512×1024 ×1024KB"], a: ["0.5 TB", "512GB", "512×1024 ×1024KB"]},
+  	{q: "有關 Modem 的功能敘述，下列哪些正確？", opts: ["它是調變解調器", "可將數位信號轉為類比信號", "可將類比信號轉為數位信號", "可透過網路平行式傳送資料到遠端的電腦"], a: ["它是調變解調器", "可將數位信號轉為類比信號", "可將類比信號轉為數位信號"]},
+  	{q: "硬碟的存取時間(Access Time) 包含下列哪些？", opts: ["讀取時間（ Read Time）", "旋轉時間（ Rotation Time）", "資料傳輸時間（ Data Transfer Time）", "搜尋時間（ Seek Time)"], a: ["旋轉時間（ Rotation Time）", "資料傳輸時間（ Data Transfer Time）", "搜尋時間（ Seek Time)"]},
+  	{q: "有關硬碟的敘述，下列哪些正確？", opts: ["磁軌是硬碟儲存資料的最小單位", "每個磁碟只有一個磁面", "硬碟是透過讀寫頭來讀取磁碟上的資料", "SATA 介面硬碟較 IDE 介面硬碟的傳輸速度快"], a: ["硬碟是透過讀寫頭來讀取磁碟上的資料", "SATA 介面硬碟較 IDE 介面硬碟的傳輸速度快"]},
+  	{q: "電腦主機板沒有安插任何介面卡就能瀏覽網頁及播放音樂，是因為主機板已內建下列哪些介面卡？", opts: ["網路卡", "音效卡", "電視卡", "顯示卡"], a: ["網路卡", "音效卡", "顯示卡"]},
+  	{q: "個人電腦中的 USB 連接埠，可以連接下列哪些週邊設備？", opts: ["隨身碟", "鍵盤", "滑鼠", "數位相機"], a: ["隨身碟", "鍵盤", "滑鼠", "數位相機"]},
+  	{q: "有關硬碟的儲存容量大小，下列哪些相同？", opts: ["122880 TB", "120×1024×1024 GB", "120×2^50 Bytes", "0.1 EB"], a: ["122880 TB", "120×1024×1024 GB", "120×2^50 Bytes"]},
+  	{q: "某台電腦的資料匯流排有 24 條排線，位址匯流排有 30 條排線，請問此台電腦之 CPU 的定址記憶體空間為何？", opts: ["2^24 bits", "2^30 Bytes", "256 MB", "1GB"], a: ["2^30 Bytes", "1GB"]},
+  	{q: "下列文數字的 ASCII Code 大小之比較，哪些正確？", opts: ["a＞ 1＞A", "c＞b＞a", "3 ＞2＞ 1", "1＞g＞p"], a: ["c＞b＞a", "3 ＞2＞ 1"]},
+  	{q: "有關頻寬單位的說明，下列哪些正確？", opts: ["bps 為每秒傳輸 1 個位元", "Kbps 為每秒傳輸 1024 個位元", "Mbps 為每秒傳輸 100 個位元", "Gbps為每秒傳輸 220 個位元"], a: ["bps 為每秒傳輸 1 個位元", "Kbps 為每秒傳輸 1024 個位元"]},
+  	{q: "下列哪些是個人電腦使用的輔助記憶體？", opts: ["快取記憶體", "硬碟機", "軟碟機", "光碟機"], a: ["硬碟機", "軟碟機", "光碟機"]},
+  	{q: "下列哪些元件直接內建於主機板上？", opts: ["光碟機", "晶片組", "BIOS ROM", "擴充槽"], a: ["晶片組", "BIOS ROM", "擴充槽"]},
+  	{q: "銷售員介紹筆記型電腦的 4 項規格中，下列哪些規格是描述其 CPU？", opts: ["8GB DDRⅢ", "雙核心", "8MB 快取記憶體", "處理器為 Intel 的 Core i5"], a: ["雙核心", "8MB 快取記憶體", "處理器為 Intel 的 Core i5"]},
+  	{q: "有關個人電腦 BIOS 的敘述， 下列哪些正確？", opts: ["BIOS 的全名為 Basic Input Output System", "BIOS 是一種韌體( Firmware)", "BIOS 是使用 RAM 製造，具有揮發性", "當電腦開機時， BIOS 會檢查電腦的相關設備是否正確"], a: ["BIOS 的全名為 Basic Input Output System", "BIOS 是一種韌體( Firmware)", "當電腦開機時， BIOS 會檢查電腦的相關設備是否正確"]},
+  	{q: "有關記憶體的敘述， 下列哪些正確？", opts: ["SRAM 可被讀取資料，也能寫入資料", "DRAM 的速度比硬式磁碟慢", "當電腦關機後， DRAM 中的資料不會消失", "SRAM 的速度比硬式磁碟快"], a: ["SRAM 可被讀取資料，也能寫入資料", "SRAM 的速度比硬式磁碟快"]},
+  	{q: "下列哪些是電腦的輸入設備？", opts: ["數位相機", "光筆", "繪圖機", "掃描器"], a: ["數位相機", "光筆", "掃描器"]},
+  	{q: "下列哪些是屬於單向傳輸的匯流排類型？", opts: ["記憶匯流排（ Memory Bus）", "位址匯流排（ Address Bus）", "控制匯流排（ Control Bus）", "資料匯流排（ Data Bus）"], a: ["位址匯流排（ Address Bus）", "控制匯流排（ Control Bus）"]},
+  	{q: "有關同軸電纜及光纖傳輸媒介之比較，下列哪些正確？", opts: ["光纖是以光脈衝信號的形式傳輸訊號", "光纖的傳輸距離最短", "光纖抗雜訊力較同軸電纜為佳", "光纖的頻寬最寬"], a: ["光纖是以光脈衝信號的形式傳輸訊號", "光纖抗雜訊力較同軸電纜為佳", "光纖的頻寬最寬"]},
+  	{q: "我國行政院生產力 4. 0 發展方案涵蓋了哪些生產力 4.0", opts: ["製造業生產力 4.0", "農業生產力 4.0", "商業服務業生產力 4.0", "教育事業生產力 4.0"], a: ["製造業生產力 4.0", "農業生產力 4.0", "商業服務業生產力 4.0"]},
+	{q: "電腦病毒入侵後在未達觸發條件前， 病毒潛伏在程式內會有部分徵兆，下列何種情況比較有可能是電腦病毒活動的徵兆？", opts: ["儲存檔案時磁碟機產生大量噪音", "螢幕經常上下跳動", "程式執行時間逐漸變長", "磁碟片產生刮痕"], a: "程式執行時間逐漸變長"},
+	{q: "資料錯誤檢核方式中，下列哪一項不常用？", opts: ["存取權限檢查(Access right verification)", "檢查號碼檢查(Check digit)", "型態檢查( Type check)", "範圍檢查(Range check)"], a: "存取權限檢查(Access right verification)"},
+	{q: "有一程式設計師在某一系統中插了一段程式，只要他的姓名從公司的人事檔案中被刪除則該程式會將公司整個檔案破壞掉，這種電腦犯罪行為屬於", opts: ["資料掉包( Data diddling)", "制壓(Superzapping)", "邏輯炸彈(Logic bombs)", "特洛依木馬( Trojan horse)"], a: "邏輯炸彈(Logic bombs)"},
+	{q: "擅自變更程式以便從大批所選擇的交易中逐個剝削每個帳戶的微小金額，然後再將其全部儲存到另一個帳戶中，這種電腦犯罪行為屬於", opts: ["資料掉包(Data diddling)", "制壓(Superzapping)", "邏輯炸彈(Logic bombs)", "義大利臘腸式詭計( Salami Methods)"], a: "義大利臘腸式詭計( Salami Methods)"},
+	{q: "下列何者不是電腦病毒的特性？", opts: ["具有自我複製的能力", "具特殊之破壞技術", "關機再重新開機後會自動消失", "會常駐在主記憶體中"], a: "關機再重新開機後會自動消失"},
+	{q: "重要資料欄的更新作業，為保留其過程的相關資料，以供核驗防範不法行為，可以利用下列什麼檔案？", opts: ["密碼檔", "異動檔", "備份檔", "日誌檔"], a: "日誌檔"},
+	{q: "下列敘述中何者不合乎資訊安全之概念？", opts: ["設定檔案存取權限，如只允許讀取， 不准寫入", "設定檔案密碼保護， 只有擁有密碼之人才得以使用", "隨時將檔案備份， 以備檔案資料被破壞時可回存使用", "設定檔案資料公開，任何人皆可以使用"], a: "設定檔案資料公開，任何人皆可以使用"},
+	{q: "在國民身分證號碼的設計中， 最後一碼為檢查碼， 請問這種設計在應用系統控制方面屬於哪一種控制？", opts: ["處理控制", "資料檔案控制", "輸入控制", "輸出控制"], a: "處理控制"},
+	{q: "電腦化作業之後，通常會將檔案複製三份，而且分散存放在不同建築物內，這種做法在應用系統控制方面屬於哪一種控制？", opts: ["處理控制", "資料檔案控制", "輸入控制", "輸出控制"], a: "資料檔案控制"},
+	{q: "一般而言要達到完善之終端機安全管制措施，則必須完整做到", opts: ["在終端機上加鎖，限制使用人員", "經常派安全人員追蹤考核", "事前訂定防弊措施", "事前訂定完善防弊措施，事後做追蹤考核， 並將終端機配合主機系統一起管制"], a: "事前訂定完善防弊措施，事後做追蹤考核， 並將終端機配合主機系統一起管制"},
+	{q: "有關「資訊安全中電子簽名保密技術」之描述下列何者正確？", opts: ["電子簽名之技術不需解碼", "若以設計問題的方法而論，電子簽名較公開鑰匙密碼法簡便", "電子簽名乃是採用光筆、滑鼠等工具簽名，以供辨識", "電子簽名乃是利用數字來代替票據必須由個人親自簽名的方法"], a: "電子簽名乃是利用數字來代替票據必須由個人親自簽名的方法"},
+	{q: "下列有關「資訊安全中存取管制( Access Control) 方法」之描述何者正確？", opts: ["為求系統安全顧慮不可銜接電腦網路", "為求存取方便不需提供存取控制碼之設定", "在系統存取時不必考慮安全問題", "系統應該提供網路存取控制碼之設定功能"], a: "系統應該提供網路存取控制碼之設定功能"},
+	{q: "下列有關「資訊安全中系統設備備援」之描述何者正確？", opts: ["重要系統設備(含軟、硬體) 必須有備援措施", "備援方法必須以 1: 1 對應的方式才可", "遠端備援方式由於需佔空間且人力支援不易，故不必考慮", "備援需花費更多費用，因此不必考慮備援"], a: "重要系統設備(含軟、硬體) 必須有備援措施"},
+	{q: "對於電腦及應用系統之備援措施，下列敘述何者為正確？", opts: ["只需做軟體備援即可", "只需做硬體備援即可", "重要電子資料必須存放防火櫃並分置不同地點", "顧及製作權及版權，為求備援則購置雙套軟體即可"], a: "重要電子資料必須存放防火櫃並分置不同地點"},
+	{q: "下列關於「防火牆」的敘述， 何者有誤？", opts: ["可以用軟體或硬體來實作防火牆", "可以管制企業內外電腦相互之間的資料傳輸", "可以隔絕來自外部網路的攻擊性網路封包", "無法封鎖來自內部網路的對外攻擊行為"], a: "無法封鎖來自內部網路的對外攻擊行為"},
+	{q: "為了避免資料庫破壞後無法回復，除了定期備份外，最重要還要做到下列哪項工作？", opts: ["管制使用", "人工記錄", "隨時記錄變動日誌檔", "修改程式"], a: "隨時記錄變動日誌檔"},
+	{q: "在做遠端資料傳輸時，為避免資料被竊取，我們可以採用何種保護措施？", opts: ["將資料壓縮", "將資料解壓縮", "將資料加密", "將資料解密"], a: "將資料加密"},
+	{q: "下列有關「網路防火牆」之敘述，何者不正確？", opts: ["外部防火牆無法防止內賊對內部的侵害", "防火牆能管制封包的流向", "防火牆可以阻隔外部網路進入內部系統", "防火牆可以防止任何病毒的入侵"], a: "防火牆可以防止任何病毒的入侵"},
+	{q: "完善的資訊安全系統，以足夠之關卡，防止使用者透過程式去存取不是他可以存取之資料， 這種觀念為", opts: ["監視性", "資料存取控制", "獨立性", "識別"], a: "資料存取控制"},
+	{q: "下列何者是錯誤的「系統安全措施」？", opts: ["系統操作者統一保管密碼", "資料加密", "密碼變更", "公布之電子文件設定成唯讀檔"], a: "系統操作者統一保管密碼"},
+	{q: "若在使用個人電腦時，發現螢幕上有異常之反白、閃爍或電腦執行速度減慢等可能中毒之現象，此時使用者應做何種處置比較適宜？", opts: ["立即結束程式之執行， 關掉電源，再以原版軟體開機", "將可能中毒之檔案刪除", "立即放入原版軟體並以 Ctrl+Alt+Del 重新開機", "立即結束原程式之執行，並用解毒軟體解毒"], a: "立即結束程式之執行， 關掉電源，再以原版軟體開機"},
+	{q: "Application Gateway 是用來限制對超過防火牆界限之服務，下列何者不是在 Internet 上普遍實作的 Application Gateway？", opts: ["Mail gateway", "Proxy", "Hub", "Server filter"], a: "Hub"},
+	{q: "有關 RFC 1108 所說明之 IPSO(IP Security Options) 之敘述下列何者不正確？", opts: ["IPSO 是在網路通訊協定中之實體層運作", "IPSO 是美國國防部 DOD 所使用的一種安全性規格", "運用 IPdatagram 標頭的變動長度 Options 欄位標記出 datagram 所裝載資料之機密性", "IPSO 之主要觀念為 datagram 安全性標記"], a: "IPSO 是在網路通訊協定中之實體層運作"},
+	{q: "關於「防火牆」之敘述，下列敘述何者不正確？", opts: ["防火牆乃是過濾器(Filter)與 Gateway 的集合", "防火牆用來將可信賴的網路保護在一個區域性管理的安全範圍內", "防火牆大量運用於區域網路中，無法運用於廣域網路", "防火牆可用來將外界無法信賴之網路隔開"], a: "防火牆大量運用於區域網路中，無法運用於廣域網路"},
+	{q: "關於「非對稱式密碼系統」之敘述， 下列何者不正確？", opts: ["1976 年以後所發展出來之公開金匙密碼系統即是屬於非對稱式密碼系統", "非對稱式密碼系統之加密金匙及解密金匙都是可以公開的", "屬於雙密匙系統", "主要特性是系統的安全分析簡單明暸, 但加解密運算過程費時"], a: "非對稱式密碼系統之加密金匙及解密金匙都是可以公開的"},
+	{q: "在分散式開放系統下的安全管理系統中， 下列何者不是該系統至少須具備之功能？", opts: ["驗證(Authentication)", "授權(Authorization)", "稽查(Auditing)", "回答(Answering)"], a: "回答(Answering)"},
+	{q: "下列何者不是資訊安全的防護措施？", opts: ["備份軟體", "採用合法軟體", "小問題組合成大問題", "可確認檔案的傳輸"], a: "小問題組合成大問題"},
+	{q: "電腦犯罪中，一點一滴偷取金錢的方法稱為？", opts: ["義大利臘腸技術", "特洛依木馬", "藍領犯罪", "資料騙取"], a: "義大利臘腸技術"},
+	{q: "一部專門用來過濾內外部網路間通訊的電腦稱為？", opts: ["熱站", "疫苗", "冷站", "防火牆"], a: "防火牆"},
+	{q: "為了避免硬體的破壞，每一電腦組織應有？", opts: ["生物技術", "編碼標準", "問題發現計劃", "活動標誌組"], a: "問題發現計劃"},
+	{q: "所有電腦化系統中最弱的環節為？", opts: ["人", "密碼", "硬體", "軟體"], a: "人"},
+	{q: "下列哪一項無法指向「無現金社會」？", opts: ["自動提款機", "信用卡", "編碼晶片", "電子資金轉帳"], a: "自動提款機"},
+	{q: "下列哪一項不是管制進入電腦系統的措施？", opts: ["名牌", "密碼", "不斷電系統", "門鎖"], a: "不斷電系統"},
+	{q: "「Taiwan-NO.1」是屬於哪一型病毒？", opts: ["檔案型", "開機型", "混合型", "巨集型"], a: "巨集型"},
+	{q: "下列有關「防火牆」之敘述， 何者不正確？", opts: ["防火牆無法防止內賊對內的侵害， 根據經驗， 許多入侵或犯罪行為都是自己人或熟知內部網路佈局的人做的", "防火牆基本上只管制封包的流向，它無法偵測出外界假造的封包， 任何人皆可製造假來源位址的封包", "防火牆無法確保連線的可信度，一但連線涉及外界公眾網路， 極有可能被竊聽或劫奪， 除非連線另行加密保護", "防火牆可以防止病毒的入侵"], a: "防火牆可以防止病毒的入侵"},
+	{q: "下列何者是一個用來存放與管理通訊錄及我們在網路上付費的信用卡資料，以確保交易時各項資料的儲存或傳送時的隱密性與安全性？", opts: ["電子錢包", "商店伺服器", "付款轉接站", "認證中心"], a: "電子錢包"},
+	{q: "一個成功的安全環境之首要部分是建立什麼？", opts: ["安全政策白皮書", "認證中心", "安全超文字傳輸協定", "BBS"], a: "安全政策白皮書"},
+	{q: "下列何者不是存取無線網路 AP( Access Point) 的安全機制方法？", opts: ["SSID(Service Set Identifier)", "MAC( Media Access Control)Address Control", "WPA(Wi-Fi Protected Access) 加密", "WEP(Wired Equivalent Privacy)加密"], a: "SSID(Service Set Identifier)"},
+	{q: "目前資訊安全規範的目的，主要是為了保護組織或個人的重要資訊資產，當評鑑所擁有的資訊資產價值時，下列何者不是必要的評估準則？", opts: ["機密性(Confidentiality)", "完整性(Integrity)", "可用性(Availability)", "弱點性(Vulnerability)"], a: "弱點性(Vulnerability)"},
+	{q: "下列有關於「字典攻擊法」的描述， 何者正確？", opts: ["使用字典上有的字來測試密碼", "使用亂數測試密碼", "將常見的密碼當作字典資料庫來測試密碼", "使用各國語言測試密碼"], a: "將常見的密碼當作字典資料庫來測試密碼"},
+	{q: "下列有關於「在拍賣網站購物時防止詐欺的方法」，何者錯誤？", opts: ["應先仔細閱讀拍賣商品說明，並確認商品保存狀況", "與賣家私下交易，以獲取較便宜的價格", "可選擇較安全的付費方式", "應先了解買家與賣家相互應有的責任與義務"], a: "與賣家私下交易，以獲取較便宜的價格"},
+	{q: "下列有關於「預防手機詐騙」的描述，何者為最適宜的作法？", opts: ["注意是否有來電顯示", "將手機關機", "接到可疑電話，不隨便依照對方指示去做", "回撥電話給對方以求證是否為手機詐騙"], a: "接到可疑電話，不隨便依照對方指示去做"},
+	{q: "我的電腦已經安裝了防火牆， 所以不需要再安裝防毒軟體？", opts: ["是，不需要重複的功能", "不是，防火牆跟防毒軟體的主要功能不一樣", "不是，防毒軟體能阻擋垃圾郵件", "是，防毒軟體價格比較貴"], a: "不是，防火牆跟防毒軟體的主要功能不一樣"},
+	{q: "「登入密碼」通常是用來滿足下列哪一項安全性之需求？", opts: ["身分識別 (Authentication)", "機密性(Confidentiality)", "不可否認性(Non-repudiation)", "完整性( Integrity)"], a: "身分識別 (Authentication)"},
+	{q: "企業的可接受風險等級如何決定最恰當？", opts: ["由評鑑的同仁決定", "由臨時開會決定", "由資安公司的資安顧問建議決定", "事先定義好準則，由管理階層裁定"], a: "事先定義好準則，由管理階層裁定"},
+	{q: "「系統在檢查使用者的密碼設定時， 會作某些特性的限制或規定」，下列對於這些特性的敘述何者錯誤？", opts: ["密碼有效性", "禁止更新密碼時延用舊密碼", "禁止不同使用者的密碼相同", "密碼必須有一定困難度"], a: "禁止不同使用者的密碼相同"},
+	{q: "下列有關於「弱點」的描述， 何者錯誤？", opts: ["弱點是一種使用者操作上的錯誤或瑕疵", "弱點存在與暴露可能導致有心人士利用作為入侵途徑", "弱點可能導致程式運作出現非預期結果而造成程式效能上的損失或進一步的權益損害", "管理員若未能即時取得弱點資訊與修正檔將導致被入侵的可能性增加"], a: "弱點是一種使用者操作上的錯誤或瑕疵"},
+	{q: "「資訊安全」的三個面向不包含下列何者？", opts: ["機密性(Confidentiality)", "可用性(Availability)", "不可否認性(Non- repudiation)", "完整性 (Integrity)"], a: "不可否認性(Non- repudiation)"},
+	{q: "請問下列哪一個網址有使用 SSL 加密？", opts: ["http://www.security.com/", "https://www.safe.com. tw/", "httpl://www.bank.com/", "httpd://www. tbank.com.tw/"], a: "https://www.safe.com. tw/"},
+	{q: "下列有關在執行「資料備份」的時候要特別注意的描述， 何者是正確而適宜的？", opts: ["電腦有沒有安裝燒錄機", "備份資料時， 一定要連防毒軟體一起備份", "網路頻寬速度是不是夠快", "備份資料有沒有中毒"], a: "備份資料有沒有中毒"},
+	{q: "「社交工程」造成資訊安全極大威脅的原因在於下列何者？", opts: ["破壞資訊服務可用性，使企業服務中斷", "隱匿性高，不易追查惡意者", "惡意人士不需要具備頂尖的電腦專業技術即可輕易地避過了企業的軟硬體安全防護", "利用通訊埠掃描( Port Scan) 方式， 無從防範"], a: "惡意人士不需要具備頂尖的電腦專業技術即可輕易地避過了企業的軟硬體安全防護"},
+	{q: "為保障電腦資料安全，備份動作是必要的執行措施；下列關於「資料備份」的敘述，何者正確？", opts: ["程式檔案一定要備份， 資料檔案涉及個資不宜備份", "除非正在使用的檔案損毀， 否則備份資料檔案絕對不能拿出來使用", "使用中的檔案與備份資料應該放在一起，便於時常進行備份更新，才能發揮備份效果", "備份資料檔案也是重要資產，在備份時進行加密是提高資料安全的作法"], a: "備份資料檔案也是重要資產，在備份時進行加密是提高資料安全的作法"},
+	{q: "下列關於「資訊環保」的敘述，何者有誤?", opts: ["綠色電腦是指從產品的設計、製造、使用到丟棄的過程都符合環保要求", "能源之星計畫最初是以電腦產品為主， 後來擴展至辦公設備與建築", "綠色軟體的特性是不需安裝或修改系統設定檔便可使用", "危害性物質限制指令(RoHS)， 是由美國所制定的一項環保指令，規範工作電壓小於 1000VAC 或 1500 VDC 的電子產品之材料， 不得使用鉛、汞、鎘等項化學物質"], a: "危害性物質限制指令(RoHS)， 是由美國所制定的一項環保指令，規範工作電壓小於 1000VAC 或 1500 VDC 的電子產品之材料， 不得使用鉛、汞、鎘等項化學物質"},
+	{q: "下列有關「間諜軟體」的特性描述， 何者錯誤？", opts: ["可能會監控你的電腦", "時常偽裝成合法的郵件附加檔四處散布", "可能會竊取電腦裡的資料", "必須經過你的同意才能安裝"], a: "必須經過你的同意才能安裝"},
+	{q: "在啟用 SSL 安全機制的安全認證網站上進行交易， 下列描述何者是可確保交易安全的？", opts: ["在交易過程中所傳輸的資料都是被加密的", "該網站不會將個人資料外流", "該網站的商品價格一定比市價便宜", "該網站不會被駭客入侵"], a: "在交易過程中所傳輸的資料都是被加密的"},
+	{q: "下列敘述何者錯誤？", opts: ["跨站指令碼不但影響伺服主機，甚至會導致瀏覽者受害", "SQL injection 是一種攻擊網站資料庫的手法", "跨目錄存取是因為程式撰寫不良", "存放網頁應用程式的系統安裝最新系統修補程式後，便不會存有弱點"], a: "存放網頁應用程式的系統安裝最新系統修補程式後，便不會存有弱點"},
+	{q: "下列何者不是「資訊安全」所要確保的資訊特性？", opts: ["機密性(Confidentiality)", "完整性(Integrity)", "可用性(Availability)", "可延伸性 (Scalability)"], a: "可延伸性 (Scalability)"},
+	{q: "資訊安全中的「社交工程( Social Engineering)」主要是透過什麼樣弱點，來達成對資訊安全的攻擊方式？", opts: ["技術缺憾", "人性弱點", "設備故障", "後門程式的掩護"], a: "人性弱點"},
+	{q: "下列關於駭客透過電子郵件來達成「社交工程( Social Engineering)」手法的入侵，何者不正確？", opts: ["電子郵件中的連結，可能會導引你到詐騙集團的網頁中", "駭客會使用情色或八卦主題，吸引你閱讀或下載電子郵件內容，達成對資訊安全的危害", "接到銀行寄來的緊急通知電子郵件，最好不要直接點選上面的超連結，而是自行連結到該銀行網站進行查詢", "只要不下載電子郵件的附檔， 駭客就無法入侵你的電腦"], a: "只要不下載電子郵件的附檔， 駭客就無法入侵你的電腦"},
+	{q: "下列關於「零時差攻擊( Zero-day Attack)」的敘述，何者不正確？", opts: ["主要針對原廠來不及提出修補程式弱點程式的時間差，進行資安攻擊方式", "因為是程式的漏洞，無法透過掃毒或防駭等軟體機制來確保攻擊不會發生", "因為是軟體程式出現漏洞，所以使用者無法做什麼事情來防止攻擊", "使用者看到軟體官方網站或資安防治單位發布警訊， 應該儘快更新版本"], a: "因為是軟體程式出現漏洞，所以使用者無法做什麼事情來防止攻擊"},
+	{q: "下列何者不是「智慧財產權」的適用範圍？", opts: ["作文", "靈感點子", "音樂作曲", "繪畫"], a: "靈感點子"},
+	{q: "繪畫大師在 95 年 7 月 30 日創作完成一幅畫，但不幸在 99 年 4 月 4 日死亡，請問這幅畫的著作財產權存續至哪一天？", opts: ["145 年 7 月 30 日", "145 年 12 月 31 日", "149 年 4 月 4 日", "149 年 12 月 31 日"], a: "149 年 12 月 31 日"},
+	{q: "小明代表學校參加全國青年學生網站設計大賽時， 整個網站是由老師提出建議點子，由小明設計建置完成， 這個網站設計的著作權是屬於誰的？", opts: ["老師", "小明", "學校", "老師與小明共享"], a: "小明"},
+	{q: "下列關於「P2P(Peer to Peer)」的敘述，何者不正確？", opts: ["Skype 是 P2 P的軟體工具之一", "P2 P 檔案分享軟體是非法的軟體", "P2 P 採取用戶與用戶的通訊模式， 可以多點連線快速下載", "P2 P 檔案分享軟體可能因為本身的漏洞，成為駭客攻擊入侵的工具"], a: "P2 P 檔案分享軟體是非法的軟體"},
+	{q: "下列關於「保護個人資料」的行為， 何者不正確？", opts: ["透過手機或電話，未確認來電者身分， 即給予個人身分證字號", "確認網路上的消費網站是可以信任的，才可以留下個人資料", "個人證件影本應註明僅限定特定用途使用", "不委託他人代辦貸款或信用卡"], a: "透過手機或電話，未確認來電者身分， 即給予個人身分證字號"},
+	{q: "對於在路邊接受市場行銷單位訪談所留下的個人資料，下列受訪者的哪個行為是不正確的？", opts: ["可以限制該公司使用資料的範圍", "不能要求該公司影印或提供複製本", "可以要求刪除在該公司資料庫中的資料", "可以要求瀏覽或更正存在該公司資料庫中的個人資料"], a: "不能要求該公司影印或提供複製本"},
+	{q: "資訊安全的目的在於維護資訊的哪些特性？", opts: ["保密性(Confidentiality)", "完整性( Intigrity)", "可用性(Availability)", "可讀性(Readability)"], a: ["保密性(Confidentiality)", "完整性( Intigrity)", "可用性(Availability)"]},
+	{q: "資訊安全威脅的種類繁多，但其攻擊目的可以歸類成哪幾種？", opts: ["以侵入為目的", "以竄改或否認為目的", "以阻斷服務為目的", "以獲得歸屬感為目的"], a: ["以侵入為目的", "以竄改或否認為目的", "以阻斷服務為目的"]},
+	{q: "下列何者為資料隱碼攻擊( SQL Injection) 的防禦方法？", opts: ["對字串過濾並限制長度", "加強資料庫權限管理，不以系統管理員帳號連結資料庫", "對使用者隱藏資料庫管理系統回傳的錯誤訊息，以免攻擊者獲得有用資訊", "不要在程式碼中標示註解"], a: ["對字串過濾並限制長度", "加強資料庫權限管理，不以系統管理員帳號連結資料庫", "對使用者隱藏資料庫管理系統回傳的錯誤訊息，以免攻擊者獲得有用資訊"]},
+	{q: "下列何者為通關密碼的破解方法？", opts: ["窮舉攻擊(Brute-Force Attack)", "字典攻擊(Dictionary Attack)", "彩虹表攻擊( Rainbow Table Attack)", "RGB攻擊(RGB Attack)"], a: ["窮舉攻擊(Brute-Force Attack)", "字典攻擊(Dictionary Attack)", "彩虹表攻擊( Rainbow Table Attack)"]},
+	{q: "依據下圖所示之防火牆過濾規則，下列何者為正確？", opts: ["拒絕所有規則之外的封包", "允許外部與防火牆連結", "允許存取 HTTP Server", "拒絕存取 SQL Server"], a: ["拒絕所有規則之外的封包", "允許存取 HTTP Server", "拒絕存取 SQL Server"]},
+	{q: "下列何者為入侵偵測與防禦系統( IDPS)提供之安全能力？", opts: ["識別可能的安全威脅", "記錄安全威脅相關資訊", "防禦安全威脅", "將安全威脅通報予安全管理人員"], a: ["識別可能的安全威脅", "記錄安全威脅相關資訊", "防禦安全威脅", "將安全威脅通報予安全管理人員"]},
+	{q: "下列何種磁碟陣列(RAID)有冗餘(Redundancy) 功能？", opts: ["RAID 一定會有冗餘", "RAID 0", "RAID 1", "RAID 10"], a: ["RAID 1", "RAID 10"]},
+	{q: "下列哪些身分認證方法以「所具之形( Something You Are)」為基礎？", opts: ["智慧卡", "指紋比對", "視網膜比對", "通關密碼"], a: ["指紋比對", "視網膜比對"]},
+	{q: "組織內部的區域網路切割為數段虛擬區域網路(VLAN)， 可得到哪些好處？", opts: ["提高網路效能", "免用防火牆", "強化資訊安全管理", "免用防毒軟體"], a: ["提高網路效能", "強化資訊安全管理"]},
+	{q: "智慧財產權包括哪些項目？", opts: ["商標專用權", "專利權", "著作權", "隱私權"], a: ["商標專用權", "專利權", "著作權"]},
+	{q: "下列何者為常見的中間人攻擊( Man-in- the- Middle Attack) 型式？", opts: ["重放攻擊(Replay Attack)", "欺騙攻擊( Spoofing Attack)", "後門攻擊( Backdoor Attack)", "字典攻擊( Dictionary Attack)"], a: ["重放攻擊(Replay Attack)", "欺騙攻擊( Spoofing Attack)"]},
+	{q: "下列何者為後門攻擊( Backdoor Attack) 所需之後門的可能產生途徑？", opts: ["軟體開發者忘記移除的維護後門( Maintenance Hook)", "攻擊者植入的後門", "管理人員安裝的遠端控制軟體", "軟體開發者打開的客廳後門"], a: ["軟體開發者忘記移除的維護後門( Maintenance Hook)", "攻擊者植入的後門", "管理人員安裝的遠端控制軟體"]},
+	{q: "下列哪些作為可以降低通關密碼猜測攻擊( Password Cracking) 的成功率？", opts: ["設定較長之通關密碼", "選擇冷門的通關密碼", "通關密碼夾雜字母與數字", "經常更換通關密碼"], a: ["設定較長之通關密碼", "選擇冷門的通關密碼", "通關密碼夾雜字母與數字", "經常更換通關密碼"]},
+	{q: "下列何者是入侵偵測與防禦系統( IDPS)的安全事件偵測方法？", opts: ["比對惡意攻擊的特徵", "分析異常的網路活動", "偵測異常的通訊協定狀態", "確認使用者的權限"], a: ["比對惡意攻擊的特徵", "分析異常的網路活動", "偵測異常的通訊協定狀態"]},
+	{q: "下列何者為網路安全漏洞的可能來源？", opts: ["軟體的瑕疵", "使用者的不良使用習慣", "多種軟/ 硬體結合而產生的問題", "圍牆與機房之間的距離很大"], a: ["軟體的瑕疵", "使用者的不良使用習慣", "多種軟/ 硬體結合而產生的問題"]},
+	{q: "下列何種作法可以強化網頁伺服器的安全？", opts: ["伺服器只安裝必要的功能模組", "封鎖不良使用者的 IP", "使用防火牆使其只能於組織內部存取", "組織的所有電腦均使用 AMD CPU"], a: ["伺服器只安裝必要的功能模組", "封鎖不良使用者的 IP", "使用防火牆使其只能於組織內部存取"]},
+	{q: "下列關於實體安全防禦措施的說明， 何者正確？", opts: ["在事前，實體安全防禦措施要達到嚇阻效果，讓攻擊者知難而退", "在事件發生中， 實體安全防禦措施應能儘量拖延入侵者的行動", "在偵測到入侵事件後， 實體安全防禦措施須能儘量記錄犯罪證據，以為事後追查與起訴的憑據", "在事件發生中， 實體安全防禦措施要達到嚇阻效果，讓攻擊者知難而退"], a: ["在事前，實體安全防禦措施要達到嚇阻效果，讓攻擊者知難而退", "在事件發生中， 實體安全防禦措施應能儘量拖延入侵者的行動", "在偵測到入侵事件後， 實體安全防禦措施須能儘量記錄犯罪證據，以為事後追查與起訴的憑據"]},
+	{q: "下列何者是資訊安全風險的可能處置方法？", opts: ["規避風險", "降低風險", "轉移風險", "接受風險"], a: ["規避風險", "降低風險", "轉移風險", "接受風險"]},
+	{q: "關於 ISO 27001 ( 資訊安全管理系統)之四階段文件的說明， 下列何者為正確？", opts: ["第一階是資訊安全政策( Information Security Policy)", "第二階是程式文件( Process Documentation)", "第三階是紀錄表單(Record Sheet)", "第四階是作業說明(Work Instruction)"], a: ["第一階是資訊安全政策( Information Security Policy)", "第二階是程式文件( Process Documentation)"]},
+	{q: "下列何者包含於資訊安全管理應該兼顧的 3 個 P 之中？", opts: ["People", "Process", "Price", "Place"], a: ["People", "Process"]},
+	{q: "企業的防火牆通常應該拒絕下列哪些封包？", opts: ["外部進入的 telnet 封包", "外部進入但位址標示為內部的封包", "外部進入的 HTTP 封包", "外部進入且目的位址是防火牆的封包"], a: ["外部進入的 telnet 封包", "外部進入但位址標示為內部的封包", "外部進入且目的位址是防火牆的封包"]},
+	{q: "下列哪些是發生電腦系統記憶體滲漏( Memory Leak) 的可能肇因？", opts: ["作業系統有錯誤", "應用程式有錯誤", "網路卡故障", "驅動程式有錯誤"], a: ["作業系統有錯誤", "應用程式有錯誤", "驅動程式有錯誤"]},
+	{q: "減少電腦系統發生記憶體滲漏( Memory Leak) 情況的方法有哪些？", opts: ["使用垃圾收集( Garbage Collection) 機制", "不要使用無線網路", "更謹慎地設計程式， 釋放不再需要的記憶體", "使用封包過濾型防火牆"], a: ["使用垃圾收集( Garbage Collection) 機制", "更謹慎地設計程式， 釋放不再需要的記憶體"]},
+        ];
+        // ==========================================
+
+        const QUIZ_SIZE = 100; // 設定每次抽取的題數
+        let currentQuiz = []; // 存放當次被抽出的題目
+
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result');
+
+        // Fisher-Yates 洗牌演算法
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // 初始化測驗：洗牌、抽題、渲染
+        function initQuiz() {
+            // 清空先前的結果
+            resultContainer.innerHTML = '';
+            
+            // 複製一份原題庫陣列，避免修改到原始資料
+            let shuffledQuestions = shuffleArray([...allQuestions]);
+            
+            // 擷取前 QUIZ_SIZE 題（若題庫總數少於 QUIZ_SIZE，則全取）
+            currentQuiz = shuffledQuestions.slice(0, QUIZ_SIZE);
+
+            renderQuiz();
+            
+            // 畫面捲動至最上方
+            window.scrollTo(0, 0);
+        }
+
+        // 渲染題目介面
+        function renderQuiz() {
+            let html = '';
+            currentQuiz.forEach((qObj, index) => {
+                const isMultipleChoice = Array.isArray(qObj.a);
+                const inputType = isMultipleChoice ? "checkbox" : "radio";
+                const inputName = `q_${index}`;
+
+                html += `<div class="question-block" id="block_${index}">`;
+                html += `<div class="question-title">第 ${index + 1} 題：${qObj.q}</div>`;
+                
+                if (isMultipleChoice) {
+                    html += `<div style="color: gray; font-size: 0.9em; margin-bottom: 10px;">（此為複選題，請勾選所有正確答案）</div>`;
+                } else {
+                    html += `<div style="color: gray; font-size: 0.9em; margin-bottom: 10px;">（此為單選題）</div>`;
+                }
+
+                html += `<ul class="options">`;
+                qObj.opts.forEach((opt, optIndex) => {
+                    const inputId = `q_${index}_opt_${optIndex}`;
+                    html += `
+                        <li>
+                            <input type="${inputType}" name="${inputName}" id="${inputId}" value="${opt}">
+                            <label for="${inputId}">${opt}</label>
+                        </li>
+                    `;
+                });
+                html += `</ul>`;
+                html += `<div class="feedback" id="feedback_${index}"></div>`;
+                html += `</div>`;
+            });
+            quizContainer.innerHTML = html;
+        }
+
+        // 批改邏輯
+        function submitQuiz() {
+            let score = 0;
+
+            currentQuiz.forEach((qObj, index) => {
+                const isMultipleChoice = Array.isArray(qObj.a);
+                const inputName = `q_${index}`;
+                
+                const selectedElements = document.querySelectorAll(`input[name="${inputName}"]:checked`);
+                const userAnswers = Array.from(selectedElements).map(el => el.value);
+                
+                let isCorrect = false;
+
+                if (userAnswers.length > 0) {
+                    if (isMultipleChoice) {
+                        const correctAnswers = qObj.a;
+                        if (userAnswers.length === correctAnswers.length) {
+                            isCorrect = userAnswers.every(val => correctAnswers.includes(val));
+                        }
+                    } else {
+                        isCorrect = (userAnswers[0] === qObj.a);
+                    }
+                }
+
+                const block = document.getElementById(`block_${index}`);
+                const feedback = document.getElementById(`feedback_${index}`);
+                
+                if (isCorrect) {
+                    block.style.borderColor = 'green';
+                    block.style.backgroundColor = '#f0fff0';
+                    feedback.innerHTML = '<span class="correct-text">正確</span>';
+                    score++;
+                } else {
+                    block.style.borderColor = 'red';
+                    block.style.backgroundColor = '#fff0f0';
+                    const correctAnsText = isMultipleChoice ? qObj.a.join('、') : qObj.a;
+                    feedback.innerHTML = `<span class="incorrect-text">錯誤。正確解答為：${correctAnsText}</span>`;
+                }
+            });
+
+            resultContainer.innerHTML = `測驗結束！您的總分為：<span style="color: #0056b3;">${score} / ${currentQuiz.length}</span>`;
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // 網頁首次載入時啟動
+        initQuiz();
+    </script>
+</body>
+</html>
