@@ -740,6 +740,14 @@ dd.drive,span.drive{margin:0;font-size:inherit}
 .now--ok{border-left-color:var(--direct)}.now--todo{border-left-color:var(--indirect)}
 .now__lab{font-weight:700;margin-right:.45rem}.now__tag{display:inline-block;font-size:.75rem;font-weight:700;padding:0 .45rem;margin-right:.45rem;border-radius:999px;background:var(--surface);border:1px solid var(--rule)}
 .tally--now{margin-top:.5rem}
+.finder{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:.6rem;margin:0 0 1.5rem;padding:.55rem 0;background:var(--paper);border-bottom:1px solid var(--rule-soft)}
+.finder__in{flex:1;min-width:0;font:inherit;font-size:.95rem;padding:.45rem .7rem;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink)}
+.finder__in:focus{outline:2px solid var(--accent);outline-offset:1px}
+.finder__n{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
+.finder__x{font:inherit;font-size:.8rem;padding:.35rem .6rem;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink-2);cursor:pointer}
+body.searching .legend,body.searching #revlist{display:none}
+body.searching .section:not(.is-hit){display:none}
+body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 </style>
 
 <div class="wrap">
@@ -751,7 +759,6 @@ dd.drive,span.drive{margin:0;font-size:inherit}
 </header>
 
 <nav class="toc">
-  <span class="toc__lab">已完成</span>
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 逐字修改清單</a>
   <a href="#s11">1.1 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
@@ -768,8 +775,9 @@ dd.drive,span.drive{margin:0;font-size:inherit}
   <a href="#s231">2.3.1 人類角色重要性</a>
   <a href="#s232">2.3.2 調節作用</a>
   <a href="#s3" style="border-color:var(--indirect);color:var(--indirect)">第三章 研究方法（草稿 v1.2）</a>
-  <span class="toc__pending">第二章有引註的章節已全數完成</span>
 </nav>
+
+<div class="finder" role="search"><input class="finder__in" type="search" placeholder="搜尋作者、關鍵字或條目代號（例：Stout、幻覺、s232-K）" aria-label="搜尋條目"><span class="finder__n" role="status"></span><button type="button" class="finder__x" hidden>清除</button></div>
 
 <div class="legend">
   <div class="legend__cell">
@@ -802,7 +810,7 @@ dd.drive,span.drive{margin:0;font-size:inherit}
     <span class="section__meta">目前無待處理項目 · 另有第二章文獻缺口與長期備忘</span>
   </div>
 
-  <div class="revbar">
+  <div class="revbar" hidden>
     <span class="revbar__count">已完成 <b class="revbar__n">0</b> / <span class="revbar__total">0</span></span>
     <button type="button" class="revbar__hide" aria-pressed="false">隱藏已完成</button>
     <span class="revbar__status" role="status"></span>
@@ -814,15 +822,14 @@ dd.drive,span.drive{margin:0;font-size:inherit}
   <p>只標「摘要」者尚未讀全文，取得全文核對後才能引用。</p>
   <ol class="issues">
     <li><div><h4>① H1：沒有研究直接檢驗「認為任務適合交給 AI → 查證意願降低」</h4><p>現有最接近的是兩篇以生成式 AI 為對象的行為實驗，結果都是「依賴 AI → 較少查證」，但兩篇測的都是依賴，不是任務可委派性，受試者也不是學生：<br>· <strong>Si等人（2024）</strong>，NAACL，pp. 1459–1474，https://doi.org/10.18653/v1/2024.naacl-long.81。80 名受試者以 ChatGPT 解釋查核事實；解釋錯誤時 <em class="q">users tend to over-trust the explanations and only achieve an accuracy of (0.35±0.22)</em>，低於無 AI 的 0.49，且 <em class="q">users spend similar time on claims with correct and wrong explanations</em>（arXiv 版全文已核對）。<br>· <strong>Spatharioti等人（2025）</strong>，CHI，https://doi.org/10.1145/3706598.3714082。使用 LLM 搜尋者 <em class="q">the majority of people (60%) making just a single query before reaching a decision</em>（arXiv 早期版已核對；CHI 正式版未讀）。<br>Vasconcelos等人（2023）仍是機制的主要依據。若引用上面兩篇，寫成「依賴生成式AI者較少查證其產出」，不要寫成直接支持 H1。<br><strong>已評估不採用：</strong>Vu等人（2026）、Ashraf等人（2026）、Giger等人（2024）。</p></div></li>
-    <li><div><h4>② H2：AI／自動化情境正反證據</h4><p>正面：Skitka 等人（2000）當責條件下更可能查證、遺漏與誤用錯誤較少（見 <a class="xref" href="#s214-AI">2.2.5 · AI 條</a>）。反面：Kupfer 等人（2023）當責操弄未顯著提升查證行為（見 <a class="xref" href="#s214-AJ">2.2.5 · AJ 條</a>），與 <a class="xref" href="#s214-D">Romeo &amp; Conti</a>、<a class="xref" href="#s214-Q">Stout</a> 之反面證據方向一致。<strong>反面證據若與本研究實際結果之方向有出入，須在第五章討論中處理。</strong></p></div></li>
+    <li><div><h4>② H2：AI／自動化情境正反證據</h4><p>正面：Skitka 等人（2000）當責條件下更可能查證、遺漏與誤用錯誤較少（見 <a class="xref" href="#s214-AB">2.2.5 · AB 條</a>）。反面：Kupfer 等人（2023）當責操弄未顯著提升查證行為（見 <a class="xref" href="#s214-AC">2.2.5 · AC 條</a>），與 <a class="xref" href="#s214-D">Romeo &amp; Conti</a>、<a class="xref" href="#s214-Q">Stout</a> 之反面證據方向一致。<strong>反面證據若與本研究實際結果之方向有出入，須在第五章討論中處理。</strong></p></div></li>
     <li><div><h4>③ HOI 定義：有一篇直接相符的預印本</h4><p>· <strong>Du（2026）</strong>，arXiv:2605.16642（預印本，全文已讀）。432 名用過生成式 AI 學習的大學生；定義 verification intention 為 <em class="q">an individual's willingness or planned tendency to check the accuracy, credibility, and reliability of information before accepting or using it</em>（p. 2，轉引 Qu &amp; Lu, 2025）；三題量表 <em class="q">I intend to verify the accuracy of AIGC before using it for learning tasks</em>／<em class="q">I am willing to check whether AIGC is reliable before accepting its content</em>／<em class="q">I plan to compare AIGC with other reliable sources before using it</em>（p. 6），α = .84（p. 8）。與本研究 HOI 最接近，但是預印本，正式引用前宜確認是否已出版。<br>· <strong>Liao &amp; Sundar（2026）</strong>，JCMC，開放取用：把查證定義為行為（受試者以其他來源佐證），意圖題目只在補充資料，未取得。<br>· Ni &amp; Huang（2025）題名即為「查證 AI 資訊的意圖」，全文付費，未讀。</p></div></li>
   </ol>
 
   <p class="subhead" id="gap23">第二章 2.3（HRS，H4a、H4b）文獻缺口 —— 給找文獻的組員</p>
   <ol class="issues">
-    <li><div><h4>H-1 HRS 定義：仍找不到「面對 AI、自身角色不可取代」的正向信念構念</h4><p>文獻中的「人類獨特性」多是威脅或抗拒的框架（Złotowski、Mirbabaie），或指 AI 不可取代，方向相反。<strong>9/18 已決定</strong>題項以 <a class="xref" href="#s231-H">Mirbabaie等人（2022）</a>為主幹。比較穩的寫法是把 HRS 定位為本研究提出、由這些鄰近構念推導的新構念，並在研究貢獻中說明。<br>相關先例：<a class="xref" href="#s232-L">Sheeran &amp; Orbell（2000）</a>、<a class="xref" href="#s232-M">Kendzierski &amp; Whitaker（1997）</a>（自我基模調節意圖→行為）；<a class="xref" href="#s232-N">Weldon &amp; Mustari（1988）</a>、<a class="xref" href="#s232-O">Kerr &amp; Bruun（1983）</a>（貢獻不可取代的題項）；<a class="xref xref--lit" href="#s11-lit-karau">Karau &amp; Williams</a>（1993, p. 696）投入具獨特性時不出現懈怠。</p></div></li>
-    <li><div><h4>H-2 「相對穩定特質」與 Lee E. H. 的張力</h4><p><strong>9/15 已定案選 A</strong>（維持相對穩定特質），已併入 2.3 內文。</p></div></li>
-    <li><div><h4>H-3 H4b：文獻多支持「減少求助」那個方向，但都只讀到摘要</h4><p>2.3.2 原句：「此信念可能促使個體更主動與成員討論查證，也可能促使其傾向獨自完成查證而減少求助」。求助研究大多指出，求助被視為能力不足，自認能力高或地位高的人較少求助：Lee（2002, <em>Journal of Applied Behavioral Science, 38</em>(1), 17–35）、Lee（1997, <em>OBHDP, 72</em>(3), 336–363）、Nadler &amp; Fisher（1986）的自尊威脅模型、Butler（1998, <em>Journal of Educational Psychology, 90</em>(4)，摘要指出求助受「能力受威脅」調節，而非能力本身）。另一方向只有 Brooks等人（2015）指出求助者反而被認為更能幹，但那是旁觀者的評價。<strong>皆未讀全文</strong>，要引用得先透過圖書館取得。</p></div></li>
+    <li><div><h4>H-1 HRS 定義：仍找不到「面對 AI、自身角色不可取代」的正向信念構念</h4><p>文獻中的「人類獨特性」多是威脅或抗拒的框架（Złotowski、Mirbabaie），或指 AI 不可取代，方向相反。題項已決定以 <a class="xref" href="#s231-H">Mirbabaie等人（2022）</a>為主幹。比較穩的寫法是把 HRS 定位為本研究提出、由這些鄰近構念推導的新構念，並在研究貢獻中說明。<br>相關先例：<a class="xref" href="#s232-L">Sheeran &amp; Orbell（2000）</a>、<a class="xref" href="#s232-M">Kendzierski &amp; Whitaker（1997）</a>（自我基模調節意圖→行為）；Weldon &amp; Mustari（1988）、Kerr &amp; Bruun（1983）（貢獻不可取代的題項；論文未引用此用途，未列入本表）；<a class="xref xref--lit" href="#s11-lit-karau">Karau &amp; Williams</a>（1993, p. 696）投入具獨特性時不出現懈怠。</p></div></li>
+    <li><div><h4>H-2 H4b：文獻多支持「減少求助」那個方向，但都只讀到摘要</h4><p>2.3.2 原句：「此信念可能促使個體更主動與成員討論查證，也可能促使其傾向獨自完成查證而減少求助」。求助研究大多指出，求助被視為能力不足，自認能力高或地位高的人較少求助：Lee（2002, <em>Journal of Applied Behavioral Science, 38</em>(1), 17–35）、Lee（1997, <em>OBHDP, 72</em>(3), 336–363）、Nadler &amp; Fisher（1986）的自尊威脅模型、Butler（1998, <em>Journal of Educational Psychology, 90</em>(4)，摘要指出求助受「能力受威脅」調節，而非能力本身）。另一方向只有 Brooks等人（2015）指出求助者反而被認為更能幹，但那是旁觀者的評價。<strong>皆未讀全文</strong>，要引用得先透過圖書館取得。</p></div></li>
   </ol>
 
   <p class="subhead" id="memo">長期備忘 —— 目前不打算寫進論文，被問到時可用</p>
@@ -872,6 +879,47 @@ dd.drive,span.drive{margin:0;font-size:inherit}
 })();
 </script>
 
+<script>
+function initFinder(){
+  var box=document.querySelector('.finder'); if(!box) return;
+  var inp=box.querySelector('.finder__in'), out=box.querySelector('.finder__n'), clr=box.querySelector('.finder__x');
+  var items=[], secs=[];
+  [].forEach.call(document.querySelectorAll('[id^="frag-"] .section'),function(sec){
+    var group=null, rec={el:sec,entries:[]};
+    [].forEach.call(sec.children,function(ch){
+      if(ch.classList.contains('srchead')){group={head:[ch],text:ch.textContent};return;}
+      if(ch.tagName==='ARTICLE'&&ch.classList.contains('entry')){
+        var it={el:ch,group:group,sec:sec,text:(ch.id+' '+ch.textContent+' '+(group?group.text:'')).toLowerCase()};
+        items.push(it); rec.entries.push(it); return;
+      }
+      if(group&&(ch.classList.contains('drive')||ch.classList.contains('biblio'))) group.head.push(ch);
+    });
+    secs.push(rec);
+  });
+  var all=[].slice.call(document.querySelectorAll('[id^="frag-"] .section, [id^="frag-"] .section > *'));
+  function run(){
+    var q=inp.value.trim().toLowerCase(), terms=q?q.split(/\s+/):[];
+    all.forEach(function(el){el.classList.remove('is-hit');});
+    if(!terms.length){document.body.classList.remove('searching'); out.textContent=''; clr.hidden=true; return;}
+    document.body.classList.add('searching'); clr.hidden=false;
+    var n=0;
+    items.forEach(function(it){
+      for(var i=0;i<terms.length;i++) if(it.text.indexOf(terms[i])<0) return;
+      n++; it.el.classList.add('is-hit'); it.sec.classList.add('is-hit');
+      if(it.group) it.group.head.forEach(function(h){h.classList.add('is-hit');});
+    });
+    out.textContent=n?('找到 '+n+' 條'):'沒有符合的條目';
+  }
+  var t=null;
+  inp.addEventListener('input',function(){clearTimeout(t); t=setTimeout(run,120);});
+  inp.addEventListener('keydown',function(e){if(e.key==='Escape'){inp.value=''; run();}});
+  clr.addEventListener('click',function(){inp.value=''; run(); inp.focus();});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href^="#"]');
+    if(a&&document.body.classList.contains('searching')){inp.value=''; run();}
+  },true);
+}
+</script>
 <script src="state.js"></script>
 <script>
 function initRevbar(){
@@ -1006,7 +1054,7 @@ function initRevbar(){
   }
   var tasks=frags.map(function(f){
     var el=document.getElementById(f.id);
-    if(!el) return Promise.resolve();
+    if(!el||el.querySelector('.section')) return Promise.resolve();
     return fetch(f.url).then(function(r){
       if(!r.ok) throw new Error('HTTP '+r.status);
       return r.text();
@@ -1018,6 +1066,7 @@ function initRevbar(){
   });
   Promise.all(tasks).then(function(){
     if(typeof initRevbar==='function') initRevbar();
+    if(typeof initFinder==='function') initFinder();
     if(location.hash){
       var t=null;
       try{ t=document.getElementById(location.hash.slice(1)); }catch(e){}
