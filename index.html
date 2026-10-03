@@ -799,25 +799,16 @@ dd.drive,span.drive{margin:0;font-size:inherit}
   <div class="section__head">
     <span class="section__num">修改</span>
     <h2 class="section__title">逐字修改清單</h2>
-    <span class="section__meta">問卷設計 1 項 · 另有第二章文獻缺口與長期備忘</span>
+    <span class="section__meta">目前無待處理項目 · 另有第二章文獻缺口與長期備忘</span>
   </div>
 
   <div class="revbar">
-    <span class="revbar__count">已完成 <b class="revbar__n">0</b> / <span class="revbar__total">1</span></span>
+    <span class="revbar__count">已完成 <b class="revbar__n">0</b> / <span class="revbar__total">0</span></span>
     <button type="button" class="revbar__hide" aria-pressed="false">隱藏已完成</button>
     <span class="revbar__status" role="status"></span>
   </div>
 
-  <p class="revgrp"><b>IEC1 換句</b>　老師建議、團隊 10/2 採用，不需再前測。仍為反向題，第三章不用改。<strong>Google 表單上的題目也要一起改。</strong></p>
-
-  <article class="rev" id="PQ-1">
-    <div class="rev__head"><span class="rev__n">PQ-1</span><span class="rev__where">問卷設計 · 表２-５ IEC1</span><h4 class="rev__title">IEC1 改用老師的建議句</h4></div>
-    <div class="rev__body">
-      <div class="rev__row"><span class="rev__lab">原文</span><div class="rev__old">有了生成式AI協助，我的投入時間會減少。</div></div>
-      <div class="rev__row"><span class="rev__lab">改為</span><div class="rev__new">有了生成式AI協助，節省了我一些時間。</div></div>
-      <div class="rev__row"><span class="rev__lab">理由</span><div class="rev__why">原句要填答者承認自己投入減少，容易因社會期許而不照實作答（前測負荷量 .372）。新句保留「時間投入」的內涵，仍為反向題，來源欄不變。</div></div>
-    </div>
-  </article>
+  <p style="color:var(--muted);font-size:.9rem;margin:0 0 1rem">目前沒有待處理的逐字修改項目。</p>
 
   <p class="subhead" id="gap21">第二章 2.2（H1、H2）文獻缺口 —— 給找文獻的組員</p>
   <p>只標「摘要」者尚未讀全文，取得全文核對後才能引用。</p>
@@ -884,7 +875,7 @@ dd.drive,span.drive{margin:0;font-size:inherit}
 <script src="state.js"></script>
 <script>
 function initRevbar(){
-  var KEY='rev-done-v20', HIDEKEY='rev-hide-done-v1';
+  var KEY='rev-done-v21', HIDEKEY='rev-hide-done-v1';
   function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
   function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
   function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
