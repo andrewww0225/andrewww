@@ -31,6 +31,8 @@
   --none:#9c3527;
   --none-bg:#f6e3e0;
   --warn-rule:#c9a227;
+  --link:#0a66c2;
+  --link-bg:#e3eefb;
 
   --f-serif:"Source Serif 4","Noto Serif TC",Georgia,"Times New Roman",serif;
   --f-sans:"Noto Sans TC","Helvetica Neue",Arial,system-ui,sans-serif;
@@ -58,6 +60,8 @@
     --none:#e08a7c;
     --none-bg:#2e1d1a;
     --warn-rule:#a8871f;
+    --link:#7cc4ff;
+    --link-bg:#1b2c40;
   }
 }
 :root[data-theme="dark"]{
@@ -78,6 +82,8 @@
   --none:#e08a7c;
   --none-bg:#2e1d1a;
   --warn-rule:#a8871f;
+  --link:#7cc4ff;
+  --link-bg:#1b2c40;
 }
 
 *{box-sizing:border-box}
@@ -760,6 +766,9 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 .fold[open] > .fold__sum .fold__btn::before{content:"收起 ▴"}
 .fold > .fold__sum:hover .fold__btn{border-color:var(--ink-2)}
 .fold > .fold__sum:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* ── 組員待查證：條目代號連結 ── */
+#newev table.qi td.loc a{color:var(--link);background:var(--link-bg);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:.05rem .4rem;border-radius:3px}
+#newev table.qi td.loc a:hover{text-decoration-thickness:2px}
 </style>
 
 <div class="wrap">
