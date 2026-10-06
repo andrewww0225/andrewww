@@ -742,9 +742,26 @@ dd.drive,span.drive{margin:0;font-size:inherit}
 body.searching .legend,body.searching #revlist{display:none}
 body.searching .section:not(.is-hit){display:none}
 body.searching .section > *:not(.is-hit):not(.section__head){display:none}
+/* ── survey progress ─────────────────────── */
+.survey{margin:1.2rem 0 1.4rem;padding:.8rem 1rem .9rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+.survey__head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.3rem 1rem;margin-bottom:.55rem}
+.survey__lab{font-weight:700;color:var(--ink)}
+.survey__num{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.survey__num b{font-size:1.15rem;color:var(--direct)}
+.survey__bar{height:14px;border-radius:7px;background:var(--rule);overflow:hidden}
+.survey__fill{height:100%;background:var(--direct);border-radius:7px 0 0 7px}
 </style>
 
 <div class="wrap">
+
+<!-- ═══════════════ 正式問卷回收進度（數字由 Claude 依 Andrew 回報更新） ═══════════════ -->
+<section class="survey" id="survey" aria-label="正式問卷回收進度">
+  <div class="survey__head">
+    <span class="survey__lab">正式問卷回收進度</span>
+    <span class="survey__num"><b>17</b> / 119 份 · 14%</span>
+  </div>
+  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="119" aria-valuenow="17" aria-label="已回收 17 份，目標 119 份"><div class="survey__fill" style="width:14.3%"></div></div>
+</section>
 
 <header class="masthead" id="top">
   <p class="masthead__eyebrow">畢業專題 · 第一章 · 第二章 · 第三章（草稿）· 口試備查</p>
@@ -802,9 +819,9 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
   <div class="section__head">
     <span class="section__num">查證</span>
     <h2 class="section__title">組員待查證：第二章新增 18 條</h2>
-    <span class="section__meta">10/5–10/6 新增 · 點條目代號跳到該條，再點文獻標頭的「Drive 原文 PDF」翻到下表頁數</span>
+    <span class="section__meta">點條目代號跳到該條，再點文獻標頭的「Drive 原文 PDF」翻到下表頁數</span>
   </div>
-  <p style="font-size:.9rem;margin:0 0 1rem">PDF 頁＝打開檔案看到的第幾頁；印刷頁＝期刊頁眉上的頁碼。Karau &amp; Williams (1993) 是掃描檔，不能用 Ctrl+F 搜尋，請直接翻到表上的 PDF 頁（PDF 頁＝印刷頁 − 680）；這 6 條的頁碼已以掃描頁影像核對（10/5–10/6）。</p>
+  <p style="font-size:.9rem;margin:0 0 1rem">PDF 頁＝打開檔案看到的第幾頁；印刷頁＝期刊頁眉上的頁碼。Karau &amp; Williams (1993) 是掃描檔，不能用 Ctrl+F 搜尋，請直接翻到表上的 PDF 頁（PDF 頁＝印刷頁 − 680）；這 6 條的頁碼已以掃描頁影像核對。</p>
   <div class="qi-wrap">
     <table class="qi">
       <thead><tr><th>條目</th><th>論文位置</th><th>論文句子</th><th>文獻</th><th>原文在哪</th></tr></thead>

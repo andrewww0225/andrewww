@@ -742,9 +742,26 @@ dd.drive,span.drive{margin:0;font-size:inherit}
 body.searching .legend,body.searching #revlist{display:none}
 body.searching .section:not(.is-hit){display:none}
 body.searching .section > *:not(.is-hit):not(.section__head){display:none}
+/* ── survey progress ─────────────────────── */
+.survey{margin:1.2rem 0 1.4rem;padding:.8rem 1rem .9rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+.survey__head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.3rem 1rem;margin-bottom:.55rem}
+.survey__lab{font-weight:700;color:var(--ink)}
+.survey__num{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.survey__num b{font-size:1.15rem;color:var(--direct)}
+.survey__bar{height:14px;border-radius:7px;background:var(--rule);overflow:hidden}
+.survey__fill{height:100%;background:var(--direct);border-radius:7px 0 0 7px}
 </style>
 
 <div class="wrap">
+
+<!-- ═══════════════ 正式問卷回收進度（數字由 Claude 依 Andrew 回報更新） ═══════════════ -->
+<section class="survey" id="survey" aria-label="正式問卷回收進度">
+  <div class="survey__head">
+    <span class="survey__lab">正式問卷回收進度</span>
+    <span class="survey__num"><b>17</b> / 119 份 · 14%</span>
+  </div>
+  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="119" aria-valuenow="17" aria-label="已回收 17 份，目標 119 份"><div class="survey__fill" style="width:14.3%"></div></div>
+</section>
 
 <header class="masthead" id="top">
   <p class="masthead__eyebrow">畢業專題 · 第一章 · 第二章 · 第三章（草稿）· 口試備查</p>
@@ -802,9 +819,9 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
   <div class="section__head">
     <span class="section__num">查證</span>
     <h2 class="section__title">組員待查證：第二章新增 18 條</h2>
-    <span class="section__meta">10/5–10/6 新增 · 點條目代號跳到該條，再點文獻標頭的「Drive 原文 PDF」翻到下表頁數</span>
+    <span class="section__meta">點條目代號跳到該條，再點文獻標頭的「Drive 原文 PDF」翻到下表頁數</span>
   </div>
-  <p style="font-size:.9rem;margin:0 0 1rem">PDF 頁＝打開檔案看到的第幾頁；印刷頁＝期刊頁眉上的頁碼。Karau &amp; Williams (1993) 是掃描檔，不能用 Ctrl+F 搜尋，請直接翻到表上的 PDF 頁（PDF 頁＝印刷頁 − 680）；這 6 條的頁碼已以掃描頁影像核對（10/5–10/6）。</p>
+  <p style="font-size:.9rem;margin:0 0 1rem">PDF 頁＝打開檔案看到的第幾頁；印刷頁＝期刊頁眉上的頁碼。Karau &amp; Williams (1993) 是掃描檔，不能用 Ctrl+F 搜尋，請直接翻到表上的 PDF 頁（PDF 頁＝印刷頁 − 680）；這 6 條的頁碼已以掃描頁影像核對。</p>
   <div class="qi-wrap">
     <table class="qi">
       <thead><tr><th>條目</th><th>論文位置</th><th>論文句子</th><th>文獻</th><th>原文在哪</th></tr></thead>
@@ -1693,7 +1710,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         <div class="src__en"><span class="src__lab">學術原文 · 前人理論的限制段</span><p>“Prior theories advanced to explain social loafing all appear to have some limitations. The most significant limitation common to all of these viewpoints is that they tend to offer explanations and make predictions about conditions under which social loafing will occur <strong>within a limited domain</strong>. … However, although current theories of social loafing provide insights as to why the effect occurs at all, <strong>they do not provide a framework that can clearly specify which particular factors should moderate social loafing under different conditions</strong>.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「先前用來解釋社會懈怠的理論似乎都有些限制。這些觀點共同最主要的限制是，它們傾向於<strong>在有限的範圍內</strong>解釋並預測社會懈怠會在哪些條件下發生。……雖然現有理論能說明此效果為何會發生，<strong>卻沒有提供一個能清楚指出哪些因素會在不同條件下調節社會懈怠的架構</strong>。」</p></div>
       </div>
-      <ul class="locus"><li><b>印刷</b>p. 684（PDF p. 4）</li><li><b>定位</b>左欄 Conclusions 小節（“Prior theories … limitations”），緊接在 Integrative Model 小標之前（10/5 已以掃描頁影像核對頁碼）</li></ul>
+      <ul class="locus"><li><b>印刷</b>p. 684（PDF p. 4）</li><li><b>定位</b>左欄 Conclusions 小節（“Prior theories … limitations”），緊接在 Integrative Model 小標之前（已以掃描頁影像核對頁碼）</li></ul>
       <p class="support"><b>如何支持論述：</b>「只能說明特定範圍內的懈怠」＝ <em class="q">within a limited domain</em>；「缺乏能具體指出哪些因素在何種條件下調節懈怠的架構」＝ <em class="q">do not provide a framework that can clearly specify which particular factors should moderate social loafing under different conditions</em>。</p>
     </div>
   </article>
@@ -1719,7 +1736,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         <div class="src__en"><span class="src__lab">學術原文 · 結果段（獨特性）＋ 討論段（實務建議）</span><p>(1) “Uniqueness of individual inputs. <strong>Individuals worked just as hard collectively as coactively when their individual inputs to the collective product were unique, but loafed when their inputs were either potentially redundant or completely redundant</strong> (ps &lt; .001).”<br>(2) “… suggesting a number of ways in which social loafing might be reduced or overcome in natural settings: … <strong>making tasks unique such that individuals feel more responsibility for their work</strong> …”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>(1)「個人投入的獨特性：<strong>當個人對集體產出的投入具獨特性時，個體在集體作業中與單獨作業時一樣努力；但若其投入可能重複或完全重複，便會出現懈怠</strong>（ps &lt; .001）。」<br>(2)「……指出若干在自然情境中減少或克服社會懈怠的方法：……<strong>讓任務具獨特性，使個體對自己的工作感覺更有責任</strong>……」</p></div>
       </div>
-      <ul class="locus"><li><b>(1)</b>印刷 p. 696（PDF p. 16）結果段 “Uniqueness of individual inputs”，右欄末段（10/5 已以掃描頁影像核對頁碼）</li><li><b>(2)</b>印刷 p. 700（PDF p. 20）結論段，與第一章 1.1 引用的同一句</li></ul>
+      <ul class="locus"><li><b>(1)</b>印刷 p. 696（PDF p. 16）結果段 “Uniqueness of individual inputs”，右欄末段（已以掃描頁影像核對頁碼）</li><li><b>(2)</b>印刷 p. 700（PDF p. 20）結論段，與第一章 1.1 引用的同一句</li></ul>
       <p class="support"><b>如何支持論述：</b>「個人投入具獨特性時…與單獨作業相當」＝ (1)；「投入與他人重複時才出現懈怠」（2.3.2）亦出自 (1) 的後半句；「使任務具獨特性，讓個體…更有責任」＝ (2)。</p>
     </div>
   </article>
@@ -1732,7 +1749,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         <div class="src__en"><span class="src__lab">學術原文 · 文獻回顧段 “Dispensability of Effort”</span><p>“Kerr and his colleagues … have suggested another possible cause of social loafing: <strong>Individuals may exert less effort when working collectively because they feel that their inputs are not essential to a high-quality group product (i.e., are dispensable)</strong>. … Thus, on some tasks individuals may be unwilling to exert effort if they feel their input will have little impact on the resulting group product.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「Kerr 等人……提出社會懈怠的另一個可能原因：<strong>個體在集體作業中可能減少努力，因為他們覺得自己的投入對高品質的團體成果並非必要（即可有可無）</strong>。……因此在某些任務上，若個體覺得自己的投入對團體成果影響不大，便可能不願付出努力。」</p></div>
       </div>
-      <ul class="locus"><li><b>印刷</b>p. 683（PDF p. 3）</li><li><b>定位</b>右欄 “Dispensability of Effort” 小標下第一段（10/5 已以掃描頁影像核對頁碼）</li></ul>
+      <ul class="locus"><li><b>印刷</b>p. 683（PDF p. 3）</li><li><b>定位</b>右欄 “Dispensability of Effort” 小標下第一段（已以掃描頁影像核對頁碼）</li></ul>
       <p class="support"><b>如何支持論述：</b>「覺得自身投入對團體成果並非必要而減少努力」＝ <em class="q">exert less effort … because they feel that their inputs are not essential to a high-quality group product</em>。</p>
       <div class="note note--warn"><span class="note__lab">措辭限度</span>這段是 Karau 與 Williams 轉述 Kerr（1983；Kerr &amp; Bruun, 1983）的觀點，再納入其集體努力模型；口試若被追問，可說明這個機制最早由 Kerr 提出（2.1.2 已引 Kerr 與 Bruun）。</div>
     </div>
@@ -1746,7 +1763,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         <div class="src__en"><span class="src__lab">學術原文 · 結論段</span><p>“However, a closer examination reveals that social loafing could indeed have serious consequences for a variety of everyday collective settings. First, <strong>the effect was robust across both maximizing and optimizing tasks and across tasks demanding different types of effort (e.g., cognitive, physical, or perceptual)</strong>. Thus, social loafing is not restricted to additive, maximizing tasks.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「然而進一步檢視會發現，社會懈怠對各種日常集體情境確實可能造成嚴重後果。第一，<strong>此效果在極大化與最適化任務中，以及在需要不同類型努力（例如認知、體力或知覺）的任務中，皆具穩健性</strong>。因此，社會懈怠並不限於加總型、極大化的任務。」</p></div>
       </div>
-      <ul class="locus"><li><b>印刷</b>p. 700（PDF p. 20），右欄第一段（10/6 以掃描頁影像核對）</li></ul>
+      <ul class="locus"><li><b>印刷</b>p. 700（PDF p. 20），右欄第一段（已以掃描頁影像核對）</li></ul>
       <p class="support"><b>如何支持論述：</b>「認知、體力與知覺等不同類型的任務」＝ <em class="q">tasks demanding different types of effort (e.g., cognitive, physical, or perceptual)</em>；「皆穩健存在」＝ <em class="q">the effect was robust across</em>。</p>
     </div>
   </article>
@@ -5862,7 +5879,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         <div class="src__en"><span class="src__lab">學術原文 · 結果段（獨特性）</span><p>“Uniqueness of individual inputs. <strong>Individuals worked just as hard collectively as coactively when their individual inputs to the collective product were unique, but loafed when their inputs were either potentially redundant or completely redundant</strong> (ps &lt; .001).”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「個人投入的獨特性：<strong>當個人對集體產出的投入具獨特性時，個體在集體作業中與單獨作業時一樣努力；但若其投入可能重複或完全重複，便會出現懈怠</strong>（ps &lt; .001）。」</p></div>
       </div>
-      <ul class="locus"><li><b>印刷</b>p. 696（PDF p. 16），右欄末段 “Uniqueness of individual inputs”（10/5 已以掃描頁影像核對頁碼）</li><li><b>同一原文</b>2.1.2 Karau 條目 AE 也引用此句</li></ul>
+      <ul class="locus"><li><b>印刷</b>p. 696（PDF p. 16），右欄末段 “Uniqueness of individual inputs”（已以掃描頁影像核對頁碼）</li><li><b>同一原文</b>2.1.2 Karau 條目 AE 也引用此句</li></ul>
       <p class="support"><b>如何支持論述：</b>「具獨特性時…相當」「與他人重複時才出現懈怠」＝ <em class="q">just as hard … when … unique, but loafed when … redundant</em>；所比較的確實是投入是否具獨特性（unique vs. redundant），而非對自身貢獻價值的認知。</p>
     </div>
   </article>
