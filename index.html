@@ -750,6 +750,16 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 .survey__num b{font-size:1.15rem;color:var(--direct)}
 .survey__bar{height:14px;border-radius:7px;background:var(--rule);overflow:hidden}
 .survey__fill{height:100%;background:var(--direct);border-radius:7px 0 0 7px}
+/* ── foldable subsections ────────────────── */
+.fold{margin:2.4rem 0 0}
+.fold:first-of-type{margin-top:1.2rem}
+.fold > .fold__sum{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 .75rem;cursor:pointer;list-style:none;user-select:none}
+.fold > .fold__sum::-webkit-details-marker{display:none}
+.fold__btn{flex:none;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:none;padding:.2rem .55rem;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink-2)}
+.fold__btn::before{content:"展開 ▾"}
+.fold[open] > .fold__sum .fold__btn::before{content:"收起 ▴"}
+.fold > .fold__sum:hover .fold__btn{border-color:var(--ink-2)}
+.fold > .fold__sum:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 
 <div class="wrap">
@@ -870,33 +880,42 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 
 
 
-  <p class="subhead" id="gap21">第二章 2.2（H1、H2）—— 第五章研究限制素材</p>
+  <details class="fold" id="gap21">
+    <summary class="subhead fold__sum"><span class="fold__t">第二章 2.2（H1、H2）—— 第五章研究限制素材</span><span class="fold__btn" aria-hidden="true"></span></summary>
   <p>以下文獻不加入論文正文，留作第五章研究限制與討論的素材。只標「摘要」者尚未讀全文，引用前須取得全文。</p>
   <ol class="issues">
     <li><div><h4>① H1：沒有研究直接檢驗「認為任務適合交給 AI → 查證意願降低」</h4><p>現有最接近的是兩篇以生成式 AI 為對象的行為實驗，結果都是「依賴 AI → 較少查證」，但兩篇測的都是依賴，不是任務可委派性，受試者也不是學生：<br>· <strong>Si等人（2024）</strong>，NAACL，pp. 1459–1474，https://doi.org/10.18653/v1/2024.naacl-long.81。80 名受試者以 ChatGPT 解釋查核事實；解釋錯誤時 <em class="q">users tend to over-trust the explanations and only achieve an accuracy of (0.35±0.22)</em>，低於無 AI 的 0.49，且 <em class="q">users spend similar time on claims with correct and wrong explanations</em>（arXiv 版全文已核對）。<br>· <strong>Spatharioti等人（2025）</strong>，CHI，https://doi.org/10.1145/3706598.3714082。使用 LLM 搜尋者 <em class="q">the majority of people (60%) making just a single query before reaching a decision</em>（arXiv 早期版已核對；CHI 正式版未讀）。<br>Vasconcelos等人（2023）仍是機制的主要依據。若引用上面兩篇，寫成「依賴生成式AI者較少查證其產出」，不要寫成直接支持 H1。<br><strong>已評估不採用：</strong>Vu等人（2026）、Ashraf等人（2026）、Giger等人（2024）。</p></div></li>
     <li><div><h4>② H2：AI／自動化情境正反證據</h4><p>正面：Skitka 等人（2000）當責條件下更可能查證、遺漏與誤用錯誤較少（見 <a class="xref" href="#s214-AB">2.2.5 · AB 條</a>）。反面：Kupfer 等人（2023）當責操弄未顯著提升查證行為（見 <a class="xref" href="#s214-AC">2.2.5 · AC 條</a>），與 <a class="xref" href="#s214-D">Romeo &amp; Conti</a>、<a class="xref" href="#s214-Q">Stout</a> 之反面證據方向一致。<strong>反面證據若與本研究實際結果之方向有出入，須在第五章討論中處理。</strong></p></div></li>
     <li><div><h4>③ HOI 定義：有一篇直接相符的預印本</h4><p>· <strong>Du（2026）</strong>，arXiv:2605.16642（預印本，全文已讀）。432 名用過生成式 AI 學習的大學生；定義 verification intention 為 <em class="q">an individual's willingness or planned tendency to check the accuracy, credibility, and reliability of information before accepting or using it</em>（p. 2，轉引 Qu &amp; Lu, 2025）；三題量表 <em class="q">I intend to verify the accuracy of AIGC before using it for learning tasks</em>／<em class="q">I am willing to check whether AIGC is reliable before accepting its content</em>／<em class="q">I plan to compare AIGC with other reliable sources before using it</em>（p. 6），α = .84（p. 8）。與本研究 HOI 最接近，但是預印本，正式引用前宜確認是否已出版。<br>· <strong>Liao &amp; Sundar（2026）</strong>，JCMC，開放取用：把查證定義為行為（受試者以其他來源佐證），意圖題目只在補充資料，未取得。<br>· Ni &amp; Huang（2025）題名即為「查證 AI 資訊的意圖」，全文付費，未讀。</p></div></li>
   </ol>
+  </details>
 
-  <p class="subhead" id="gap23">第二章 2.3（HRS，H4a、H4b）—— 第五章研究限制素材</p>
+  <details class="fold" id="gap23">
+    <summary class="subhead fold__sum"><span class="fold__t">第二章 2.3（HRS，H4a、H4b）—— 第五章研究限制素材</span><span class="fold__btn" aria-hidden="true"></span></summary>
   <ol class="issues">
     <li><div><h4>H-1 HRS 定義：仍找不到「面對 AI、自身角色不可取代」的正向信念構念</h4><p>文獻中的「人類獨特性」多是威脅或抗拒的框架（Złotowski、Mirbabaie），或指 AI 不可取代，方向相反。題項已決定以 <a class="xref" href="#s231-H">Mirbabaie等人（2022）</a>為主幹。比較穩的寫法是把 HRS 定位為本研究提出、由這些鄰近構念推導的新構念，並在研究貢獻中說明。<br>相關先例：<a class="xref" href="#s232-L">Sheeran &amp; Orbell（2000）</a>、<a class="xref" href="#s232-M">Kendzierski &amp; Whitaker（1997）</a>（自我基模調節意圖→行為）；Weldon &amp; Mustari（1988）、Kerr &amp; Bruun（1983）（貢獻不可取代的題項；論文未引用此用途，未列入本表）；<a class="xref xref--lit" href="#s11-lit-karau">Karau &amp; Williams</a>（1993, p. 696）投入具獨特性時不出現懈怠。</p></div></li>
     <li><div><h4>H-2 H4b：文獻多支持「減少求助」那個方向，但都只讀到摘要</h4><p>2.3.2 原句：「此信念可能促使個體更主動與成員討論查證，也可能促使其傾向獨自完成查證而減少求助」。求助研究大多指出，求助被視為能力不足，自認能力高或地位高的人較少求助：Lee（2002, <em>Journal of Applied Behavioral Science, 38</em>(1), 17–35）、Lee（1997, <em>OBHDP, 72</em>(3), 336–363）、Nadler &amp; Fisher（1986）的自尊威脅模型、Butler（1998, <em>Journal of Educational Psychology, 90</em>(4)，摘要指出求助受「能力受威脅」調節，而非能力本身）。另一方向只有 Brooks等人（2015）指出求助者反而被認為更能幹，但那是旁觀者的評價。<strong>皆未讀全文</strong>，要引用得先透過圖書館取得。</p></div></li>
   </ol>
+  </details>
 
-  <p class="subhead" id="memo">長期備忘 —— 目前不打算寫進論文，被問到時可用</p>
+  <details class="fold" id="memo">
+    <summary class="subhead fold__sum"><span class="fold__t">長期備忘 —— 目前不打算寫進論文，被問到時可用</span><span class="fold__btn" aria-hidden="true"></span></summary>
   <ol class="issues">
     <li><div><h4><a class="xref xref--lit" href="#s214-lit-stout">Stout</a> 的作者自己說沒研究「委派後的監督」（印刷 p.8）</h4><p><em class="q">Since SAs differ in their ability to provide monitoring and control functionality, future research should also examine how SAs and their features influence delegation throughout the process.</em><br><strong>SA</strong> 是 <em class="q">software agents (SAs)</em> 的縮寫，即軟體代理人：原文指能提出建議、不經使用者介入就自主做決策並完成任務的軟體（印刷 p.2，PDF p.3）。<br>等於對方把這題留給後續研究，比「依變項不同」更有力。</p></div></li>
     <li><div><h4><a class="xref xref--lit" href="#s214-lit-stout">Stout</a> 自稱反向結果是本文主要發現（印刷 p.7）</h4><p><em class="q">The primary finding of interest is that…</em>。口試被問到競爭解釋時可以引用。</p></div></li>
     <li><div><h4><a class="xref xref--lit" href="#s223-lit-elshan">Elshan</a> 研究一的係數方向與小結相反</h4><p>研究一 Results 報告 <code>B = 0.12</code>、<code>B = 0.09</code>（皆正值），Summary 卻說 <em class="q">negative relationship</em>；研究二、三皆為負值。論文 2.1.3 仍寫「知識自我效能感的中介角色在三個研究中方向一致」，被問到時說明是依三研究小結的敘述。</p></div></li>
   </ol>
+  </details>
 
-  <p class="subhead">關於「原文自身有問題」的三處 —— 不用改，但要知道</p>
+  <details class="fold">
+    <summary class="subhead fold__sum"><span class="fold__t">關於「原文自身有問題」的三處 —— 不用改，但要知道</span><span class="fold__btn" aria-hidden="true"></span></summary>
   <ol class="issues">
     <li><div><h4><a class="xref xref--lit" href="#s223-lit-li">Li</a> (2024) 正文與表格正負號不一致</h4><p>正文寫 <code>Novelty (β = 0.173)</code>，Table 9 卻是 <code>−0.173</code>。顯著性判定不受影響（都 p &gt; .10）。</p></div></li>
     <li><div><h4><a class="xref xref--lit" href="#s223-lit-elshan">Elshan</a> (2025) 研究三結果段與小結段互斥</h4><p>同一頁相鄰段落。你的批判性引用<strong>成立</strong>，可放心保留。</p></div></li>
     <li><div><h4><a class="xref xref--lit" href="#s221-lit-mulvey">Mulvey &amp; Klein</a> (1998) 數字矛盾</h4><p><code>dropped from 31 to 18%</code>（差 13）卻標 <code>15%</code>；Table 8 段落誤寫 <code>group performance</code>。被問到時照實說原文內部不一致，不要圓場。</p></div></li>
   </ol>
+  </details>
+
 </section>
 
 <div id="frag-s1"><p style="padding:2rem 0;color:var(--muted);font-family:var(--f-mono);font-size:.85rem;text-align:center">載入中…</p></div>
