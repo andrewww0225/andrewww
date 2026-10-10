@@ -777,9 +777,10 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 <section class="survey" id="survey" aria-label="正式問卷回收進度">
   <div class="survey__head">
     <span class="survey__lab">正式問卷回收進度</span>
-    <span class="survey__num"><b>78</b> / 200 份 · 39%</span>
+    <span class="survey__num"><b>87</b>（可用 86）/ 200 份 · 43%</span>
   </div>
-  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="78" aria-label="已回收 78 份，目標 200 份"><div class="survey__fill" style="width:39%"></div></div>
+  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="86" aria-label="已回收 87 份，可用 86 份，目標 200 份"><div class="survey__fill" style="width:43%"></div></div>
+  <p style="margin:.5rem 0 0;font-size:.82rem;color:var(--ink-2)">可用樣本的科系：商管 75、資訊 5、其他 4、待問老師 2（財金、休閒事業管理）</p>
 </section>
 
 <header class="masthead" id="top">
@@ -790,7 +791,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 逐字修改清單</a>
-  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（0 項）</a>
+  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（2 項）</a>
   <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（19 條）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
@@ -841,7 +842,10 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <h2 class="section__title">問老師清單</h2>
     <span class="section__meta">下次開會要請老師決定的事</span>
   </div>
-  <p style="margin:0 0 .6rem">目前沒有要問老師的事。</p>
+  <ol class="issues">
+    <li><div><h4>自填科系「財金」「休閒事業管理」要算商管嗎？</h4><p>正式問卷的科系題中，各有 1 份自行填寫「財金」與「休閒事業管理」，沒有勾選「商業與管理類」。這兩份要歸入商管，還是算其他？目前兩份都還算在可用樣本內，但沒有計入任何科系類別。</p></div></li>
+    <li><div><h4>確定是廢卷的樣本，要直接從資料刪除，還是保留但分析時排除？</h4><p>科系欄填「我是超商人員」的那一份（試算表第 60 列，25 題全部填 4），老師已確認當廢卷處理。要問的是處理方式：直接從原始資料刪除，或保留在原始資料、只在分析時排除並於第三章說明排除原因與份數。網頁上的可用份數已先扣除這一份。</p></div></li>
+  </ol>
   <p style="font-size:.88rem;color:var(--ink-2);margin:0"><strong>已決定：</strong>HOI 定義保留「修正」。老師認為刪除 HOI3 後，HOI5 仍涵蓋修正的內涵，定義不用改。</p>
 </section>
 
