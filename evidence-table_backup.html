@@ -800,7 +800,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 逐字修改清單</a>
-  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（7 項）</a>
+  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（9 項）</a>
   <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（20 條）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
@@ -855,7 +855,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <li><div><h4>自填科系「財金」「休閒事業管理」要算商管嗎？</h4><p>正式問卷的科系題中，各有 1 份自行填寫「財金」與「休閒事業管理」，沒有勾選「商業與管理類」。這兩份要歸入商管，還是算其他？目前兩份都還算在可用樣本內，但沒有計入任何科系類別。</p></div></li>
     <li><div><h4>確定是廢卷的樣本，要直接從資料刪除，還是保留但分析時排除？</h4><p>科系欄填「我是超商人員」的那一份（試算表第 60 列，25 題全部填 4），老師已確認當廢卷處理。要問的是處理方式：直接從原始資料刪除，或保留在原始資料、只在分析時排除並於第三章說明排除原因與份數。網頁上的可用份數已先扣除這一份。</p></div></li>
     <li><div><h4>分析時題號可以重新編號嗎？</h4><p>前測後刪除 AD1、HOI3，老師 10/5 指示題號沿用原編號、不重編，第三章表3-2 也用原編號。分析檔若重新編號，AD 會變成 AD1–AD4（原 AD2–AD5），HOI 會變成 HOI1–HOI4（原 HOI1、HOI2、HOI4、HOI5）。要問的是：論文與分析能不能改用重新編號後的題號？若可以，第三章表3-2、問卷設計頁與網頁上的題號要一起改。</p></div></li>
-    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p>寬鬆條件 103 份，用四種標準逐份檢查：S＝25 題全同分（第 82、95 列）、L＝連續 15 題以上同分（6 份）、P＝個人標準差 &lt; 0.6（7 份）、M＝多變量極端值，馬氏距離 p &lt; .001（第 20、28、59、91 列）。L、P 的門檻是經驗值；S、M 是常用的客觀標準。以下為 SmartPLS 結果（β，雙尾，10,000 次抽樣；*** p &lt; .001、** p &lt; .01、* p &lt; .05、ns 不顯著）。</p>
+    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p>寬鬆條件 103 份，用四種標準逐份檢查：S＝25 題全同分（第 82、95 列）、L＝連續 15 題以上同分（6 份）、P＝個人標準差 &lt; 0.6（7 份）、M＝多變量極端值，馬氏距離 p &lt; .001（第 20、28、59、91 列）。L、P 的門檻是經驗值；S、M 是常用的客觀標準。M 的 p &lt; .001 門檻一般認為出自 Tabachnick 與 Fidell 的教科書，原書版本與頁碼尚未查到。以下為 SmartPLS 結果（β，雙尾，10,000 次抽樣；*** p &lt; .001、** p &lt; .01、* p &lt; .05、ns 不顯著）。</p>
       <div class="qi-wrap"><table class="qi">
         <thead><tr><th>假說</th><th>V0 不刪<br>n=103</th><th>V1 S<br>n=101</th><th>V2 S+L<br>n=95</th><th>V3 S+P<br>n=94</th><th>V4 M<br>n=99</th><th>V5 全刪<br>n=86</th><th>V6 S+M<br>n=97</th></tr></thead>
         <tbody>
@@ -902,6 +902,22 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
       </table></div>
       <p>原因：新的 IEC1（「有了生成式AI協助，節省了我一些時間。」）反向後與其他三題呈負相關，已不具反向題作用（前測舊題「投入時間會減少」方向正確）；IEC2 與 IEC3、IEC4 的相關只有 .1–.2；正式樣本答案集中在高分，壓低題目間相關；IEC3、IEC4 與 TII、HOI 的相關高於與 IEC 其他題。刪卷與換題目組合都無法改善，屬測量工具本身的問題。只留 IEC3、IEC4 兩題不可行（違反每構面至少 4 題、缺少「投入時間」的內容）。可行方向：A 保留 4 題並列為研究限制、解讀 H3a 時保守；B IEC1 不反向計分（需理論理由，α 仍未達標）；D 修改 IEC 題目後重新施測。請老師決定。</p>
       <p>另外，V6 的 rho_a 也需注意。IEC 的 rho_a 為 .717（看似合格），但 PLS 給 IEC1_R 負權重（−.349）把它反轉、並偏重 IEC3（.350）與 IEC4（.512），不能據此說 IEC 信度合格；IEC 的 α .141、rho_c .461、AVE .474 都不合格。AD 的 rho_a 為 <b>−1.173</b>（信度不可能為負），但 AD 的 α .902、rho_c .839、AVE .572 均合格，四題本身一致；問題在 PLS 權重不穩（AD4 1.049、AD3 −.530），原因是 AD 與 HOI 幾乎無關（AD → HOI 在各版本皆不顯著），權重由雜訊決定。建議 AD 以 α 與 rho_c 報告信度，rho_a 加註說明不具解釋意義。請老師（或負責統計的辛彥妮）確認可否這樣處理。</p></div></li>
+    <li><div><h4>前測和正式問卷的資料可以合併分析嗎？</h4><p>前測 30 份與正式問卷合併後的 SmartPLS 結果（β，雙尾，10,000 次抽樣；括號內為 p 值；* p &lt; .05）：</p>
+      <div class="qi-wrap"><table class="qi">
+        <thead><tr><th>假說</th><th>前測＋商管<br>n=118</th><th>前測＋商管 V6<br>n=109</th><th>前測＋寬鬆<br>n=139</th><th>前測＋寬鬆 V6<br>n=129</th><th>只有正式 V6<br>n=97</th></tr></thead>
+        <tbody>
+          <tr><td>H1 AD → HOI</td><td>−.009 (.948)</td><td>.033 (.847)</td><td>−.115 (.335)</td><td>−.183 (.127)</td><td>−.227 (.275)</td></tr>
+          <tr><td>H2 A → HOI</td><td>.379*</td><td>.404*</td><td>.397*</td><td>.445*</td><td>.492*</td></tr>
+          <tr><td>H3a HOI → IEC</td><td>.448*</td><td>.446*</td><td>.474*</td><td>.367*</td><td>.440*</td></tr>
+          <tr><td>H3b HOI → TII</td><td>.451*</td><td>.421*</td><td>.467*</td><td>.286*</td><td>.390*</td></tr>
+          <tr><td>H4a HRS×HOI → IEC</td><td>.075 (.483)</td><td>−.020 (.857)</td><td>.036 (.669)</td><td>−.093 (.174)</td><td><b>−.255 (.003)*</b></td></tr>
+          <tr><td>H4b HRS×HOI → TII</td><td>.096 (.384)</td><td>.039 (.723)</td><td>.064 (.482)</td><td>−.057 (.437)</td><td>−.161 (.199)</td></tr>
+          <tr><td>IEC α／AVE</td><td>.32／.42</td><td>.38／.43</td><td>.32／.45</td><td>.40／.47</td><td>.14／.47</td></tr>
+          <tr><td>HTMT IEC–TII</td><td>.980</td><td>1.052</td><td>.898</td><td>.921</td><td>.886</td></tr>
+        </tbody>
+      </table></div>
+      <p>合併後 H2、H3a、H3b 仍全部顯著；H4a 的負向顯著只出現在只有正式問卷的 V6，加入前測後就消失，表示這個反向結果不穩定。IEC 合併後仍不合格。合併有一個資料上的問題：<b>前測與正式問卷的 IEC1 不是同一題</b>。前測是舊題「我的投入時間會減少」，正式問卷是老師修改後的「有了生成式AI協助，節省了我一些時間。」，合併檔把兩題放在同一欄。要請老師決定：前測與正式問卷能否合併；若可以，IEC1 要怎麼處理。</p></div></li>
+    <li><div><h4>IEC 與 TII 的區別效度不足，要怎麼處理？</h4><p>IEC 與 TII 的 HTMT 在所有樣本都超過 .85：只有正式問卷的七個刪卷版本為 .882–.923，合併前測的四個樣本為 .898–1.052（前測時為 .847）。Hair et al.（2022）的門檻是概念不同的構面 .85、概念相近的構面 .90；超過 1 表示兩個構面在資料上分不開。「前測＋商管」的 HTMT 拔靴信賴區間為 .801–1.176，包含 1。可能原因是 IEC3、IEC4 與 TII 的相關高於與 IEC 其他題的相關，即填答者沒有把「自己投入多少心力」和「對團隊投入」分開作答。這和上一題 IEC 的信度問題有關，可以一起決定：列為研究限制，或與 IEC 修題、重新施測一起處理。</p></div></li>
   </ol>
   <p style="font-size:.88rem;color:var(--ink-2);margin:0"><strong>已決定：</strong>HOI 定義保留「修正」。老師認為刪除 HOI3 後，HOI5 仍涵蓋修正的內涵，定義不用改。</p>
 </section>
@@ -1320,7 +1336,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <li><div><h4>Williams, Harkins, &amp; Latané (1981) · 適合 2.1.2</h4><p>印刷 p.303 摘要：個人產出可辨識性調節社會懈怠，讓受試者相信產出可被辨識後，<em class="q">This manipulation eliminated social loafing</em>。<span class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1AFYXWD01Yb6kh4ZBQGp03FJ5VPKL3s6s/view" target="_blank" rel="noopener noreferrer">原文 ↗</a></span></p></div></li>
     <li><div><h4>Alnuaimi, Robert, &amp; Maruping (2010) · 適合 2.1.2</h4><p>PDF p.2 摘要：責任分散、責難歸因與去人性化<strong>部分</strong>中介團隊規模對社會懈怠的影響；分散程度的效果只由去人性化（完全）中介。實驗為 140 名學生、32 隊、群組軟體腦力激盪。<span class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1oqjPR4wp9QSnRuVAjSLRBM920oQTp-VR/view" target="_blank" rel="noopener noreferrer">原文 ↗</a></span></p></div></li>
     <li><div><h4>Siemon &amp; Wank (2021) · 適合 2.1.3</h4><p>PDF p.1 摘要：有無 AI 隊友時，對同事努力的預期與知覺 <em class="q">no significant difference</em>，但對話紀錄顯示 <em class="q">less detail and length of contributions</em>。PACIS 2021，無連續頁碼。<span class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1NK4elwicCQUxMSCrYKk-tYnUTDUN6eOl/view" target="_blank" rel="noopener noreferrer">原文 ↗</a></span></p></div></li>
-    <li><div><h4>Stieglitz et al. (2022) · 適合 2.1.3</h4><p>印刷 p.745 摘要：N = 102，受試者由虛擬助理協助解題；<em class="q">The results indicate SL tendencies in virtual collaboration with VAs and that participants tend to cede responsibility to the VA</em>。是否另有真人隊友未讀方法段確認。<span class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1vSN2N3grpn4qITYdAWU_w4FsF4MJwxsj/view" target="_blank" rel="noopener noreferrer">原文 ↗</a></span></p></div></li>
+    <li><div><h4>Stieglitz et al. (2022) · 適合 2.1.3</h4><p>印刷 p.745 摘要：N = 102，受試者由虛擬助理協助解題；<em class="q">The results indicate SL tendencies in virtual collaboration with VAs and that participants tend to cede responsibility to the VA</em>。是否另有真人隊友未讀方法段確認。<span class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1vSN2N3grpn4qITYdAWU_w4FsF4MJwxsj/view" target="_blank" rel="noopener noreferrer">原文 ↗</a></span></p></div></li>
     <li><div><h4>Parasuraman &amp; Manzey (2010) 的兩個點 · 適合 2.2.5</h4><p>印刷 p.384：可靠度固定時故障偵測率 33%、會變動時 82%（轉引 Parasuraman, Molloy, &amp; Singh, 1993），但只出現在<strong>多工負荷</strong>下，單一任務時約 97%～100%。印刷 p.381：自動化偏誤 <em class="q">can affect decision making in individuals as well as in teams</em>。</p></div></li>
   </ol>
 </section>
@@ -6639,4 +6655,4 @@ function initRevbar(){
 })();
 </script>
 
-</body></html>
+</body></html>
