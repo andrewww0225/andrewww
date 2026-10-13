@@ -852,7 +852,23 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <span class="section__meta">下次開會要請老師決定的事</span>
   </div>
   <ol class="issues">
-    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p>寬鬆條件 103 份，用四種標準逐份檢查：S＝25 題全同分（第 82、95 列）、L＝連續 15 題以上同分（6 份）、P＝個人標準差 &lt; 0.6（7 份）、M＝多變量極端值，馬氏距離 p &lt; .001（第 20、28、59、91 列）。L、P 的門檻是經驗值；S、M 是常用的客觀標準。M 的 p &lt; .001 門檻一般認為出自 Tabachnick 與 Fidell 的教科書，原書版本與頁碼尚未查到。以下為 SmartPLS 結果，右邊四欄是加入前測 30 份的合併樣本，老師建議儘量不合併，僅供參考（β，雙尾，10,000 次抽樣；*** p &lt; .001、** p &lt; .01、* p &lt; .05、ns 不顯著）。</p>
+    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p><b>最新資料（回收 115 份）的 SmartPLS 結果</b>（IEC 拿掉 IEC1；β，雙尾 bootstrapping；括號內為 p 值；* p &lt; .05）：</p>
+      <div class="qi-wrap"><table class="qi">
+        <thead><tr><th>假說</th><th>V6 全部科系<br>同分＋極端值<br>n=106</th><th>V7 全部科系<br>同分＋連續同分＋極端值<br>n=100</th><th>SP1 探索用<br>刪到 IEC 合格<br>n=26</th></tr></thead>
+        <tbody>
+          <tr><td>H1 AD → HOI</td><td>−.182 (.289)</td><td>.058 (.752)</td><td>−.220 (.486)</td></tr>
+          <tr><td>H2 A → HOI</td><td>.497*</td><td>.413*</td><td>.391* (.041)</td></tr>
+          <tr><td>H3a HOI → IEC</td><td>.413*</td><td>.394*</td><td>.256 (.329)</td></tr>
+          <tr><td>H3b HOI → TII</td><td>.410*</td><td>.398*</td><td>.437 (.145)</td></tr>
+          <tr><td>H4a HRS×HOI → IEC</td><td>−.185* (.009)</td><td>−.217* (.005)</td><td>−.051 (.782)</td></tr>
+          <tr><td>H4b HRS×HOI → TII</td><td>−.097 (.293)</td><td>−.111 (.276)</td><td>−.209 (.254)</td></tr>
+          <tr><td>HRS → IEC（無對應假說）</td><td>.228* (.013)</td><td>.210* (.025)</td><td>.474 (.072)</td></tr>
+          <tr><td>R² HOI／IEC／TII</td><td>.25／.44／.25</td><td>.18／.41／.23</td><td>.18／.44／.35</td></tr>
+        </tbody>
+      </table></div>
+      <p>V6 與 V7 結論一致：H2、H3a、H3b 顯著；H4a 顯著但方向與假說相反（HRS 愈高，HOI → IEC 愈弱）；H1、H4b 不顯著。SP1 是為了讓 IEC 的 α 達 .70 而刪到只剩 26 份的探索版本，IEC 信效度全部合格，但 H3a、H3b 都不顯著，說明不能為了 IEC 犧牲樣本。建議 V6 為正式分析、V7 為穩健性檢查；請老師決定。下方舊表為上週偷跑時 103 份的結果，僅供對照。</p>
+      <p>
+寬鬆條件 103 份，用四種標準逐份檢查：S＝25 題全同分（第 82、95 列）、L＝連續 15 題以上同分（6 份）、P＝個人標準差 &lt; 0.6（7 份）、M＝多變量極端值，馬氏距離 p &lt; .001（第 20、28、59、91 列）。L、P 的門檻是經驗值；S、M 是常用的客觀標準。M 的 p &lt; .001 門檻一般認為出自 Tabachnick 與 Fidell 的教科書，原書版本與頁碼尚未查到。以下為 SmartPLS 結果，右邊四欄是加入前測 30 份的合併樣本，老師建議儘量不合併，僅供參考（β，雙尾，10,000 次抽樣；*** p &lt; .001、** p &lt; .01、* p &lt; .05、ns 不顯著）。</p>
       <div class="qi-wrap"><table class="qi">
         <thead><tr><th>假說</th><th>V0 不刪<br>n=103</th><th>V1 S<br>n=101</th><th>V2 S+L<br>n=95</th><th>V3 S+P<br>n=94</th><th>V4 M<br>n=99</th><th>V5 全刪<br>n=86</th><th>V6 S+M<br>n=97</th><th>前測＋商管<br>n=118</th><th>前測＋商管 V6<br>n=109</th><th>前測＋寬鬆<br>n=139</th><th>前測＋寬鬆 V6<br>n=129</th></tr></thead>
         <tbody>
@@ -925,16 +941,16 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
       </table></div>
       <p>原因：新的 IEC1（「有了生成式AI協助，節省了我一些時間。」）反向後與其他三題呈負相關，已不具反向題作用（前測舊題「投入時間會減少」方向正確）；IEC2 與 IEC3、IEC4 的相關只有 .1–.2；正式樣本答案集中在高分，壓低題目間相關；IEC3、IEC4 與 TII、HOI 的相關高於與 IEC 其他題。刪卷與換題目組合都無法改善，屬測量工具本身的問題。只留 IEC3、IEC4 兩題不可行（違反每構面至少 4 題、缺少「投入時間」的內容）。</p>
       <p>IEC 的處理規則已由老師決定（見下方「已決定」）。依規則先檢查前後不一致：IEC1（反向後）與 IEC2–4 平均相差 4 分以上的有 60 份（V0，共 103 份）、58 份（V6，共 97 份），超過一半；刪掉這些樣本後 IEC2–4 的 α 反而下降（V0 .52 → .12）。多數填答者把 IEC1 讀成正面描述，問題在題目而不在填答者，所以實際上要走第二步：刪除 IEC1，在 SmartPLS 重跑後再看 rho_c 與 AVE。</p>
-      <p><b>最新資料（回收 115 份）的結果</b>（IEC 拿掉 IEC1，只用 IEC2–4；* 為 SmartPLS 正式結果，其餘為近似值，待 SmartPLS 確認）：</p>
+      <p><b>最新資料（回收 115 份）的結果</b>（IEC 拿掉 IEC1，只用 IEC2–4；SmartPLS 結果）：</p>
       <div class="qi-wrap"><table class="qi">
         <thead><tr><th>版本</th><th>樣本與刪法</th><th>n</th><th>α</th><th>rho_a</th><th>rho_c</th><th>AVE</th><th>HTMT IEC–TII</th></tr></thead>
         <tbody>
-          <tr><td>V6</td><td>全部科系；刪同分＋極端值</td><td>106</td><td>.632</td><td>.755</td><td>.793</td><td>.572</td><td>.813</td></tr>
-          <tr><td>V7</td><td>全部科系；刪同分＋連續同分＋極端值</td><td>100</td><td>.577*</td><td>.731*</td><td>.762*</td><td>.537*</td><td>.805*</td></tr>
+          <tr><td>V6</td><td>全部科系；刪同分＋極端值</td><td>106</td><td>.632</td><td>.755</td><td>.792</td><td>.572</td><td>.813</td></tr>
+          <tr><td>V7</td><td>全部科系；刪同分＋連續同分＋極端值</td><td>100</td><td>.577</td><td>.731</td><td>.762</td><td>.537</td><td>.805</td></tr>
           <tr><td>門檻</td><td></td><td></td><td>.70</td><td>.70</td><td>.70</td><td>.50</td><td>&lt; .85</td></tr>
         </tbody>
       </table></div>
-      <p>除了 α，其餘指標都合格。另外試過約 8,600 種資料處理組合（三種樣本 × 三種 IEC 題目組合 × 各種刪除規則與門檻）：保留 IEC1 時，只有刪到剩 26 份 α 才達 .70；拿掉 IEC1 時，α 要達 .70 就得刪到只剩 40–70 份，而且這時 HTMT 一律高於 .92。任何資料處理都無法讓 IEC 全部合格，問題在題目本身（IEC1 被讀成正面描述，IEC 與 TII 內容相近）。建議正式分析用 V6，IEC 以 rho_a、rho_c 為主要信度指標，α 偏低列為研究限制。請老師決定。</p>
+      <p>除了 α，其餘指標都合格。V6 的 HTMT（.813）雖低於 .85，但 bootstrapping 的 95% 信賴區間為 .613–1.067，上限超過 1，區別效度在檢定上仍不夠確定。另外試過約 8,600 種資料處理組合（三種樣本 × 三種 IEC 題目組合 × 各種刪除規則與門檻）：保留 IEC1 時，只有刪到剩 26 份 α 才達 .70；拿掉 IEC1 時，α 要達 .70 就得刪到只剩 40–70 份，而且這時 HTMT 一律高於 .92。任何資料處理都無法讓 IEC 全部合格，問題在題目本身（IEC1 被讀成正面描述，IEC 與 TII 內容相近）。建議正式分析用 V6，IEC 以 rho_a、rho_c 為主要信度指標，α 偏低列為研究限制。請老師決定。</p>
       <p>刪除規則的出處：連續同分參考 Curran（2016）「連續相同作答達量表長度一半以上」的經驗法則（本研究 25 題取 15 題，較保守）；馬氏距離 p &lt; .001 一般認為出自 Tabachnick 與 Fidell，原書頁碼尚未查到。</p>
 
       <p>另外，V6 的 rho_a 也需注意。IEC 的 rho_a 為 .717（看似合格），但 PLS 給 IEC1_R 負權重（−.349）把它反轉、並偏重 IEC3（.350）與 IEC4（.512），不能據此說 IEC 信度合格；IEC 的 α .141、rho_c .461、AVE .474 都不合格。AD 的 rho_a 為 <b>−1.173</b>（信度不可能為負），但 AD 的 α .902、rho_c .839、AVE .572 均合格，四題本身一致；問題在 PLS 權重不穩（AD4 1.049、AD3 −.530），原因是 AD 與 HOI 幾乎無關（AD → HOI 在各版本皆不顯著），權重由雜訊決定。建議 AD 以 α 與 rho_c 報告信度，rho_a 加註說明不具解釋意義。請老師（或負責統計的辛彥妮）確認可否這樣處理。</p></div></li>
