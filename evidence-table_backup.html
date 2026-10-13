@@ -800,7 +800,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 逐字修改清單</a>
-  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（4 項）</a>
+  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（5 項）</a>
   <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（20 條）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
@@ -925,8 +925,21 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
       </table></div>
       <p>原因：新的 IEC1（「有了生成式AI協助，節省了我一些時間。」）反向後與其他三題呈負相關，已不具反向題作用（前測舊題「投入時間會減少」方向正確）；IEC2 與 IEC3、IEC4 的相關只有 .1–.2；正式樣本答案集中在高分，壓低題目間相關；IEC3、IEC4 與 TII、HOI 的相關高於與 IEC 其他題。刪卷與換題目組合都無法改善，屬測量工具本身的問題。只留 IEC3、IEC4 兩題不可行（違反每構面至少 4 題、缺少「投入時間」的內容）。</p>
       <p>IEC 的處理規則已由老師決定（見下方「已決定」）。依規則先檢查前後不一致：IEC1（反向後）與 IEC2–4 平均相差 4 分以上的有 60 份（V0，共 103 份）、58 份（V6，共 97 份），超過一半；刪掉這些樣本後 IEC2–4 的 α 反而下降（V0 .52 → .12）。多數填答者把 IEC1 讀成正面描述，問題在題目而不在填答者，所以實際上要走第二步：刪除 IEC1，在 SmartPLS 重跑後再看 rho_c 與 AVE。</p>
+      <p><b>最新資料（回收 115 份）的結果</b>（IEC 拿掉 IEC1，只用 IEC2–4；* 為 SmartPLS 正式結果，其餘為近似值，待 SmartPLS 確認）：</p>
+      <div class="qi-wrap"><table class="qi">
+        <thead><tr><th>版本</th><th>樣本與刪法</th><th>n</th><th>α</th><th>rho_a</th><th>rho_c</th><th>AVE</th><th>HTMT IEC–TII</th></tr></thead>
+        <tbody>
+          <tr><td>V6</td><td>全部科系；刪同分＋極端值</td><td>106</td><td>.632</td><td>.755</td><td>.793</td><td>.572</td><td>.813</td></tr>
+          <tr><td>V7</td><td>全部科系；刪同分＋連續同分＋極端值</td><td>100</td><td>.577*</td><td>.731*</td><td>.762*</td><td>.537*</td><td>.805*</td></tr>
+          <tr><td>門檻</td><td></td><td></td><td>.70</td><td>.70</td><td>.70</td><td>.50</td><td>&lt; .85</td></tr>
+        </tbody>
+      </table></div>
+      <p>除了 α，其餘指標都合格。另外試過約 8,600 種資料處理組合（三種樣本 × 三種 IEC 題目組合 × 各種刪除規則與門檻）：保留 IEC1 時，只有刪到剩 26 份 α 才達 .70；拿掉 IEC1 時，α 要達 .70 就得刪到只剩 40–70 份，而且這時 HTMT 一律高於 .92。任何資料處理都無法讓 IEC 全部合格，問題在題目本身（IEC1 被讀成正面描述，IEC 與 TII 內容相近）。建議正式分析用 V6，IEC 以 rho_a、rho_c 為主要信度指標，α 偏低列為研究限制。請老師決定。</p>
+      <p>刪除規則的出處：連續同分參考 Curran（2016）「連續相同作答達量表長度一半以上」的經驗法則（本研究 25 題取 15 題，較保守）；馬氏距離 p &lt; .001 一般認為出自 Tabachnick 與 Fidell，原書頁碼尚未查到。</p>
+
       <p>另外，V6 的 rho_a 也需注意。IEC 的 rho_a 為 .717（看似合格），但 PLS 給 IEC1_R 負權重（−.349）把它反轉、並偏重 IEC3（.350）與 IEC4（.512），不能據此說 IEC 信度合格；IEC 的 α .141、rho_c .461、AVE .474 都不合格。AD 的 rho_a 為 <b>−1.173</b>（信度不可能為負），但 AD 的 α .902、rho_c .839、AVE .572 均合格，四題本身一致；問題在 PLS 權重不穩（AD4 1.049、AD3 −.530），原因是 AD 與 HOI 幾乎無關（AD → HOI 在各版本皆不顯著），權重由雜訊決定。建議 AD 以 α 與 rho_c 報告信度，rho_a 加註說明不具解釋意義。請老師（或負責統計的辛彥妮）確認可否這樣處理。</p></div></li>
     <li><div><h4>IEC 與 TII 的區別效度不足，要怎麼處理？</h4><p>IEC 與 TII 的 HTMT 在所有樣本都超過 .85：只有正式問卷的七個刪卷版本為 .882–.923，合併前測的四個樣本為 .898–1.052（前測時為 .847）。Hair et al.（2022）的門檻是概念不同的構面 .85、概念相近的構面 .90；超過 1 表示兩個構面在資料上分不開。「前測＋商管」的 HTMT 拔靴信賴區間為 .801–1.176，包含 1。可能原因是 IEC3、IEC4 與 TII 的相關高於與 IEC 其他題的相關，即填答者沒有把「自己投入多少心力」和「對團隊投入」分開作答。這和上一題 IEC 的信度問題有關，可以一起決定：列為研究限制，或與 IEC 修題、重新施測一起處理。老師：先照 IEC 的規則（刪除 IEC1）試試看，仍太高再處理。</p></div></li>
+    <li><div><h4>正式分析要用全部科系，還是只用商管＋資訊？</h4><p>可用樣本 110 份：商管 90、資訊 8、其他科系 12（自填科系不屬於商管或資訊的學生）。研究對象若是大學生，其他科系的 12 人應保留；若限定商管，樣本只剩 90 份左右，低於 G*Power 估計的最低 119 份。上表的 V6、V7 都是全部科系；只用商管時，IEC 與 TII 的 HTMT 要刪到 66 份以下才會低於 .85。</p></div></li>
       <li><div><h4>論文裡可以用「我們」自稱嗎？</h4><p>工作筆記寫「自稱一律寫『本研究』，不用『我們』」，但沒有寫是老師的規定。描述觀察到的結果時，用「我們」讀起來較順；台灣商管論文的慣例多用「本研究」。</p></div></li>
 </ol>
   <p style="font-size:.88rem;color:var(--ink-2);margin:0 0 .3rem"><strong>已決定：</strong></p>
@@ -937,6 +950,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <li>第一章主軸改為「成員多 → 成員更多」。</li>
     <li>前測與正式問卷儘量不合併分析。</li>
     <li>IEC 先單看 IEC：刪掉極端值與前後不一致的樣本，仍不合格就刪 IEC1；IEC 只剩 3 題可以接受。</li>
+    <li>第 82、95 列（25 題全部同分）排除（Andrew）。</li>
     <li>HOI 定義保留「修正」：刪除原 HOI3 後，HOI4（原 HOI5）仍涵蓋修正的內涵。</li>
   </ul>
 </section>
