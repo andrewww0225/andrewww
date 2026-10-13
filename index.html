@@ -940,7 +940,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         </tbody>
       </table></div>
       <p>原因：新的 IEC1（「有了生成式AI協助，節省了我一些時間。」）反向後與其他三題呈負相關，已不具反向題作用（前測舊題「投入時間會減少」方向正確）；IEC2 與 IEC3、IEC4 的相關只有 .1–.2；正式樣本答案集中在高分，壓低題目間相關；IEC3、IEC4 與 TII、HOI 的相關高於與 IEC 其他題。刪卷與換題目組合都無法改善，屬測量工具本身的問題。只留 IEC3、IEC4 兩題不可行（違反每構面至少 4 題、缺少「投入時間」的內容）。</p>
-      <p>IEC 的處理規則已由老師決定（見下方「已決定」）。依規則先檢查前後不一致：IEC1（反向後）與 IEC2–4 平均相差 4 分以上的有 60 份（V0，共 103 份）、58 份（V6，共 97 份），超過一半；刪掉這些樣本後 IEC2–4 的 α 反而下降（V0 .52 → .12）。多數填答者把 IEC1 讀成正面描述，問題在題目而不在填答者，所以實際上要走第二步：刪除 IEC1，在 SmartPLS 重跑後再看 rho_c 與 AVE。</p>
+      <p>老師的規則：先刪極端值與前後不一致的樣本，仍不合格就刪 IEC1（IEC 只剩 3 題可以接受）。依規則先檢查前後不一致：IEC1（反向後）與 IEC2–4 平均相差 4 分以上的有 60 份（V0，共 103 份）、58 份（V6，共 97 份），超過一半；刪掉這些樣本後 IEC2–4 的 α 反而下降（V0 .52 → .12）。多數填答者把 IEC1 讀成正面描述，問題在題目而不在填答者，所以實際上要走第二步：刪除 IEC1，在 SmartPLS 重跑後再看 rho_c 與 AVE。</p>
       <p><b>最新資料（回收 115 份）的結果</b>（IEC 拿掉 IEC1，只用 IEC2–4；SmartPLS 結果）：</p>
       <div class="qi-wrap"><table class="qi">
         <thead><tr><th>版本</th><th>樣本與刪法</th><th>n</th><th>α</th><th>rho_a</th><th>rho_c</th><th>AVE</th><th>HTMT IEC–TII</th></tr></thead>
@@ -958,17 +958,6 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <li><div><h4>正式分析要用全部科系，還是只用商管＋資訊？</h4><p>可用樣本 110 份：商管 90、資訊 8、其他科系 12（自填科系不屬於商管或資訊的學生）。研究對象若是大學生，其他科系的 12 人應保留；若限定商管，樣本只剩 90 份左右，低於 G*Power 估計的最低 119 份。上表的 V6、V7 都是全部科系；只用商管時，IEC 與 TII 的 HTMT 要刪到 66 份以下才會低於 .85。</p></div></li>
       <li><div><h4>論文裡可以用「我們」自稱嗎？</h4><p>工作筆記寫「自稱一律寫『本研究』，不用『我們』」，但沒有寫是老師的規定。描述觀察到的結果時，用「我們」讀起來較順；台灣商管論文的慣例多用「本研究」。</p></div></li>
 </ol>
-  <p style="font-size:.88rem;color:var(--ink-2);margin:0 0 .3rem"><strong>已決定：</strong></p>
-  <ul style="list-style:disc;margin:0 0 0 1.2rem;padding:0;font-size:.88rem;color:var(--ink-2)">
-    <li>科系自填「財金」「休閒事業管理」算商管。</li>
-    <li>廢卷保留在原始資料，整理分析資料時才刪除，第三章說明排除原因與份數。</li>
-    <li>題號可以重新編號：AD1–AD4（原 AD2–AD5）、HOI1–HOI4（原 HOI1、HOI2、HOI4、HOI5）。</li>
-    <li>第一章主軸改為「成員多 → 成員更多」。</li>
-    <li>前測與正式問卷儘量不合併分析。</li>
-    <li>IEC 先單看 IEC：刪掉極端值與前後不一致的樣本，仍不合格就刪 IEC1；IEC 只剩 3 題可以接受。</li>
-    <li>第 82、95 列（25 題全部同分）排除（Andrew）。</li>
-    <li>HOI 定義保留「修正」：刪除原 HOI3 後，HOI4（原 HOI5）仍涵蓋修正的內涵。</li>
-  </ul>
 </section>
 
 <!-- ═══════════════ 組員待查證（10/5 新增） ═══════════════ -->
