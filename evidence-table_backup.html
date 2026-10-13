@@ -855,21 +855,49 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <li><div><h4>自填科系「財金」「休閒事業管理」要算商管嗎？</h4><p>正式問卷的科系題中，各有 1 份自行填寫「財金」與「休閒事業管理」，沒有勾選「商業與管理類」。這兩份要歸入商管，還是算其他？目前兩份都還算在可用樣本內，但沒有計入任何科系類別。</p></div></li>
     <li><div><h4>確定是廢卷的樣本，要直接從資料刪除，還是保留但分析時排除？</h4><p>科系欄填「我是超商人員」的那一份（試算表第 60 列，25 題全部填 4），老師已確認當廢卷處理。要問的是處理方式：直接從原始資料刪除，或保留在原始資料、只在分析時排除並於第三章說明排除原因與份數。網頁上的可用份數已先扣除這一份。</p></div></li>
     <li><div><h4>分析時題號可以重新編號嗎？</h4><p>前測後刪除 AD1、HOI3，第三章表3-2 目前沿用原編號。分析檔若重新編號，AD 會變成 AD1–AD4（原 AD2–AD5），HOI 會變成 HOI1–HOI4（原 HOI1、HOI2、HOI4、HOI5）。要問的是：論文與分析能不能改用重新編號後的題號？若可以，第三章表3-2、問卷設計頁與網頁上的題號要一起改。</p></div></li>
-    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p>寬鬆條件 103 份，用四種標準逐份檢查：S＝25 題全同分（第 82、95 列）、L＝連續 15 題以上同分（6 份）、P＝個人標準差 &lt; 0.6（7 份）、M＝多變量極端值，馬氏距離 p &lt; .001（第 20、28、59、91 列）。L、P 的門檻是經驗值；S、M 是常用的客觀標準。M 的 p &lt; .001 門檻一般認為出自 Tabachnick 與 Fidell 的教科書，原書版本與頁碼尚未查到。以下為 SmartPLS 結果（β，雙尾，10,000 次抽樣；*** p &lt; .001、** p &lt; .01、* p &lt; .05、ns 不顯著）。</p>
+    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p>寬鬆條件 103 份，用四種標準逐份檢查：S＝25 題全同分（第 82、95 列）、L＝連續 15 題以上同分（6 份）、P＝個人標準差 &lt; 0.6（7 份）、M＝多變量極端值，馬氏距離 p &lt; .001（第 20、28、59、91 列）。L、P 的門檻是經驗值；S、M 是常用的客觀標準。M 的 p &lt; .001 門檻一般認為出自 Tabachnick 與 Fidell 的教科書，原書版本與頁碼尚未查到。以下為 SmartPLS 結果，右邊四欄是加入前測 30 份的合併樣本（β，雙尾，10,000 次抽樣；*** p &lt; .001、** p &lt; .01、* p &lt; .05、ns 不顯著）。</p>
       <div class="qi-wrap"><table class="qi">
-        <thead><tr><th>假說</th><th>V0 不刪<br>n=103</th><th>V1 S<br>n=101</th><th>V2 S+L<br>n=95</th><th>V3 S+P<br>n=94</th><th>V4 M<br>n=99</th><th>V5 全刪<br>n=86</th><th>V6 S+M<br>n=97</th></tr></thead>
+        <thead><tr><th>假說</th><th>V0 不刪<br>n=103</th><th>V1 S<br>n=101</th><th>V2 S+L<br>n=95</th><th>V3 S+P<br>n=94</th><th>V4 M<br>n=99</th><th>V5 全刪<br>n=86</th><th>V6 S+M<br>n=97</th><th>前測＋商管<br>n=118</th><th>前測＋商管 V6<br>n=109</th><th>前測＋寬鬆<br>n=139</th><th>前測＋寬鬆 V6<br>n=129</th></tr></thead>
         <tbody>
-          <tr><td>H1 AD → HOI</td><td>−.168 ns</td><td>−.134 ns</td><td>.022 ns</td><td>−.159 ns</td><td>−.290 ns</td><td>.107 ns</td><td>−.227 ns</td></tr>
-          <tr><td>H2 A → HOI</td><td>.436***</td><td>.432***</td><td>.371***</td><td>.393***</td><td>.502***</td><td>.378***</td><td>.492***</td></tr>
-          <tr><td>H3a HOI → IEC</td><td>.490***</td><td>.489***</td><td>.483***</td><td>.496***</td><td>.442***</td><td>.430***</td><td>.440***</td></tr>
-          <tr><td>H3b HOI → TII</td><td>.509***</td><td>.507***</td><td>.501***</td><td>.511***</td><td>.393***</td><td>.374*</td><td>.390**</td></tr>
-          <tr><td>H4a HRS×HOI → IEC</td><td>−.111 ns</td><td>−.120 ns</td><td>−.146 ns</td><td>−.063 ns</td><td><b>−.244**</b></td><td><b>−.272*</b></td><td><b>−.255**</b></td></tr>
-          <tr><td>H4b HRS×HOI → TII</td><td>−.027 ns</td><td>−.033 ns</td><td>−.021 ns</td><td>.035 ns</td><td>−.147 ns</td><td>−.175 ns</td><td>−.161 ns</td></tr>
-          <tr><td>R² HOI／IEC／TII</td><td>.21／.39／.24</td><td>.19／.38／.24</td><td>.14／.34／.22</td><td>.17／.34／.23</td><td>.30／.46／.22</td><td>.16／.37／.19</td><td>.26／.46／.22</td></tr>
-          <tr><td>IEC α／AVE</td><td>.05／.45</td><td>.03／.45</td><td>.01／.41</td><td>.04／.43</td><td>.15／.48</td><td>.14／.42</td><td>.14／.47</td></tr>
-          <tr><td>HTMT IEC–TII</td><td>.887</td><td>.882</td><td>.903</td><td>.897</td><td>.892</td><td>.923</td><td>.886</td></tr>
+          <tr><td>H1 AD → HOI</td><td>−.168 ns</td><td>−.134 ns</td><td>.022 ns</td><td>−.159 ns</td><td>−.290 ns</td><td>.107 ns</td><td>−.227 ns</td><td>−.009 ns</td><td>.033 ns</td><td>−.115 ns</td><td>−.183 ns</td></tr>
+          <tr><td>H2 A → HOI</td><td>.436***</td><td>.432***</td><td>.371***</td><td>.393***</td><td>.502***</td><td>.378***</td><td>.492***</td><td>.379***</td><td>.404***</td><td>.397***</td><td>.445***</td></tr>
+          <tr><td>H3a HOI → IEC</td><td>.490***</td><td>.489***</td><td>.483***</td><td>.496***</td><td>.442***</td><td>.430***</td><td>.440***</td><td>.448***</td><td>.446***</td><td>.474***</td><td>.367***</td></tr>
+          <tr><td>H3b HOI → TII</td><td>.509***</td><td>.507***</td><td>.501***</td><td>.511***</td><td>.393***</td><td>.374*</td><td>.390**</td><td>.451***</td><td>.421**</td><td>.467***</td><td>.286**</td></tr>
+          <tr><td>H4a HRS×HOI → IEC</td><td>−.111 ns</td><td>−.120 ns</td><td>−.146 ns</td><td>−.063 ns</td><td><b>−.244**</b></td><td><b>−.272*</b></td><td><b>−.255**</b></td><td>.075 ns</td><td>−.020 ns</td><td>.036 ns</td><td>−.093 ns</td></tr>
+          <tr><td>H4b HRS×HOI → TII</td><td>−.027 ns</td><td>−.033 ns</td><td>−.021 ns</td><td>.035 ns</td><td>−.147 ns</td><td>−.175 ns</td><td>−.161 ns</td><td>.096 ns</td><td>.039 ns</td><td>.064 ns</td><td>−.057 ns</td></tr>
+          <tr><td>R² HOI／IEC／TII</td><td>.21／.39／.24</td><td>.19／.38／.24</td><td>.14／.34／.22</td><td>.17／.34／.23</td><td>.30／.46／.22</td><td>.16／.37／.19</td><td>.26／.46／.22</td><td>.14／.33／.23</td><td>.17／.35／.21</td><td>.16／.35／.22</td><td>.21／.40／.21</td></tr>
+          <tr><td>IEC α／AVE</td><td>.05／.45</td><td>.03／.45</td><td>.01／.41</td><td>.04／.43</td><td>.15／.48</td><td>.14／.42</td><td>.14／.47</td><td>.32／.42</td><td>.38／.43</td><td>.32／.45</td><td>.40／.47</td></tr>
+          <tr><td>HTMT IEC–TII</td><td>.887</td><td>.882</td><td>.903</td><td>.897</td><td>.892</td><td>.923</td><td>.886</td><td>.980</td><td>1.052</td><td>.898</td><td>.921</td></tr>
         </tbody>
       </table></div>
+      <details style="margin:.4rem 0"><summary style="cursor:pointer;font-size:.88rem;font-weight:700">各樣本完整信效度與 R²（粗體＝未達標：α、rho_c &lt; .70，AVE &lt; .50）</summary>
+      <div class="qi-wrap"><table class="qi">
+        <thead><tr><th>構面</th><th>指標</th><th>V0 不刪<br>n=103</th><th>V1 S<br>n=101</th><th>V2 S+L<br>n=95</th><th>V3 S+P<br>n=94</th><th>V4 M<br>n=99</th><th>V5 全刪<br>n=86</th><th>V6 S+M<br>n=97</th><th>前測＋商管<br>n=118</th><th>前測＋商管 V6<br>n=109</th><th>前測＋寬鬆<br>n=139</th><th>前測＋寬鬆 V6<br>n=129</th></tr></thead>
+        <tbody>
+          <tr><td>AD</td><td>α</td><td>.908</td><td>.905</td><td>.908</td><td>.907</td><td>.906</td><td>.908</td><td>.902</td><td>.899</td><td>.894</td><td>.892</td><td>.887</td></tr>
+          <tr><td>AD</td><td>rho_c</td><td><b>.602</b></td><td>.882</td><td>.899</td><td>.744</td><td><b>.438</b></td><td>.858</td><td>.839</td><td>.853</td><td>.827</td><td>.916</td><td>.915</td></tr>
+          <tr><td>AD</td><td>AVE</td><td><b>.302</b></td><td>.654</td><td>.693</td><td><b>.437</b></td><td><b>.200</b></td><td>.608</td><td>.572</td><td>.600</td><td>.555</td><td>.734</td><td>.731</td></tr>
+          <tr><td>A</td><td>α</td><td>.837</td><td>.834</td><td>.818</td><td>.825</td><td>.841</td><td>.815</td><td>.838</td><td>.848</td><td>.850</td><td>.829</td><td>.828</td></tr>
+          <tr><td>A</td><td>rho_c</td><td>.882</td><td>.879</td><td>.865</td><td>.871</td><td>.885</td><td>.865</td><td>.882</td><td>.888</td><td>.889</td><td>.879</td><td>.878</td></tr>
+          <tr><td>A</td><td>AVE</td><td>.600</td><td>.595</td><td>.565</td><td>.578</td><td>.606</td><td>.563</td><td>.601</td><td>.614</td><td>.617</td><td>.592</td><td>.591</td></tr>
+          <tr><td>HOI</td><td>α</td><td>.823</td><td>.821</td><td>.805</td><td>.811</td><td>.831</td><td>.806</td><td>.829</td><td>.837</td><td>.843</td><td>.845</td><td>.867</td></tr>
+          <tr><td>HOI</td><td>rho_c</td><td>.882</td><td>.881</td><td>.870</td><td>.874</td><td>.887</td><td>.872</td><td>.886</td><td>.890</td><td>.893</td><td>.896</td><td>.909</td></tr>
+          <tr><td>HOI</td><td>AVE</td><td>.652</td><td>.649</td><td>.627</td><td>.636</td><td>.663</td><td>.631</td><td>.660</td><td>.670</td><td>.678</td><td>.682</td><td>.715</td></tr>
+          <tr><td>HRS</td><td>α</td><td>.788</td><td>.785</td><td>.762</td><td>.767</td><td>.810</td><td>.775</td><td>.807</td><td>.834</td><td>.836</td><td>.837</td><td>.838</td></tr>
+          <tr><td>HRS</td><td>rho_c</td><td>.862</td><td>.860</td><td>.844</td><td>.848</td><td>.874</td><td>.850</td><td>.872</td><td>.889</td><td>.889</td><td>.891</td><td>.891</td></tr>
+          <tr><td>HRS</td><td>AVE</td><td>.611</td><td>.607</td><td>.578</td><td>.585</td><td>.637</td><td>.591</td><td>.633</td><td>.668</td><td>.668</td><td>.672</td><td>.672</td></tr>
+          <tr><td>IEC</td><td>α</td><td><b>.046</b></td><td><b>.034</b></td><td><b>.008</b></td><td><b>.043</b></td><td><b>.150</b></td><td><b>.135</b></td><td><b>.141</b></td><td><b>.322</b></td><td><b>.382</b></td><td><b>.323</b></td><td><b>.398</b></td></tr>
+          <tr><td>IEC</td><td>rho_c</td><td><b>.452</b></td><td><b>.441</b></td><td><b>.388</b></td><td><b>.434</b></td><td><b>.473</b></td><td><b>.385</b></td><td><b>.461</b></td><td><b>.594</b></td><td><b>.602</b></td><td><b>.607</b></td><td><b>.637</b></td></tr>
+          <tr><td>IEC</td><td>AVE</td><td><b>.451</b></td><td><b>.446</b></td><td><b>.412</b></td><td><b>.426</b></td><td><b>.479</b></td><td><b>.421</b></td><td><b>.474</b></td><td><b>.421</b></td><td><b>.427</b></td><td><b>.448</b></td><td><b>.473</b></td></tr>
+          <tr><td>TII</td><td>α</td><td>.847</td><td>.842</td><td>.825</td><td>.840</td><td>.804</td><td>.763</td><td>.796</td><td>.843</td><td>.842</td><td>.848</td><td>.816</td></tr>
+          <tr><td>TII</td><td>rho_c</td><td>.891</td><td>.888</td><td>.876</td><td>.887</td><td>.853</td><td>.796</td><td>.845</td><td>.892</td><td>.890</td><td>.894</td><td>.871</td></tr>
+          <tr><td>TII</td><td>AVE</td><td>.673</td><td>.666</td><td>.642</td><td>.664</td><td>.598</td><td>.517</td><td>.585</td><td>.675</td><td>.671</td><td>.680</td><td>.630</td></tr>
+          <tr><td>HOI</td><td>R²</td><td>.210</td><td>.194</td><td>.140</td><td>.170</td><td>.298</td><td>.164</td><td>.261</td><td>.142</td><td>.171</td><td>.160</td><td>.209</td></tr>
+          <tr><td>IEC</td><td>R²</td><td>.387</td><td>.381</td><td>.335</td><td>.335</td><td>.464</td><td>.373</td><td>.460</td><td>.332</td><td>.353</td><td>.355</td><td>.395</td></tr>
+          <tr><td>TII</td><td>R²</td><td>.242</td><td>.237</td><td>.220</td><td>.227</td><td>.222</td><td>.193</td><td>.219</td><td>.228</td><td>.207</td><td>.224</td><td>.208</td></tr>
+        </tbody>
+      </table></div>
+      </details>
       <p>重點：H2、H3a、H3b 七個版本全部顯著，H1、H4b 全部不顯著。H4a 只有刪掉 4 份極端值的版本（V4、V5、V6）才顯著，且係數為負（HRS 愈高，HOI → IEC 愈弱），結果靠 4 份問卷翻轉，需如實報告。第二章 2.3.2 的 H4a 假設為「人類角色重要性<b>正向</b>調節人類監督意圖與個人努力投入之間的關係」，這三個版本的顯著結果方向<b>相反</b>，即使顯著也不支持 H4a，而是需要在第五章解釋的反向發現。IEC 在所有版本都不合格（IEC1 反向後負荷量約 −.6，IEC2 為 .25–.43），刪卷無法改善。建議以 V6（S＋M，標準最客觀，且是在看到各版本 SmartPLS 結果之前就依此原則提出）為正式分析、其餘版本作穩健性檢查；請老師決定。</p>      <p><b>各版本刪法說明</b>（寬鬆條件 103 份；列號為回覆試算表列號）</p>
       <div class="qi-wrap"><table class="qi">
         <thead><tr><th>版本</th><th>刪法</th><th>n</th><th>刪除的列</th></tr></thead>
@@ -907,21 +935,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
         <li>D　修改 IEC 題目後重新施測</li>
       </ul>
       <p>另外，V6 的 rho_a 也需注意。IEC 的 rho_a 為 .717（看似合格），但 PLS 給 IEC1_R 負權重（−.349）把它反轉、並偏重 IEC3（.350）與 IEC4（.512），不能據此說 IEC 信度合格；IEC 的 α .141、rho_c .461、AVE .474 都不合格。AD 的 rho_a 為 <b>−1.173</b>（信度不可能為負），但 AD 的 α .902、rho_c .839、AVE .572 均合格，四題本身一致；問題在 PLS 權重不穩（AD4 1.049、AD3 −.530），原因是 AD 與 HOI 幾乎無關（AD → HOI 在各版本皆不顯著），權重由雜訊決定。建議 AD 以 α 與 rho_c 報告信度，rho_a 加註說明不具解釋意義。請老師（或負責統計的辛彥妮）確認可否這樣處理。</p></div></li>
-    <li><div><h4>前測和正式問卷的資料可以合併分析嗎？</h4><p>前測 30 份與正式問卷合併後的 SmartPLS 結果（β，雙尾，10,000 次抽樣；括號內為 p 值；* p &lt; .05）：</p>
-      <div class="qi-wrap"><table class="qi">
-        <thead><tr><th>假說</th><th>前測＋商管<br>n=118</th><th>前測＋商管 V6<br>n=109</th><th>前測＋寬鬆<br>n=139</th><th>前測＋寬鬆 V6<br>n=129</th><th>只有正式 V6<br>n=97</th></tr></thead>
-        <tbody>
-          <tr><td>H1 AD → HOI</td><td>−.009 (.948)</td><td>.033 (.847)</td><td>−.115 (.335)</td><td>−.183 (.127)</td><td>−.227 (.275)</td></tr>
-          <tr><td>H2 A → HOI</td><td>.379*</td><td>.404*</td><td>.397*</td><td>.445*</td><td>.492*</td></tr>
-          <tr><td>H3a HOI → IEC</td><td>.448*</td><td>.446*</td><td>.474*</td><td>.367*</td><td>.440*</td></tr>
-          <tr><td>H3b HOI → TII</td><td>.451*</td><td>.421*</td><td>.467*</td><td>.286*</td><td>.390*</td></tr>
-          <tr><td>H4a HRS×HOI → IEC</td><td>.075 (.483)</td><td>−.020 (.857)</td><td>.036 (.669)</td><td>−.093 (.174)</td><td><b>−.255 (.003)*</b></td></tr>
-          <tr><td>H4b HRS×HOI → TII</td><td>.096 (.384)</td><td>.039 (.723)</td><td>.064 (.482)</td><td>−.057 (.437)</td><td>−.161 (.199)</td></tr>
-          <tr><td>IEC α／AVE</td><td>.32／.42</td><td>.38／.43</td><td>.32／.45</td><td>.40／.47</td><td>.14／.47</td></tr>
-          <tr><td>HTMT IEC–TII</td><td>.980</td><td>1.052</td><td>.898</td><td>.921</td><td>.886</td></tr>
-        </tbody>
-      </table></div>
-      <p>合併後 H2、H3a、H3b 仍全部顯著；H4a 的負向顯著只出現在只有正式問卷的 V6，加入前測後就消失，表示這個反向結果不穩定。IEC 合併後仍不合格。合併有一個資料上的問題：<b>前測與正式問卷的 IEC1 不是同一題</b>。前測是舊題「我的投入時間會減少」，正式問卷是老師修改後的「有了生成式AI協助，節省了我一些時間。」，合併檔把兩題放在同一欄。要請老師決定：前測與正式問卷能否合併；若可以，IEC1 要怎麼處理。</p></div></li>
+    <li><div><h4>前測和正式問卷的資料可以合併分析嗎？</h4><p>合併前測後的 SmartPLS 結果見「偷跑的刪卷版本」那題表格的右邊四欄。合併後 H2、H3a、H3b 仍全部顯著；H4a 的負向顯著只出現在只有正式問卷的 V6，加入前測後就消失，表示這個反向結果不穩定。IEC 合併後仍不合格。合併有一個資料上的問題：<b>前測與正式問卷的 IEC1 不是同一題</b>。前測是舊題「我的投入時間會減少」，正式問卷是老師修改後的「有了生成式AI協助，節省了我一些時間。」，合併檔把兩題放在同一欄。要請老師決定：前測與正式問卷能否合併；若可以，IEC1 要怎麼處理。</p></div></li>
     <li><div><h4>IEC 與 TII 的區別效度不足，要怎麼處理？</h4><p>IEC 與 TII 的 HTMT 在所有樣本都超過 .85：只有正式問卷的七個刪卷版本為 .882–.923，合併前測的四個樣本為 .898–1.052（前測時為 .847）。Hair et al.（2022）的門檻是概念不同的構面 .85、概念相近的構面 .90；超過 1 表示兩個構面在資料上分不開。「前測＋商管」的 HTMT 拔靴信賴區間為 .801–1.176，包含 1。可能原因是 IEC3、IEC4 與 TII 的相關高於與 IEC 其他題的相關，即填答者沒有把「自己投入多少心力」和「對團隊投入」分開作答。這和上一題 IEC 的信度問題有關，可以一起決定：列為研究限制，或與 IEC 修題、重新施測一起處理。</p></div></li>
   </ol>
   <p style="font-size:.88rem;color:var(--ink-2);margin:0"><strong>已決定：</strong>HOI 定義保留「修正」。老師認為刪除 HOI3 後，HOI5 仍涵蓋修正的內涵，定義不用改。</p>
