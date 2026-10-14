@@ -786,10 +786,10 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 <section class="survey" id="survey" aria-label="正式問卷回收進度">
   <div class="survey__head">
     <span class="survey__lab">正式問卷回收進度</span>
-    <span class="survey__num"><b>115</b>（可用 110）/ 200 份 · 55%</span>
+    <span class="survey__num"><b>172</b>（可用 153）/ 200 份 · 77%</span>
   </div>
-  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="110" aria-label="已回收 115 份，可用 110 份，目標 200 份"><div class="survey__fill" style="width:55%"></div></div>
-  <p style="margin:.5rem 0 0;font-size:.82rem;color:var(--ink-2)">可用樣本的科系：商管 90、資訊 8、其他 12</p>
+  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="153" aria-label="已回收 172 份，可用 153 份，目標 200 份"><div class="survey__fill" style="width:77%"></div></div>
+  <p style="margin:.5rem 0 0;font-size:.82rem;color:var(--ink-2)">商管 102、資訊 12、資管 3、其他 36</p>
 </section>
 
 <header class="masthead" id="top">
@@ -801,7 +801,6 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
   <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（5 項）</a>
-  <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（6 條）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
   <a href="#s221-lit-mulvey">2.1.2 社會懈怠研究的後續發展</a>
@@ -886,33 +885,6 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 </ol>
 </section>
 
-<!-- ═══════════════ 組員待查證 ═══════════════ -->
-<section class="section" id="newev">
-  <div class="section__head">
-    <span class="section__num">查證</span>
-    <h2 class="section__title">組員待查證：6 條</h2>
-    <span class="section__meta">點條目代號跳到該條，再點文獻標頭的「Drive 原文 PDF」翻到下表頁數</span>
-  </div>
-  <p style="font-size:.9rem;margin:0 0 1rem">PDF 頁＝打開檔案看到的第幾頁；印刷頁＝期刊頁眉上的頁碼。Karau &amp; Williams (1993) 是掃描檔，不能用 Ctrl+F 搜尋，請直接翻到表上的 PDF 頁（PDF 頁＝印刷頁 − 680）。</p>
-  <div class="vbar">
-    <span class="revbar__count">已查證 <b class="vbar__n">0</b> / <span class="vbar__total">6</span></span>
-    <button type="button" class="revbar__hide vbar__hide" aria-pressed="false">隱藏已查證</button>
-    <span class="revbar__status vbar__status" role="status"></span>
-  </div>
-  <div class="qi-wrap">
-    <table class="qi">
-      <thead><tr><th>條目</th><th>論文位置</th><th>論文句子</th><th>文獻</th><th>原文在哪</th><th class="vchk__th">已查</th></tr></thead>
-      <tbody>
-        <tr data-vid="s221-AH"><td class="loc"><a href="#s221-AH">s221-AH</a></td><td>2.1.1</td><td>社會懈怠在認知、體力與知覺等不同類型的任務中皆穩健存在</td><td>Karau &amp; Williams (1993)</td><td class="loc">印刷 p.700（PDF p.20），右欄第一段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s221-AH 已查證"></td></tr>
-        <tr data-vid="s221-AC"><td class="loc"><a href="#s221-AC">s221-AC</a></td><td>2.1.2</td><td>既有解釋多只能說明特定範圍內的懈怠…</td><td>Karau &amp; Williams (1993)</td><td class="loc">印刷 p.684（PDF p.4），左欄 Conclusions</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s221-AC 已查證"></td></tr>
-        <tr data-vid="s221-AD"><td class="loc"><a href="#s221-AD">s221-AD</a></td><td>2.1.2</td><td>評估的可能性、對同伴表現的預期、任務意義與文化…</td><td>Karau &amp; Williams (1993)</td><td class="loc">印刷 p.681（PDF p.1）摘要</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s221-AD 已查證"></td></tr>
-        <tr data-vid="s221-AE"><td class="loc"><a href="#s221-AE">s221-AE</a></td><td>2.1.2</td><td>個人投入具獨特性時…；實務建議…更有責任</td><td>Karau &amp; Williams (1993)</td><td class="loc">印刷 p.696（PDF p.16），右欄末段<br>實務建議：印刷 p.700（PDF p.20）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s221-AE 已查證"></td></tr>
-        <tr data-vid="s221-AF"><td class="loc"><a href="#s221-AF">s221-AF</a></td><td>2.2.6、2.3.2</td><td>個體可能因覺得自身投入…並非必要而減少努力</td><td>Karau &amp; Williams (1993)</td><td class="loc">印刷 p.683（PDF p.3），右欄 Dispensability of Effort</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s221-AF 已查證"></td></tr>
-        <tr data-vid="s232-N"><td class="loc"><a href="#s232-N">s232-N</a></td><td>2.3.2、2.3.3</td><td>投入與他人重複時才出現懈怠；比較的是任務是否具獨特性</td><td>Karau &amp; Williams (1993)</td><td class="loc">印刷 p.696（PDF p.16），右欄末段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s232-N 已查證"></td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
 
 <!-- ═══════════════ 第五章素材與長期備忘 ═══════════════ -->
 <section class="section" id="revlist">
