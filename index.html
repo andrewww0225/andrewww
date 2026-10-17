@@ -800,7 +800,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
-  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（6 項）</a>
+  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（4 項）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
   <a href="#s221-lit-mulvey">2.1.2 社會懈怠研究的後續發展</a>
@@ -851,43 +851,71 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <span class="section__meta">下次開會要請老師決定的事</span>
   </div>
   <ol class="issues">
-    <li><div><h4>偷跑的刪卷版本，正式分析要用哪一版？</h4><p><b>最新資料（回收 115 份）的 SmartPLS 結果</b>（IEC 拿掉 IEC1；β，雙尾 bootstrapping；括號內為 p 值；* p &lt; .05）：</p>
+    <li><div><h4>正式分析用哪個樣本、哪個刪卷版本？</h4><p>回收 213 份，先排除不同意 3、25 題全同分 12、職工 2，再依樣本分別刪極端值（V6）或另刪連續 15 題以上同分（V7）。IEC 皆刪除 IEC1。SmartPLS 結果（β，雙尾；* p &lt; .05、** p &lt; .01、*** p &lt; .001；ns 附 p 值）：</p>
       <div class="qi-wrap"><table class="qi">
-        <thead><tr><th>假說</th><th>V6 全部科系<br>同分＋極端值<br>n=106</th><th>V7 全部科系<br>同分＋連續同分＋極端值<br>n=100</th><th>SP1 探索用<br>刪到 IEC 合格<br>n=26</th></tr></thead>
+        <thead><tr><th></th><th>全部科系<br>V6 n=186</th><th>全部科系<br>V7 n=176</th><th>商管＋資訊＋資管<br>V6 n=144</th><th>商管＋資訊＋資管<br>V7 n=137</th><th>純商管<br>V6 n=120</th><th>純商管<br>V7 n=115</th></tr></thead>
         <tbody>
-          <tr><td>H1 AD → HOI</td><td>−.182 (.289)</td><td>.058 (.752)</td><td>−.220 (.486)</td></tr>
-          <tr><td>H2 A → HOI</td><td>.497*</td><td>.413*</td><td>.391* (.041)</td></tr>
-          <tr><td>H3a HOI → IEC</td><td>.413*</td><td>.394*</td><td>.256 (.329)</td></tr>
-          <tr><td>H3b HOI → TII</td><td>.410*</td><td>.398*</td><td>.437 (.145)</td></tr>
-          <tr><td>H4a HRS×HOI → IEC</td><td>−.185* (.009)</td><td>−.217* (.005)</td><td>−.051 (.782)</td></tr>
-          <tr><td>H4b HRS×HOI → TII</td><td>−.097 (.293)</td><td>−.111 (.276)</td><td>−.209 (.254)</td></tr>
-          <tr><td>HRS → IEC（無對應假說）</td><td>.228* (.013)</td><td>.210* (.025)</td><td>.474 (.072)</td></tr>
-          <tr><td>R² HOI／IEC／TII</td><td>.25／.44／.25</td><td>.18／.41／.23</td><td>.18／.44／.35</td></tr>
+          <tr><td>H1 AD → HOI</td><td>−.105 (.334)</td><td>−.086 (.443)</td><td>−.043 (.688)</td><td>−.045 (.682)</td><td>−.016 (.908)</td><td>−.013 (.922)</td></tr>
+          <tr><td>H2 A → HOI</td><td>.460***</td><td>.413***</td><td>.514***</td><td>.485***</td><td>.498***</td><td>.484***</td></tr>
+          <tr><td>H3a HOI → IEC</td><td>.394***</td><td>.375***</td><td>.429***</td><td>.413***</td><td>.400**</td><td>.409**</td></tr>
+          <tr><td>H3b HOI → TII</td><td>.193 (.091)</td><td>.209 (.081)</td><td>.265 (.069)</td><td>.248 (.100)</td><td>.361**</td><td>.366**</td></tr>
+          <tr><td>H4a HRS×HOI → IEC</td><td>−.051 (.463)</td><td>−.068 (.359)</td><td>−.033 (.712)</td><td>−.046 (.618)</td><td>−.016 (.867)</td><td>−.033 (.754)</td></tr>
+          <tr><td>H4b HRS×HOI → TII</td><td>−.068 (.396)</td><td>−.043 (.617)</td><td>.033 (.757)</td><td>.039 (.722)</td><td>−.008 (.935)</td><td>−.008 (.939)</td></tr>
+          <tr><td>HRS → IEC（無對應假說）</td><td>.306***</td><td>.292***</td><td>.254*</td><td>.244*</td><td>.227 (.058)</td><td>.196 (.101)</td></tr>
+          <tr><td>R² HOI／IEC／TII</td><td>.22／.41／.23</td><td>.18／.37／.19</td><td>.26／.37／.18</td><td>.23／.34／.16</td><td>.25／.32／.14</td><td>.23／.30／.14</td></tr>
+          <tr><td>IEC α／rho_a</td><td>.643／.693</td><td>.592／.654</td><td>.561／.678</td><td>.521／.667</td><td>.515／.668</td><td>.430／.642</td></tr>
+          <tr><td>IEC rho_c／AVE</td><td>.802／.579</td><td>.777／.544</td><td>.764／.538</td><td>.743／.518</td><td>.739／.508</td><td>.689／.462</td></tr>
+          <tr><td>HTMT IEC–TII（95% CI）</td><td>.802（.633–.971）</td><td>.769（.586–.967）</td><td>.924（.717–1.142）</td><td>.940（.718–1.177）</td><td>.945（.691–1.254）</td><td>1.031（.699–1.388）</td></tr>
         </tbody>
       </table></div>
-      <p>V6 與 V7 結論一致：H2、H3a、H3b 顯著；H4a 顯著但方向與假說相反（HRS 愈高，HOI → IEC 愈弱）；H1、H4b 不顯著。SP1 是為了讓 IEC 的 α 達 .70 而刪到只剩 26 份的探索版本，IEC 信效度全部合格，但 H3a、H3b 都不顯著，說明不能為了 IEC 犧牲樣本。建議 V6 為正式分析、V7 為穩健性檢查；請老師決定。</p></div></li>
-      <li><div><h4>IEC 的信度怎麼報告？AD 的 rho_a 怎麼處理？</h4><p>老師的規則：先刪極端值與前後不一致的樣本，仍不合格就刪 IEC1（IEC 只剩 3 題可以接受）。IEC1（反向後）與 IEC2–4 平均相差 4 分以上的人超過一半，刪掉後 α 反而下降；多數人把 IEC1 讀成正面描述，所以改走第二步：刪除 IEC1。</p>
-      <p><b>最新資料（回收 115 份）的結果</b>（IEC 拿掉 IEC1，只用 IEC2–4；SmartPLS 結果）：</p>
+      <details style="margin:.4rem 0"><summary style="cursor:pointer;font-size:.88rem;font-weight:700">各構面信效度與最低負荷量（粗體＝未達標：α、rho_a、rho_c &lt; .70，AVE &lt; .50，負荷量 &lt; .40）</summary>
       <div class="qi-wrap"><table class="qi">
-        <thead><tr><th>版本</th><th>樣本與刪法</th><th>n</th><th>α</th><th>rho_a</th><th>rho_c</th><th>AVE</th><th>HTMT IEC–TII</th></tr></thead>
+        <thead><tr><th>構面</th><th>指標</th><th>全部科系<br>V6 n=186</th><th>全部科系<br>V7 n=176</th><th>商資管<br>V6 n=144</th><th>商資管<br>V7 n=137</th><th>純商管<br>V6 n=120</th><th>純商管<br>V7 n=115</th></tr></thead>
         <tbody>
-          <tr><td>V6</td><td>全部科系；刪同分＋極端值</td><td>106</td><td>.632</td><td>.755</td><td>.792</td><td>.572</td><td>.813</td></tr>
-          <tr><td>V7</td><td>全部科系；刪同分＋連續同分＋極端值</td><td>100</td><td>.577</td><td>.731</td><td>.762</td><td>.537</td><td>.805</td></tr>
-          <tr><td>門檻</td><td></td><td></td><td>.70</td><td>.70</td><td>.70</td><td>.50</td><td>&lt; .85</td></tr>
+          <tr><td>AD</td><td>α</td><td>.883</td><td>.879</td><td>.892</td><td>.888</td><td>.886</td><td>.881</td></tr>
+          <tr><td>AD</td><td>rho_a</td><td><b>−.265</b></td><td><b>−.099</b></td><td><b>−.128</b></td><td>.792</td><td>.773</td><td>.928</td></tr>
+          <tr><td>AD</td><td>rho_c</td><td>.830</td><td>.827</td><td>.844</td><td>.903</td><td>.893</td><td>.914</td></tr>
+          <tr><td>AD</td><td>AVE</td><td>.560</td><td>.558</td><td>.582</td><td>.701</td><td>.678</td><td>.727</td></tr>
+          <tr><td>AD</td><td>最低負荷量</td><td>.522</td><td>.460</td><td>.558</td><td>.737</td><td>.727</td><td>.817</td></tr>
+          <tr><td>A</td><td>α</td><td>.828</td><td>.813</td><td>.835</td><td>.824</td><td>.842</td><td>.829</td></tr>
+          <tr><td>A</td><td>rho_a</td><td>.848</td><td>.840</td><td>.858</td><td>.853</td><td>.889</td><td>.885</td></tr>
+          <tr><td>A</td><td>rho_c</td><td>.877</td><td>.866</td><td>.882</td><td>.874</td><td>.884</td><td>.874</td></tr>
+          <tr><td>A</td><td>AVE</td><td>.589</td><td>.565</td><td>.600</td><td>.583</td><td>.606</td><td>.583</td></tr>
+          <tr><td>A</td><td>最低負荷量</td><td>.715</td><td>.680</td><td>.692</td><td>.664</td><td>.725</td><td>.645</td></tr>
+          <tr><td>HOI</td><td>α</td><td>.873</td><td>.862</td><td>.857</td><td>.850</td><td>.836</td><td>.828</td></tr>
+          <tr><td>HOI</td><td>rho_a</td><td>.878</td><td>.868</td><td>.869</td><td>.863</td><td>.853</td><td>.845</td></tr>
+          <tr><td>HOI</td><td>rho_c</td><td>.913</td><td>.906</td><td>.903</td><td>.898</td><td>.890</td><td>.885</td></tr>
+          <tr><td>HOI</td><td>AVE</td><td>.724</td><td>.706</td><td>.700</td><td>.689</td><td>.670</td><td>.659</td></tr>
+          <tr><td>HOI</td><td>最低負荷量</td><td>.812</td><td>.800</td><td>.771</td><td>.760</td><td>.752</td><td>.744</td></tr>
+          <tr><td>HRS</td><td>α</td><td>.843</td><td>.836</td><td>.852</td><td>.851</td><td>.845</td><td>.833</td></tr>
+          <tr><td>HRS</td><td>rho_a</td><td>.859</td><td>.861</td><td>.882</td><td>.904</td><td>.923</td><td>.965</td></tr>
+          <tr><td>HRS</td><td>rho_c</td><td>.894</td><td>.890</td><td>.899</td><td>.897</td><td>.892</td><td>.881</td></tr>
+          <tr><td>HRS</td><td>AVE</td><td>.679</td><td>.669</td><td>.690</td><td>.686</td><td>.676</td><td>.652</td></tr>
+          <tr><td>HRS</td><td>最低負荷量</td><td>.772</td><td>.754</td><td>.758</td><td>.742</td><td>.715</td><td>.677</td></tr>
+          <tr><td>IEC</td><td>α</td><td><b>.643</b></td><td><b>.592</b></td><td><b>.561</b></td><td><b>.521</b></td><td><b>.515</b></td><td><b>.430</b></td></tr>
+          <tr><td>IEC</td><td>rho_a</td><td><b>.693</b></td><td><b>.654</b></td><td><b>.678</b></td><td><b>.667</b></td><td><b>.668</b></td><td><b>.642</b></td></tr>
+          <tr><td>IEC</td><td>rho_c</td><td>.802</td><td>.777</td><td>.764</td><td>.743</td><td>.739</td><td><b>.689</b></td></tr>
+          <tr><td>IEC</td><td>AVE</td><td>.579</td><td>.544</td><td>.538</td><td>.518</td><td>.508</td><td><b>.462</b></td></tr>
+          <tr><td>IEC</td><td>最低負荷量</td><td>.620</td><td>.568</td><td>.429</td><td><b>.359</b></td><td><b>.388</b></td><td><b>.285</b></td></tr>
+          <tr><td>TII</td><td>α</td><td>.814</td><td>.805</td><td>.827</td><td>.814</td><td>.798</td><td>.778</td></tr>
+          <tr><td>TII</td><td>rho_a</td><td>.898</td><td>.902</td><td>.890</td><td>.879</td><td>.849</td><td>.812</td></tr>
+          <tr><td>TII</td><td>rho_c</td><td>.863</td><td>.850</td><td>.875</td><td>.863</td><td>.855</td><td>.834</td></tr>
+          <tr><td>TII</td><td>AVE</td><td>.616</td><td>.593</td><td>.640</td><td>.616</td><td>.602</td><td>.568</td></tr>
+          <tr><td>TII</td><td>最低負荷量</td><td>.621</td><td>.574</td><td>.650</td><td>.602</td><td>.593</td><td>.499</td></tr>
         </tbody>
       </table></div>
-      <p>除了 α，其餘指標都合格。另外試過約 8,600 種資料處理組合：保留 IEC1 時，只有刪到剩 26 份 α 才達 .70，而且這時 H3a、H3b 都不顯著；拿掉 IEC1 時，α 要達 .70 就得刪到只剩 40–70 份，而且這時 HTMT 一律高於 .92。任何資料處理都無法讓 IEC 全部合格，問題在題目本身。建議 IEC 以 rho_a、rho_c 為主要信度指標，α 偏低列為研究限制。</p>
-      <p>刪除規則的出處：連續同分參考 Curran（2016）「連續相同作答達量表長度一半以上」的經驗法則（線上搶先版 p. 5；本研究 25 題取 15 題，較保守）；馬氏距離 p &lt; .001 出自 Tabachnick 與 Fidell（2001，第 4 版，p. 68）。</p>
-      <p>AD 的 rho_a 為 −.083（V6），信度不可能為負；但 AD 的 α .897、rho_c .873、AVE .638 均合格。原因是 AD 與 HOI 幾乎無關（H1 不顯著），PLS 權重不穩。建議 AD 以 α 與 rho_c 報告信度，rho_a 加註不具解釋意義。請老師（或辛彥妮）確認。</p></div></li>
-    <li><div><h4>IEC 與 TII 的區別效度算過關嗎？</h4><p>刪除 IEC1 後，V6 的 HTMT 為 .813、V7 為 .805，已低於 .85。但 V6 bootstrapping 的 95% 信賴區間為 .613–1.067，上限超過 1。區別效度看 HTMT 本身就好，還是要看信賴區間？</p></div></li>
-    <li><div><h4>正式分析要用全部科系，還是只用商管＋資訊？</h4><p>可用樣本 110 份：商管 90、資訊 8、其他科系 12（自填科系不屬於商管或資訊的學生）。研究對象若是大學生，其他科系的 12 人應保留；若限定商管，樣本只剩 90 份左右，低於 G*Power 估計的最低 119 份。上表的 V6、V7 都是全部科系；只用商管時，IEC 與 TII 的 HTMT 要刪到 66 份以下才會低於 .85。</p></div></li>
-    <li><div><h4>背景變項要做哪些 MGA？</h4><p>不放控制變項，改以 MICOM＋PLS-MGA 比較組間差異。可用樣本（回收 189 份，刪不同意、同分、廢卷、職工與極端值後 166 份）各組人數：</p>
+      </details>
+      <p>六個版本都是 H2、H3a 顯著，H1、H4a、H4b 不顯著（H4a 先前在 115 份的全部科系樣本顯著為負，這次不再出現）。差別在測量與 H3b：只有全部科系的 IEC 與 TII 分得開（HTMT &lt; .85，信賴區間上限 &lt; 1），而 H3b 只有純商管顯著。全部科系 V6 的 IEC 除 α 外只差 rho_a（.693）。建議以全部科系 V6 為正式分析、V7 為穩健性檢查；若老師要限定商管，IEC 與 TII 的區別效度不成立。碩士班目前沒有排除（全部科系 V6 中 16 人）；排除後 IEC 的 rho_a 反而略降。請老師決定。</p>
+      <p>刪除規則的出處：連續同分參考 Curran（2016）「連續相同作答達量表長度一半以上」的經驗法則（線上搶先版 p. 5；本研究 25 題取 15 題，較保守）；馬氏距離 p &lt; .001 出自 Tabachnick 與 Fidell（2001，第 4 版，p. 68）。</p></div></li>
+    <li><div><h4>IEC 與 AD 的信度可以這樣報告嗎？</h4><p>依老師的規則刪除 IEC1（IEC 只剩 3 題）。全部科系 V6 的 IEC：α .643、rho_a .693、rho_c .802、AVE .579。Hair 等人（2022）指出信度一般應高於 .70，但在探索性研究中 .60 至 .70 可以接受（PDF 第 147 頁，印刷頁約 p. 125，待翻書確認）。IEC 為自編量表，擬以探索性研究的標準報告 rho_a，α 偏低列為研究限制。AD 的 rho_a 為負（全部科系 V6 −.265），但 α .883、rho_c .830、AVE .560 合格；原因是 AD 與 HOI 幾乎無關、PLS 權重不穩，擬以 α 與 rho_c 報告並加註。請老師（或辛彥妮）確認。</p></div></li>
+
+    <li><div><h4>背景變項要做哪些 MGA？</h4><p>不放控制變項，改以 MICOM＋PLS-MGA 比較組間差異。可用樣本（全部科系 V6，186 份）各組人數：</p>
       <ul style="list-style:disc;margin:0 0 .6rem 1.2rem;padding:0;font-size:.88rem;color:var(--ink-2)">
-        <li>性別：女 124、男 37、不願透露 5</li>
-        <li>年級：大一 34、大二 50、大三 22、大四 45、碩士 15</li>
-        <li>經驗時長：未滿 6 個月 4、6–12 個月 14、1–2 年 68、超過 2 年 80</li>
-        <li>使用頻率：極少 4、每月數次 20、每週數次 71、幾乎每天 71</li>
-        <li>使用的 AI（複選）：只用 1 種 19、2 種以上 147；有用 ChatGPT 153、沒用 13</li>
+        <li>性別：女 134、男 46、不願透露 6</li>
+        <li>年級：大一 37、大二 58、大三 26、大四 49、碩士 16</li>
+        <li>經驗時長：未滿 6 個月 6、6–12 個月 14、1–2 年 76、超過 2 年 90</li>
+        <li>使用頻率：極少 3、每月數次 22、每週數次 80、幾乎每天 81</li>
+        <li>使用的 AI（複選）：只用 1 種 22、2 種以上 164；有用 ChatGPT 173、沒用 13</li>
       </ul>
       <p>性別、年級、經驗、頻率是單選，人數少的類別合併後可以分組（例如經驗「2 年以上 vs 未滿 2 年」、頻率「幾乎每天 vs 其他」）。使用的 AI 是複選，只能改成「用幾種 AI」或「有沒有用某平台」分組，兩種分法都有一組太小；而且比較「用多個 AI 的人」與論文「一人一個 AI」的設定不一致。建議性別做 MGA，年級、經驗、頻率視老師意見，使用的 AI 只在第三章做樣本描述。請老師決定要做哪幾個。</p></div></li>
 
