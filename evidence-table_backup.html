@@ -907,7 +907,20 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
       </details>
       <p>六個版本都是 H2、H3a 顯著，H1、H4a、H4b 不顯著（H4a 先前在 115 份的全部科系樣本顯著為負，這次不再出現）。差別在測量與 H3b：只有全部科系的 IEC 與 TII 分得開（HTMT &lt; .85，信賴區間上限 &lt; 1），而 H3b 只有純商管顯著。全部科系 V6 的 IEC 除 α 外只差 rho_a（.693）。建議以全部科系 V6 為正式分析、V7 為穩健性檢查；若老師要限定商管，IEC 與 TII 的區別效度不成立。碩士班目前沒有排除（全部科系 V6 中 16 人）；排除後 IEC 的 rho_a 反而略降。請老師決定。</p>
       <p>刪除規則的出處：連續同分參考 Curran（2016）「連續相同作答達量表長度一半以上」的經驗法則（線上搶先版 p. 5；本研究 25 題取 15 題，較保守）；馬氏距離 p &lt; .001 出自 Tabachnick 與 Fidell（2001，第 4 版，p. 68）。</p></div></li>
-    <li><div><h4>IEC 與 AD 的信度可以這樣報告嗎？</h4><p>依老師的規則刪除 IEC1（IEC 只剩 3 題）。全部科系 V6 的 IEC：α .643、rho_a .693、rho_c .802、AVE .579。Hair 等人（2022）指出信度一般應高於 .70，但在探索性研究中 .60 至 .70 可以接受（p. 119；重點整理框 p. 126）。IEC 為自編量表，擬以探索性研究的標準報告 rho_a，α 偏低列為研究限制。AD 的 rho_a 為負（全部科系 V6 −.265），但 α .883、rho_c .830、AVE .560 合格；原因是 AD 與 HOI 幾乎無關、PLS 權重不穩，擬以 α 與 rho_c 報告並加註。請老師（或辛彥妮）確認。</p></div></li>
+    <li><div><h4>IEC 與 AD 的信度可以這樣報告嗎？</h4><p>依老師的規則刪除 IEC1（IEC 只剩 3 題）。全部科系 V6 的 IEC：α .643、rho_a .693、rho_c .802、AVE .579。Hair 等人（2022）指出信度一般應高於 .70，但在探索性研究中 .60 至 .70 可以接受（p. 119；重點整理框 p. 126）。IEC 為自編量表，擬以探索性研究的標準報告 rho_a，α 偏低列為研究限制。AD 的 rho_a 為負（全部科系 V6 −.265），但 α .883、rho_c .830、AVE .560 合格；原因是 AD 與 HOI 幾乎無關、PLS 權重不穩，擬以 α 與 rho_c 報告並加註。請老師（或辛彥妮）確認。</p>
+      <details style="margin:.4rem 0"><summary style="cursor:pointer;font-size:.88rem;font-weight:700">信度指標對照：SmartPLS 報表、論文寫法與門檻</summary>
+      <div class="qi-wrap"><table class="qi">
+        <thead><tr><th>SmartPLS 報表</th><th>論文寫法</th><th>中文名稱</th><th>門檻（Hair 等人，2022）</th></tr></thead>
+        <tbody>
+          <tr><td>Cronbach's alpha</td><td>Cronbach's α</td><td>Cronbach's α 係數</td><td>0.70 以上；探索性研究 0.60–0.70 可接受</td></tr>
+          <tr><td>rho_a</td><td>ρA</td><td>一致性信度（Dijkstra–Henseler's ρA）</td><td>同上</td></tr>
+          <tr><td>rho_c</td><td>ρc</td><td>組合信度（composite reliability，舊文獻稱 CR）</td><td>同上；高於 0.95 表示題目太像、互相重複</td></tr>
+          <tr><td>AVE</td><td>AVE</td><td>平均變異萃取量</td><td>0.50 以上</td></tr>
+        </tbody>
+      </table></div>
+      <p>α 是信度的下限（偏保守），ρc 是上限（偏寬鬆），ρA 通常介於兩者之間，可視為兩者的折衷（Hair 等人，2022，p. 119–120、p. 126）。全部科系 V6 的 IEC 也符合這個順序：α .643 &lt; ρA .693 &lt; ρc .802。可以這樣寫：「α 與 ρA 介於探索性研究可接受的 0.60 至 0.70 之間，ρc 高於 0.70，AVE（.579）高於 0.50。」</p>
+      </details>
+    </div></li>
 
     <li><div><h4>背景變項要做哪些 MGA？</h4><p>不放控制變項，改以 MICOM＋PLS-MGA 比較組間差異。可用樣本（全部科系 V6，186 份）各組人數：</p>
       <ul style="list-style:disc;margin:0 0 .6rem 1.2rem;padding:0;font-size:.88rem;color:var(--ink-2)">
