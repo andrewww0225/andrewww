@@ -800,6 +800,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
+  <a href="#results" style="border-color:var(--direct);color:var(--direct);font-weight:700">◆ 正式分析結果</a>
   <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（0 項）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
@@ -842,6 +843,36 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
     <span class="legend__v">原文一律取自 PDF 文字層逐字複製。找不到即標「無法確認原文位置」，不推測頁碼、不補寫原文。</span>
   </div>
 </div>
+
+<!-- ═══════════════ 正式分析結果 ═══════════════ -->
+<section class="section" id="results">
+  <div class="section__head">
+    <span class="section__num">結果</span>
+    <h2 class="section__title">正式分析結果</h2>
+    <span class="section__meta">商管＋資訊＋資管 V6 為主分析</span>
+  </div>
+  <p style="font-size:.88rem;color:var(--ink-2)">IEC 皆刪除 IEC1。β 與 95% 信賴區間（percentile 拔靴法，10,000 次，雙尾）；<b>粗體</b>＝信賴區間不含 0。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th></th><th>商資管 V6<br>n=168</th><th>商資管 V7<br>n=158</th><th>純商管 V6<br>n=137</th><th>純商管 V7<br>n=130</th></tr></thead>
+    <tbody>
+      <tr><td>H1 AD → HOI</td><td>−.070 [−.226, .115]</td><td>−.065 [−.238, .117]</td><td>−.011 [−.251, .195]</td><td>.005 [−.232, .222]</td></tr>
+      <tr><td>H2 A → HOI</td><td><b>.563 [.449, .692]</b></td><td><b>.532 [.413, .670]</b></td><td><b>.547 [.401, .678]</b></td><td><b>.505 [.352, .647]</b></td></tr>
+      <tr><td>H3a HOI → IEC</td><td><b>.403 [.233, .574]</b></td><td><b>.384 [.205, .555]</b></td><td><b>.366 [.167, .551]</b></td><td><b>.420 [.191, .639]</b></td></tr>
+      <tr><td>H3b HOI → TII</td><td><b>.308 [.105, .514]</b></td><td><b>.292 [.082, .503]</b></td><td><b>.315 [.096, .530]</b></td><td><b>.392 [.146, .636]</b></td></tr>
+      <tr><td>H4a HRS×HOI → IEC</td><td>−.105 [−.283, .020]</td><td><b>−.131 [−.331, −.003]</b></td><td>−.093 [−.309, .036]</td><td>−.069 [−.323, .086]</td></tr>
+      <tr><td>H4b HRS×HOI → TII</td><td><b>−.129 [−.296, −.010]</b></td><td>−.128 [−.305, .002]</td><td>−.108 [−.305, .022]</td><td>−.039 [−.260, .147]</td></tr>
+      <tr><td>HRS → IEC（無對應假說）</td><td><b>.279 [.134, .454]</b></td><td><b>.270 [.123, .453]</b></td><td><b>.297 [.151, .494]</b></td><td><b>.196 [.002, .444]</b></td></tr>
+      <tr><td>R² HOI／IEC／TII</td><td>.33／.42／.21</td><td>.29／.40／.20</td><td>.30／.39／.17</td><td>.26／.33／.15</td></tr>
+      <tr><td>IEC α／ρA</td><td>.609／.685</td><td>.571／.667</td><td>.573／.670</td><td>.496／.654</td></tr>
+      <tr><td>IEC ρc／AVE</td><td>.785／.556</td><td>.764／.532</td><td>.766／.531</td><td>.729／.498</td></tr>
+      <tr><td>IEC2 負荷量</td><td>.549</td><td>.485</td><td>.524</td><td>.371</td></tr>
+      <tr><td>AD ρA（α 皆 &gt; .88）</td><td>−.767</td><td>−.898</td><td>.209</td><td>.983</td></tr>
+      <tr><td>HTMT IEC–TII（95% CI）</td><td>.936（.745–1.142）</td><td>.955（.740–1.195）</td><td>.893（.660–1.197）</td><td>.953（.701–1.265）</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">H2、H3a、H3b 四個版本都成立，H1 都不成立。H4a、H4b 方向為負，只在個別版本的信賴區間剛好不含 0（p 值都 &gt; .05），結果不穩定。顯著性以信賴區間判斷：Hair 等人（2022）建議報告拔靴信賴區間而非 t 值與 p 值，並採 percentile 法（p. 158、p. 208）。測量上，IEC 的 ρA 在主分析為 .685，屬探索性研究可接受的 .60–.70；其他構面之間的 HTMT 都低於 .80。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>IEC 與 TII 的區辨效度在四個版本都不成立</b>（HTMT &gt; .85，信賴區間上限 &gt; 1）。把純商管 V6 的資料複製成兩倍（n = 274）重算，HTMT 仍是 .893，信賴區間上限只從 1.19 降到 1.08；複製成四倍（n = 548）才降到約 1.02。若新收的人作答型態和現在相同，加收樣本只會縮小信賴區間，HTMT 本身不會下降。</p>
+</section>
 
 <!-- ═══════════════ 問老師清單 ═══════════════ -->
 <section class="section" id="askprof" style="border:2px solid var(--none);border-radius:6px;padding:1rem 1.2rem">
