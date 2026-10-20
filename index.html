@@ -778,6 +778,12 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 #newev tr.is-checked td:nth-child(3){text-decoration:line-through;text-decoration-thickness:1.5px}
 #newev tr.is-checked td.vchk{background:var(--direct-bg)}
 #newev.hide-checked tr.is-checked{display:none}
+/* 問老師清單：有題目時紅框，空的時候一般樣式 */
+.toc a.toc-ask{font-weight:700}
+body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);background:var(--none-bg)}
+#askprof{border:2px solid var(--rule);border-radius:6px;padding:1rem 1.2rem}
+#askprof:has(li){border-color:var(--none)}
+#askprof:has(li) .section__num{color:var(--none)}
 </style>
 
 <div class="wrap">
@@ -801,7 +807,7 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
   <a href="#results" style="border-color:var(--direct);color:var(--direct);font-weight:700">◆ 正式分析結果</a>
-  <a href="#askprof" style="border-color:var(--none);color:var(--none);font-weight:700;background:var(--none-bg)">◆ 問老師清單（0 項）</a>
+  <a href="#askprof" class="toc-ask">◆ 問老師清單（0 項）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠理論的提出</a>
   <a href="#s221-lit-mulvey">2.1.2 社會懈怠研究的後續發展</a>
@@ -875,9 +881,9 @@ body.searching .section > *:not(.is-hit):not(.section__head){display:none}
 </section>
 
 <!-- ═══════════════ 問老師清單 ═══════════════ -->
-<section class="section" id="askprof" style="border:2px solid var(--none);border-radius:6px;padding:1rem 1.2rem">
+<section class="section" id="askprof">
   <div class="section__head">
-    <span class="section__num" style="color:var(--none)">開會</span>
+    <span class="section__num">開會</span>
     <h2 class="section__title">問老師清單</h2>
     <span class="section__meta">下次開會要請老師決定的事</span>
   </div>
