@@ -789,6 +789,19 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 .srchead--gone h3{color:var(--muted)}
 .entry--gone{opacity:.6}
 .note--gone{border-left-color:var(--muted);margin:.2rem 0 .9rem}
+.vs{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;margin-top:.3rem}
+.vs__b{font-family:var(--f-mono);font-size:.94rem;line-height:1;padding:.38rem .6rem;border:1px solid var(--rule);border-radius:3px;background:transparent;color:var(--ink-2);cursor:pointer}
+.vs__b:hover{border-color:var(--accent)}
+.vs__b.is-on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.vs__b--none{text-decoration:line-through;color:var(--muted)}
+.vs__b:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.vs__p{margin:.1rem 0 .7rem;padding:.5rem .7rem;border-left:2px solid var(--accent);background:var(--sunken);font-size:.92rem;line-height:1.75;color:var(--ink-2);overflow-wrap:anywhere}
+.vs__h{display:block;font-family:var(--f-mono);font-size:.7rem;color:var(--muted);margin-bottom:.2rem}
+.vs__p del{background:var(--none-bg);color:var(--none);text-decoration:line-through}
+.vs__p ins{background:var(--direct-bg);color:inherit;text-decoration:none;border-bottom:1px solid var(--direct)}
+.vs__none{color:var(--muted);font-style:italic}
+.vs__low{display:inline-block;margin-left:.4rem;font-size:.72rem;color:var(--indirect);border:1px solid var(--indirect);border-radius:3px;padding:0 .3rem}
+@media (max-width:760px){.vs{flex-direction:row;flex-wrap:wrap;margin-top:0}}
 </style>
 
 <div class="wrap">
@@ -847,7 +860,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </div>
   <div class="legend__cell">
     <span class="legend__k">版本基準</span>
-    <span class="legend__v">每節開頭載明所依據的版本。預印本與正式出版版分頁不同者，另列版本對照。</span>
+    <span class="legend__v">每節開頭載明所依據的版本。預印本與正式出版版分頁不同者，另列版本對照。第二章條目左欄的版本選單（v1.4、v1.5、v1.3、v1.2）可切換論文各版的同一句，以目前引文的版本為基準：底色是該版才有的字，劃線是基準版有、該版沒有的字。</span>
   </div>
   <div class="legend__cell">
     <span class="legend__k">查證原則</span>
@@ -1038,6 +1051,15 @@ function initFinder(){
     if(a&&document.body.classList.contains('searching')){inp.value=''; run();}
   },true);
 }
+</script>
+<script>
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('.vs__b'); if(!b) return;
+  var art=b.closest('article'); if(!art) return;
+  var v=b.getAttribute('data-v');
+  art.querySelectorAll('.vs__b').forEach(function(x){var on=x===b; x.classList.toggle('is-on',on); x.setAttribute('aria-pressed',on?'true':'false');});
+  art.querySelectorAll('.vs__p').forEach(function(p){p.hidden=p.getAttribute('data-v')!==v;});
+});
 </script>
 <script src="verify.js"></script>
 <script>
