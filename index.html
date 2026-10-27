@@ -873,8 +873,73 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <div class="section__head">
     <span class="section__num">結果</span>
     <h2 class="section__title">正式分析結果</h2>
-    <span class="section__meta">全部科系 · 刪卷與刪題組合探索中</span>
+    <span class="section__meta">全部科系 · 目前選用 X9</span>
   </div>
+  <p class="subhead">目前選用：X9（n=207）</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">起點為 V6（排除不同意、全部同答、職員與馬氏距離 p &lt; .001 的極端值，n=212），再刪 5 筆：63、92 為長串同答（連續 11、13 題）且 AD、當責或 HOI、HRS 都偏高；179 為當責很低、HOI 卻偏高；37、214 為 HOI 很低。模型不含 IEC1，其餘 24 題全部保留。數字為 SmartPLS 結果。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低 CR</th><th>最低 AVE</th><th>最低負荷量</th><th>HTMT IEC–TII [95% CI]</th></tr></thead>
+    <tbody>
+      <tr><td>.304／.446／.229</td><td>.699（IEC，寫成 .70）</td><td>.831</td><td>.572</td><td>.668（TII2；其餘 ≥ .70）</td><td>.831 [.682, .968]</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th></th><th>SRMR</th><th>d_ULS</th><th>d_G</th></tr></thead>
+    <tbody>
+      <tr><td>saturated（門檻：SRMR &lt; .08；其餘 &lt; 95%）</td><td>.070</td><td>1.477（1.779）</td><td>.615（.676）</td></tr>
+      <tr><td>estimated（門檻：&lt; 99%）</td><td>.105（.119）</td><td>3.291（4.278）</td><td>.730（1.060）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>假說</th><th>β</th><th>p</th><th>f²</th><th>結果</th></tr></thead>
+    <tbody>
+      <tr><td>H1 AD → HOI（−）</td><td>−.124</td><td>.104</td><td>.022</td><td>不支持（方向一致）</td></tr>
+      <tr><td>H2 當責 → HOI（+）</td><td><b>.543</b></td><td>&lt; .001</td><td>.423</td><td>支持</td></tr>
+      <tr><td>H3a HOI → IEC（+）</td><td><b>.386</b></td><td>&lt; .001</td><td>.154</td><td>支持</td></tr>
+      <tr><td>H3b HOI → TII（+）</td><td><b>.259</b></td><td>.005</td><td>.050</td><td>支持</td></tr>
+      <tr><td>H4a HRS×HOI → IEC（+）</td><td><b>−.130</b></td><td>.010</td><td>.030</td><td>不支持（顯著但方向相反）</td></tr>
+      <tr><td>H4b HRS×HOI → TII（+）</td><td><b>−.208</b></td><td>&lt; .001</td><td>.056</td><td>不支持（顯著但方向相反）</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">交互作用項的 f² 以 .005／.01／.025 為小／中／大（Kenny，2018，轉引自 Hair 等人，2022），H4a、H4b 都達大效果量。</p>
+  <p class="subhead">簡單斜率：HRS 高低兩組的 HOI 效果</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th></th><th>HRS 低（平均數 − 1 SD）</th><th>HRS 高（平均數 + 1 SD）</th></tr></thead>
+    <tbody>
+      <tr><td>HOI → IEC</td><td><b>.516</b></td><td><b>.256</b></td></tr>
+      <tr><td>HOI → TII</td><td><b>.467</b></td><td>.051（不顯著）</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">斜率＝HOI 路徑係數 ± 交互作用項係數（SmartPLS）；顯著性為 Claude 的程式以 bootstrap 2,000 次估算，SmartPLS 的簡單斜率只提供圖。HRS 愈低，HOI 對個人努力投入與團隊互動的影響愈強；HRS 高時，HOI 對團隊互動幾乎沒有影響。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>方向與假說相反的可能解釋：</b>Kerr 與 Bruun（1983）指出，個體愈認為自己的努力對團體成功並非必要，動機便愈低（p. 79）。認為自己在 AI 面前可被取代的成員（HRS 低）正處於這種處境，此時監督 AI 的意圖讓他們有不可省略的工作，因此 HOI 與投入、互動的關聯最強；認為自己不可取代的成員（HRS 高），投入不必靠監督 AI 來維持，HOI 的效果便較弱。這段解讀要寫進第五章前，需再對照第二章 2.3 的假說推論。</p>
+  <p class="subhead">「低」「很低」的定義與刪除問卷的類型</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">構面分數為該構面題目平均（1–7 分）。以同意知情同意的 240 份計算平均數與標準差：低於平均數 1 個標準差為「低」（z ≤ −1），低於 2 個標準差為「很低」（z ≤ −2）。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>構面</th><th>平均數</th><th>標準差</th><th>「低」：低於</th><th>「很低」：低於</th></tr></thead>
+    <tbody>
+      <tr><td>AD</td><td>4.75</td><td>1.27</td><td>3.48（34 人）</td><td>2.21（4 人）</td></tr>
+      <tr><td>當責</td><td>5.66</td><td>0.93</td><td>4.74（32 人）</td><td>3.81（6 人）</td></tr>
+      <tr><td>HOI</td><td>5.84</td><td>1.10</td><td>4.73（32 人）</td><td>3.63（7 人）</td></tr>
+      <tr><td>HRS</td><td>5.61</td><td>1.14</td><td>4.46（35 人）</td><td>3.32（8 人）</td></tr>
+      <tr><td>IEC</td><td>5.46</td><td>1.02</td><td>4.45（39 人）</td><td>3.43（8 人）</td></tr>
+      <tr><td>TII</td><td>5.19</td><td>1.13</td><td>4.06（38 人）</td><td>2.93（8 人）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>類型</th><th>定義</th><th>240 份中人數</th><th>X1–X5 刪到</th></tr></thead>
+    <tbody>
+      <tr><td>IEC、TII 都低</td><td>IEC 與 TII 的 z 都 ≤ −1</td><td>23（含 4 份全同答）</td><td>3（91、157、195）</td></tr>
+      <tr><td>只有 HOI 低</td><td>HOI 的 z ≤ −1，其他構面都 &gt; −1</td><td>6</td><td>1（207）</td></tr>
+      <tr><td>當責低但 HOI 高</td><td>當責 z ≤ −1 且 HOI z ≥ +1</td><td>2</td><td>2（152、179）</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">同一類型沒有整批刪除，搜尋只刪了對指標有幫助的幾筆；若要寫成刪除規則，同類型的人要一起刪。</p>
+  <p class="subhead">其他測試</p>
+  <ul style="font-size:.88rem;color:var(--ink-2)">
+    <li>沒有明顯特徵的 6 筆（121、131、153、163、200、244）加回後：X4 即為 X9；X5 降為 α、負荷量 .60–.70，配適仍全過；X1 的 HTMT 升到 .861，不再合格。</li>
+    <li>以 240 份為起點的組合（X2、X3、X6、X8）再刪除全部同答的 12 份後，配適度都不合格，X2、X3 還有題目負荷量接近 0；這些組合原本合格是靠全同答撐住。</li>
+  </ul>
+  <p class="subhead">其他候選組合（X1–X8）</p>
   <p style="font-size:.88rem;color:var(--ink-2)">八個組合都在 SmartPLS 跑過。模型都不含 IEC1；「起點」是開始刪卷前的樣本：V6 為 212 份，全部 240 份含 12 份全同答與 2 份職員，排除全同答與職員為 226 份。組合依序要求：R² &gt; .20；α、CR &gt; .70，AVE &gt; .50；負荷量 &gt; .70；HTMT &lt; .85。八個組合都達到；X5 的最低負荷量（A3）與最低 α 剛好是 .700。</p>
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th>組合</th><th>起點</th><th>模型拿掉</th><th>另外刪的問卷（列號）</th><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低 CR</th><th>最低 AVE</th><th>最低負荷量</th><th>HTMT IEC–TII [95% CI]</th></tr></thead>
