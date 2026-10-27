@@ -896,6 +896,35 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </table></div>
   <p style="font-size:.88rem;color:var(--ink-2)">H2、H3a、H3b 四個版本都成立，H1 都不成立。H4a、H4b 方向為負，只在個別版本的信賴區間剛好不含 0（p 值都 &gt; .05），結果不穩定。顯著性以信賴區間判斷：Hair 等人（2022）建議報告拔靴信賴區間而非 t 值與 p 值，並採 percentile 法（p. 158、p. 208）。測量上，IEC 的 ρA 在主分析為 .685，屬探索性研究可接受的 .60–.70；其他構面之間的 HTMT 都低於 .80。</p>
   <p style="font-size:.88rem;color:var(--ink-2)"><b>IEC 與 TII 的區辨效度在四個版本都不成立</b>（HTMT &gt; .85，信賴區間上限 &gt; 1）。</p>
+
+  <p class="subhead">多群組分析：商管 vs 非商管（全部科系 V6，n=212）</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">商管 139 人、非商管 73 人（資訊、資管與其他科系）。MICOM 的 permutation 5,000 次（Henseler 等人，2016）；PLS-MGA 的 bootstrap 10,000 次，雙尾。<b>粗體</b>＝p &lt; .05。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>MICOM</th><th>步驟二：組成不變性<br>c（p）</th><th>步驟三a：平均數差異<br>（p）</th><th>步驟三b：變異數差異<br>（p）</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>.993（.299）</td><td>.134（.350）</td><td>.003（.990）</td></tr>
+      <tr><td>AD</td><td>.837（.579）</td><td>−.001（.992）</td><td>−.161（.346）</td></tr>
+      <tr><td>HOI</td><td>.998（.180）</td><td>−.141（.329）</td><td>−.196（.443）</td></tr>
+      <tr><td>HRS</td><td>.997（.547）</td><td>−.073（.624）</td><td>.003（.990）</td></tr>
+      <tr><td>IEC</td><td>.990（.258）</td><td>−.004（.975）</td><td><b>−.489（.012）</b></td></tr>
+      <tr><td>TII</td><td>.995（.677）</td><td>−.037（.816）</td><td><b>−.613（.004）</b></td></tr>
+    </tbody>
+  </table></div>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>路徑</th><th>商管 β（p）</th><th>非商管 β（p）</th><th>差異（雙尾 p）</th></tr></thead>
+    <tbody>
+      <tr><td>H1 AD → HOI</td><td>−.022（.858）</td><td>−.192（.157）</td><td>.170（.293）</td></tr>
+      <tr><td>H2 A → HOI</td><td><b>.545（&lt; .001）</b></td><td><b>.505（&lt; .001）</b></td><td>.040（.747）</td></tr>
+      <tr><td>H3a HOI → IEC</td><td><b>.363（&lt; .001）</b></td><td><b>.557（&lt; .001）</b></td><td>−.194（.271）</td></tr>
+      <tr><td>H3b HOI → TII</td><td><b>.313（.004）</b></td><td>.190（.273）</td><td>.123（.539）</td></tr>
+      <tr><td>H4a HRS×HOI → IEC</td><td>−.094（.315）</td><td>−.013（.870）</td><td>−.081（.523）</td></tr>
+      <tr><td>H4b HRS×HOI → TII</td><td>−.111（.169）</td><td><b>−.204（.029）</b></td><td>.092（.444）</td></tr>
+      <tr><td>HRS → IEC（無對應假說）</td><td><b>.291（&lt; .001）</b></td><td>.226（.107）</td><td>.065（.689）</td></tr>
+      <tr><td>HRS → TII（無對應假說）</td><td>.027（.808）</td><td>.277（.071）</td><td>−.250（.193）</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>MICOM：</b>步驟二六個構面都通過，步驟三a 兩組平均數都沒有差異；步驟三b 的 IEC 與 TII 兩組變異數不同。因此達到<b>部分測量不變性</b>，可以比較兩組的路徑係數，但不宜把兩組合併後直接比較構面分數。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>MGA：</b>八條路徑在商管與非商管之間<b>都沒有顯著差異</b>（雙尾 p 介於 .193 與 .747），模型的關係不因科系而不同。個別組裡顯著與否的差別（例如 H3b 只在商管顯著、H4b 只在非商管顯著）不能解讀成兩組不同，因為兩組的差異檢定不顯著。非商管只有 73 人，檢定力較低，「沒有顯著差異」也不等於證明兩組相同。</p>
 </section>
 
 <!-- ═══════════════ 問老師清單 ═══════════════ -->
@@ -911,6 +940,18 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
         <h4>IEC 與 TII 的區辨效度：商管＋資訊＋資管樣本不過，要怎麼處理？</h4>
         <p>243 份回覆的粗估（IEC2–4，未經 SmartPLS 確認）：主分析 V6 商管＋資訊＋資管 n172，HTMT（IEC–TII）.928，95% CI 上限 1.128 &gt; 1；ρA .682、α .608。改用全部科系 V6 n212，HTMT .840、CI 上限 .991，ρA .703。</p>
         <p>原因是科系組成，不是樣本數：從全部科系隨機抽 172 份，HTMT 平均仍是 .84；同一份資料只看商管＋資訊＋資管是 .927，其他科系 41 人是 .647。再多收商管的卷，HTMT 預期仍在 .93 附近，只會讓信賴區間變窄。</p>
+        <p><b>全部科系 V6（n=212）依科系拆開</b>（IEC2–4；243 份回覆，粗估）：</p>
+        <div class="qi-wrap"><table class="qi">
+          <thead><tr><th>科系</th><th>份數</th><th>IEC α</th><th>HTMT IEC–TII</th></tr></thead>
+          <tbody>
+            <tr><td>商管</td><td>138</td><td>.589</td><td>.887</td></tr>
+            <tr><td>資訊</td><td>18</td><td>.674</td><td>.884</td></tr>
+            <tr><td>資管</td><td>12</td><td>.826</td><td>1.036</td></tr>
+            <tr><td>其他</td><td>44</td><td>.776</td><td>.677</td></tr>
+            <tr><td><b>全部</b></td><td><b>212</b></td><td><b>.666</b></td><td><b>.840</b></td></tr>
+          </tbody>
+        </table></div>
+        <p>只看商管時 α 未達 .60、HTMT 高於 .85；其他科系的 α 較高、HTMT 較低，把整體數字拉好。資管只有 12 人，HTMT 超過 1 不具參考性。</p>
         <p><strong>請老師決定：</strong>主分析維持商管＋資訊＋資管，區辨效度不足寫進第五章研究限制？全部科系能不能當補充分析？還是有其他處理方式？</p>
       </div>
     </li>
