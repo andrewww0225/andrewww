@@ -873,31 +873,66 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <div class="section__head">
     <span class="section__num">結果</span>
     <h2 class="section__title">正式分析結果</h2>
-    <span class="section__meta">商管＋資訊＋資管 V6 為主分析</span>
+    <span class="section__meta">全部科系 · 刪卷與刪題組合探索中</span>
   </div>
-  <p style="font-size:.88rem;color:var(--ink-2)">IEC 皆刪除 IEC1。β 與 95% 信賴區間（percentile 拔靴法，10,000 次，雙尾）；<b>粗體</b>＝信賴區間不含 0。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">八個組合都在 SmartPLS 跑過。模型都不含 IEC1；「起點」是開始刪卷前的樣本：V6 為 212 份，全部 240 份含 12 份全同答與 2 份職員，排除全同答與職員為 226 份。組合依序要求：R² &gt; .20；α、CR &gt; .70，AVE &gt; .50；負荷量 &gt; .70；HTMT &lt; .85。八個組合都達到；X5 的最低負荷量（A3）與最低 α 剛好是 .700。</p>
   <div class="qi-wrap"><table class="qi">
-    <thead><tr><th></th><th>商資管 V6<br>n=168</th><th>商資管 V7<br>n=158</th><th>純商管 V6<br>n=137</th><th>純商管 V7<br>n=130</th></tr></thead>
+    <thead><tr><th>組合</th><th>起點</th><th>模型拿掉</th><th>另外刪的問卷（列號）</th><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低 CR</th><th>最低 AVE</th><th>最低負荷量</th><th>HTMT IEC–TII [95% CI]</th></tr></thead>
     <tbody>
-      <tr><td>H1 AD → HOI</td><td>−.070 [−.226, .115]</td><td>−.065 [−.238, .117]</td><td>−.011 [−.251, .195]</td><td>.005 [−.232, .222]</td></tr>
-      <tr><td>H2 A → HOI</td><td><b>.563 [.449, .692]</b></td><td><b>.532 [.413, .670]</b></td><td><b>.547 [.401, .678]</b></td><td><b>.505 [.352, .647]</b></td></tr>
-      <tr><td>H3a HOI → IEC</td><td><b>.403 [.233, .574]</b></td><td><b>.384 [.205, .555]</b></td><td><b>.366 [.167, .551]</b></td><td><b>.420 [.191, .639]</b></td></tr>
-      <tr><td>H3b HOI → TII</td><td><b>.308 [.105, .514]</b></td><td><b>.292 [.082, .503]</b></td><td><b>.315 [.096, .530]</b></td><td><b>.392 [.146, .636]</b></td></tr>
-      <tr><td>H4a HRS×HOI → IEC</td><td>−.105 [−.283, .020]</td><td><b>−.131 [−.331, −.003]</b></td><td>−.093 [−.309, .036]</td><td>−.069 [−.323, .086]</td></tr>
-      <tr><td>H4b HRS×HOI → TII</td><td><b>−.129 [−.296, −.010]</b></td><td>−.128 [−.305, .002]</td><td>−.108 [−.305, .022]</td><td>−.039 [−.260, .147]</td></tr>
-      <tr><td>HRS → IEC（無對應假說）</td><td><b>.279 [.134, .454]</b></td><td><b>.270 [.123, .453]</b></td><td><b>.297 [.151, .494]</b></td><td><b>.196 [.002, .444]</b></td></tr>
-      <tr><td>R² HOI／IEC／TII</td><td>.33／.42／.21</td><td>.29／.40／.20</td><td>.30／.39／.17</td><td>.26／.33／.15</td></tr>
-      <tr><td>IEC α／ρA</td><td>.609／.685</td><td>.571／.667</td><td>.573／.670</td><td>.496／.654</td></tr>
-      <tr><td>IEC ρc／AVE</td><td>.785／.556</td><td>.764／.532</td><td>.766／.531</td><td>.729／.498</td></tr>
-      <tr><td>IEC2 負荷量</td><td>.549</td><td>.485</td><td>.524</td><td>.371</td></tr>
-      <tr><td>AD ρA（α 皆 &gt; .88）</td><td>−.767</td><td>−.898</td><td>.209</td><td>.983</td></tr>
-      <tr><td>HTMT IEC–TII（95% CI）</td><td>.936（.745–1.142）</td><td>.955（.740–1.195）</td><td>.893（.660–1.197）</td><td>.953（.701–1.265）</td></tr>
+      <tr><td>X1<br>n=205</td><td>V6</td><td>TII2</td><td>63、87、121、153、174、179、200</td><td>.307／.425／.229</td><td>.713</td><td>.837</td><td>.577</td><td>.703</td><td>.848 [.709, .975]</td></tr>
+      <tr><td>X2<br>n=232</td><td>全部 240</td><td>TII2</td><td>20、63、91、98、140、179、195、207</td><td>.324／.453／.287</td><td>.707</td><td>.835</td><td>.619</td><td>.729</td><td>.832 [.709, .963]</td></tr>
+      <tr><td>X3<br>n=232</td><td>全部 240</td><td>—</td><td>63、91、98、140、160、179、195、207</td><td>.329／.454／.264</td><td>.706</td><td>.835</td><td>.615</td><td>.717</td><td>.802 [.683, .925]</td></tr>
+      <tr><td>X4<br>n=203</td><td>V6</td><td>—</td><td>37、63、92、131、163、179、200、214、244</td><td>.320／.459／.239</td><td>.706</td><td>.835</td><td>.579</td><td>.702</td><td>.820 [.671, .957]</td></tr>
+      <tr><td>X5<br>n=216</td><td>排除全同答與職員 226</td><td>TII2</td><td>63、91、121、140、152、153、157、179、200、244</td><td>.288／.446／.289</td><td>.700</td><td>.831</td><td>.584</td><td>.700</td><td>.812 [.680, .940]</td></tr>
+      <tr><td>X6<br>n=235</td><td>全部 240</td><td>AD2、TII2</td><td>59、63、91、179、214</td><td>.310／.501／.341</td><td>.711</td><td>.837</td><td>.599</td><td>.715</td><td>.849 [.731, .966]</td></tr>
+      <tr><td>X7<br>n=204</td><td>V6</td><td>AD2、TII2</td><td>63、87、121、152、174、179、200、244</td><td>.320／.428／.232</td><td>.711</td><td>.836</td><td>.576</td><td>.701</td><td>.8498 [.707, .978]</td></tr>
+      <tr><td>X8<br>n=228</td><td>全部 240</td><td>AD2</td><td>37、57、63、91、121、152、156、158、179、200、214、244</td><td>.373／.494／.316</td><td>.704</td><td>.834</td><td>.605</td><td>.722</td><td>.824 [.702, .946]</td></tr>
     </tbody>
   </table></div>
-  <p style="font-size:.88rem;color:var(--ink-2)">H2、H3a、H3b 四個版本都成立，H1 都不成立。H4a、H4b 方向為負，只在個別版本的信賴區間剛好不含 0（p 值都 &gt; .05），結果不穩定。顯著性以信賴區間判斷：Hair 等人（2022）建議報告拔靴信賴區間而非 t 值與 p 值，並採 percentile 法（p. 158、p. 208）。測量上，IEC 的 ρA 在主分析為 .685，屬探索性研究可接受的 .60–.70；其他構面之間的 HTMT 都低於 .80。</p>
-  <p style="font-size:.88rem;color:var(--ink-2)"><b>IEC 與 TII 的區辨效度在四個版本都不成立</b>（HTMT &gt; .85，信賴區間上限 &gt; 1）。</p>
+  <p class="subhead">配適度</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">saturated SRMR 要 &lt; .08；其他格為原始值，括號內為 bootstrap 分位數：saturated 看 95%，estimated 看 99%，原始值小於括號內的值即通過（Dijkstra 與 Henseler，2015）。八個組合全部通過。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>組合</th><th>SRMR<br>saturated</th><th>d_ULS<br>saturated（95%）</th><th>d_G<br>saturated（95%）</th><th>SRMR<br>estimated（99%）</th><th>d_ULS<br>estimated（99%）</th><th>d_G<br>estimated（99%）</th></tr></thead>
+    <tbody>
+      <tr><td>X1</td><td>.067</td><td>1.230（2.427）</td><td>.497（.759）</td><td>.102（.122）</td><td>2.884（4.080）</td><td>.598（1.014）</td></tr>
+      <tr><td>X2</td><td>.066</td><td>1.186（1.952）</td><td>.516（.690）</td><td>.094（.122）</td><td>2.459（4.101）</td><td>.586（1.028）</td></tr>
+      <tr><td>X3</td><td>.069</td><td>1.444（2.029）</td><td>.629（.714）</td><td>.097（.119）</td><td>2.795（4.233）</td><td>.710（1.039）</td></tr>
+      <tr><td>X4</td><td>.070</td><td>1.483（1.596）</td><td>.623（.640）</td><td>.102（.118）</td><td>3.117（4.145）</td><td>.729（1.029）</td></tr>
+      <tr><td>X5</td><td>.065</td><td>1.156（1.613）</td><td>.472（.648）</td><td>.097（.126）</td><td>2.574（4.356）</td><td>.539（1.054）</td></tr>
+      <tr><td>X6</td><td>.066</td><td>1.090（1.596）</td><td>.473（.661）</td><td>.105（.107）</td><td>2.790（2.891）</td><td>.548（.893）</td></tr>
+      <tr><td>X7</td><td>.067</td><td>1.138（1.494）</td><td>.474（.621）</td><td>.102（.105）</td><td>2.626（2.769）</td><td>.569（.866）</td></tr>
+      <tr><td>X8</td><td>.070</td><td>1.340（1.404）</td><td>.596（.632）</td><td>.099（.104）</td><td>2.691（2.979）</td><td>.676（.927）</td></tr>
+    </tbody>
+  </table></div>
+  <p class="subhead">路徑係數</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">β（p），bootstrap 雙尾；<b>粗體</b>＝p &lt; .05。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>組合</th><th>H1</th><th>H2</th><th>H3a</th><th>H3b</th><th>H4a</th><th>H4b</th><th>HRS → IEC</th><th>HRS → TII</th></tr></thead>
+    <tbody>
+      <tr><td>X1</td><td>−.114（.183）</td><td><b>.547（&lt; .001）</b></td><td><b>.423（&lt; .001）</b></td><td><b>.298（.002）</b></td><td>−.061（.369）</td><td><b>−.132（.043）</b></td><td><b>.273（&lt; .001）</b></td><td>.143（.124）</td></tr>
+      <tr><td>X2</td><td>−.019（.795）</td><td><b>.572（&lt; .001）</b></td><td><b>.434（&lt; .001）</b></td><td><b>.299（.002）</b></td><td>−.047（.391）</td><td>−.058（.381）</td><td><b>.296（&lt; .001）</b></td><td><b>.274（.018）</b></td></tr>
+      <tr><td>X3</td><td>−.020（.770）</td><td><b>.577（&lt; .001）</b></td><td><b>.443（&lt; .001）</b></td><td><b>.292（.003）</b></td><td>−.045（.417）</td><td>−.058（.390）</td><td><b>.289（&lt; .001）</b></td><td><b>.258（.029）</b></td></tr>
+      <tr><td>X4</td><td>−.135（.087）</td><td><b>.557（&lt; .001）</b></td><td><b>.396（&lt; .001）</b></td><td><b>.275（.003）</b></td><td><b>−.119（.017）</b></td><td><b>−.197（&lt; .001）</b></td><td><b>.316（&lt; .001）</b></td><td>.150（.100）</td></tr>
+      <tr><td>X5</td><td>−.119（.142）</td><td><b>.527（&lt; .001）</b></td><td><b>.409（&lt; .001）</b></td><td><b>.266（.008）</b></td><td>−.067（.114）</td><td>−.077（.140）</td><td><b>.284（&lt; .001）</b></td><td><b>.274（.021）</b></td></tr>
+      <tr><td>X6</td><td>−.112（.155）</td><td><b>.556（&lt; .001）</b></td><td><b>.414（&lt; .001）</b></td><td><b>.287（.003）</b></td><td><b>−.082（.010）</b></td><td>−.088（.071）</td><td><b>.310（&lt; .001）</b></td><td><b>.295（.010）</b></td></tr>
+      <tr><td>X7</td><td>−.110（.168）</td><td><b>.559（&lt; .001）</b></td><td><b>.427（&lt; .001）</b></td><td><b>.302（.002）</b></td><td>−.056（.412）</td><td><b>−.129（.049）</b></td><td><b>.276（&lt; .001）</b></td><td>.145（.121）</td></tr>
+      <tr><td>X8</td><td>−.123（.139）</td><td><b>.609（&lt; .001）</b></td><td><b>.396（&lt; .001）</b></td><td><b>.259（.010）</b></td><td><b>−.072（.019）</b></td><td>−.079（.094）</td><td><b>.334（&lt; .001）</b></td><td><b>.307（.009）</b></td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">八個組合都是 H2、H3a、H3b 成立，H1 不成立，HRS → IEC 顯著。H4a、H4b 方向都為負，只在部分組合顯著。</p>
+  <p class="subhead">再拿掉兩份職員問卷（估算）</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">以全部 240 份為起點的組合，再拿掉兩份職員問卷後的結果。這張表是 Claude 的程式估算，尚未在 SmartPLS 跑過；同一套程式算 X1–X8 時，R² 與 SmartPLS 一致到小數第三位。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>組合</th><th>模型拿掉</th><th>n</th><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低負荷量</th><th>HTMT IEC–TII</th><th>配適度</th></tr></thead>
+    <tbody>
+      <tr><td>X2 再拿掉職員</td><td>TII2</td><td>230</td><td>.324／.451／.285</td><td>.703</td><td>.726</td><td>.830</td><td>全部通過</td></tr>
+      <tr><td>X3 再拿掉職員</td><td>—</td><td>230</td><td>.330／.451／.262</td><td>.702</td><td>.716</td><td>.801</td><td>全部通過</td></tr>
+      <tr><td>X6 再拿掉職員</td><td>AD2、TII2</td><td>233</td><td>.311／.500／.339</td><td>.707</td><td>.715</td><td>.847</td><td>全部通過</td></tr>
+      <tr><td>X8 再拿掉職員</td><td>AD2</td><td>226</td><td>.374／.493／.314</td><td>.701</td><td>.721</td><td>.823</td><td>未通過（saturated SRMR、d_ULS 超過 95%）</td></tr>
+    </tbody>
+  </table></div>
 
-  <p class="subhead">多群組分析：商管 vs 非商管（全部科系 V6，n=212）</p>
+  <p class="subhead">多群組分析：商管 vs 非商管（全部科系 V6，n=212；老師決定不採用，檢定力不足）</p>
   <p style="font-size:.88rem;color:var(--ink-2)">商管 139 人、非商管 73 人（資訊、資管與其他科系）。MICOM 的 permutation 5,000 次（Henseler 等人，2016）；PLS-MGA 的 bootstrap 10,000 次，雙尾。<b>粗體</b>＝p &lt; .05。</p>
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th>MICOM</th><th>步驟二：組成不變性<br>c（p）</th><th>步驟三a：平均數差異<br>（p）</th><th>步驟三b：變異數差異<br>（p）</th></tr></thead>
