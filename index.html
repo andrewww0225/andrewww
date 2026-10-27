@@ -885,25 +885,20 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </ol>
   <p style="font-size:.88rem;color:var(--ink-2)">模型不含 IEC1，其餘 24 題全部保留。</p>
 
-  <p class="subhead">二、測量模型</p>
+  <p class="subhead">二、結果總覽</p>
   <div class="qi-wrap"><table class="qi">
-    <thead><tr><th>構面</th><th>α</th><th>CR（ρc）</th><th>AVE</th><th>最低負荷量</th></tr></thead>
-    <tbody><tr><td>當責</td><td>.815</td><td>.869</td><td>.572</td><td>.703（A3）</td></tr><tr><td>AD</td><td>.890</td><td>.913</td><td>.725</td><td>.768（AD2）</td></tr><tr><td>HOI</td><td>.868</td><td>.910</td><td>.716</td><td>.810（HOI1）</td></tr><tr><td>HRS</td><td>.834</td><td>.888</td><td>.666</td><td>.761（HRS1）</td></tr><tr><td>IEC</td><td>.699</td><td>.831</td><td>.622</td><td>.740（IEC2）</td></tr><tr><td>TII</td><td>.815</td><td>.868</td><td>.626</td><td>.668（TII2）</td></tr></tbody>
+    <thead><tr><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低 CR</th><th>最低 AVE</th><th>最低負荷量</th><th>HTMT IEC–TII [95% CI]</th></tr></thead>
+    <tbody>
+      <tr><td>.304／.446／.229</td><td>.699（IEC，寫成 .70）</td><td>.831</td><td>.572</td><td>.668（TII2；其餘 ≥ .70）</td><td>.831 [.682, .968]</td></tr>
+    </tbody>
   </table></div>
-  <p style="font-size:.88rem;color:var(--ink-2)">門檻：α、CR &gt; .70（探索性研究 .60–.70 可接受）；AVE &gt; .50；負荷量 &gt; .70（.40–.70 可接受）（Hair 等人，2022）。IEC 的 α 為 .699，寫成 .70；TII2 負荷量 .668。區辨效度：HTMT 最高為 IEC–TII .831，95% CI [.682, .968]，低於 .85 且上限小於 1；其次為 IEC–HOI .773。</p>
-
-  <p class="subhead">三、配適度</p>
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th></th><th>SRMR</th><th>d_ULS</th><th>d_G</th></tr></thead>
     <tbody>
-      <tr><td>saturated（SRMR &lt; .08；其餘 &lt; 95%）</td><td>.070</td><td>1.477（1.779）</td><td>.615（.676）</td></tr>
-      <tr><td>estimated（&lt; 99%）</td><td>.105（.119）</td><td>3.291（4.278）</td><td>.730（1.060）</td></tr>
+      <tr><td>saturated（門檻：SRMR &lt; .08；其餘 &lt; 95%）</td><td>.070</td><td>1.477（1.779）</td><td>.615（.676）</td></tr>
+      <tr><td>estimated（門檻：&lt; 99%）</td><td>.105（.119）</td><td>3.291（4.278）</td><td>.730（1.060）</td></tr>
     </tbody>
   </table></div>
-  <p style="font-size:.88rem;color:var(--ink-2)">括號內為 bootstrap 分位數，原始值小於括號內的值即通過（Dijkstra 與 Henseler，2015）。全部通過。</p>
-  <p style="font-size:.88rem;color:var(--ink-2)">以不含交互作用項的主效果模型（HRS → IEC、TII 改畫成一般路徑）重跑：saturated SRMR .070、d_ULS 1.477、d_G .615 完全相同；estimated SRMR .105、d_ULS 3.295、d_G .739，與上表只差小數第三位。不論是否含交互作用項，SRMR 都是 .070。</p>
-
-  <p class="subhead">四、假說檢定</p>
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th>假說</th><th>β</th><th>p</th><th>f²</th><th>結果</th></tr></thead>
     <tbody>
@@ -911,13 +906,26 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
       <tr><td>H2 當責 → HOI（+）</td><td><b>.543</b></td><td>&lt; .001</td><td>.423</td><td>支持</td></tr>
       <tr><td>H3a HOI → IEC（+）</td><td><b>.386</b></td><td>&lt; .001</td><td>.154</td><td>支持</td></tr>
       <tr><td>H3b HOI → TII（+）</td><td><b>.259</b></td><td>.005</td><td>.050</td><td>支持</td></tr>
-      <tr><td>H4a HRS 調節 HOI → IEC（+）</td><td><b>−.130</b></td><td>.010</td><td>.030</td><td>不支持（顯著但方向相反）</td></tr>
-      <tr><td>H4b HRS 調節 HOI → TII（+）</td><td><b>−.208</b></td><td>&lt; .001</td><td>.056</td><td>不支持（顯著但方向相反）</td></tr>
+      <tr><td>H4a HRS×HOI → IEC（+）</td><td><b>−.130</b></td><td>.010</td><td>.030</td><td>不支持（顯著但方向相反）</td></tr>
+      <tr><td>H4b HRS×HOI → TII（+）</td><td><b>−.208</b></td><td>&lt; .001</td><td>.056</td><td>不支持（顯著但方向相反）</td></tr>
     </tbody>
   </table></div>
-  <p style="font-size:.88rem;color:var(--ink-2)">R²：HOI .304、IEC .446、TII .229。交互作用項的 f² 以 .005／.01／.025 為小／中／大（Kenny，2018，轉引自 Hair 等人，2022），H4a、H4b 都達大效果量。HRS 為調節變數，模型中 HRS → IEC、TII 的路徑是估計交互作用所需，不另作解釋。</p>
 
-  <p class="subhead">五、調節效果：簡單斜率</p>
+  <p class="subhead">三、測量模型</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>構面</th><th>α</th><th>CR（ρc）</th><th>AVE</th><th>最低負荷量</th></tr></thead>
+    <tbody><tr><td>當責</td><td>.815</td><td>.869</td><td>.572</td><td>.703（A3）</td></tr><tr><td>AD</td><td>.890</td><td>.913</td><td>.725</td><td>.768（AD2）</td></tr><tr><td>HOI</td><td>.868</td><td>.910</td><td>.716</td><td>.810（HOI1）</td></tr><tr><td>HRS</td><td>.834</td><td>.888</td><td>.666</td><td>.761（HRS1）</td></tr><tr><td>IEC</td><td>.699</td><td>.831</td><td>.622</td><td>.740（IEC2）</td></tr><tr><td>TII</td><td>.815</td><td>.868</td><td>.626</td><td>.668（TII2）</td></tr></tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">門檻：α、CR &gt; .70（探索性研究 .60–.70 可接受）；AVE &gt; .50；負荷量 &gt; .70（.40–.70 可接受）（Hair 等人，2022）。IEC 的 α 為 .699，寫成 .70；TII2 負荷量 .668。區辨效度：HTMT 最高為 IEC–TII .831，95% CI [.682, .968]，低於 .85 且上限小於 1；其次為 IEC–HOI .773。</p>
+
+  <p class="subhead">四、配適度</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">總覽中配適度表括號內為 bootstrap 分位數，原始值小於括號內的值即通過（Dijkstra 與 Henseler，2015）。全部通過。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">以不含交互作用項的主效果模型（HRS → IEC、TII 改畫成一般路徑）重跑：saturated SRMR .070、d_ULS 1.477、d_G .615 完全相同；estimated SRMR .105、d_ULS 3.295、d_G .739，與上表只差小數第三位。不論是否含交互作用項，SRMR 都是 .070。</p>
+
+  <p class="subhead">五、假說檢定</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">β、p、f² 見總覽。交互作用項的 f² 以 .005／.01／.025 為小／中／大（Kenny，2018，轉引自 Hair 等人，2022），H4a、H4b 都達大效果量。HRS 為調節變數，模型中 HRS → IEC、TII 的路徑是估計交互作用所需，不另作解釋。</p>
+
+  <p class="subhead">六、調節效果：簡單斜率</p>
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th>HOI 的效果</th><th>HRS 低（平均 − 1 SD）</th><th>HRS 平均</th><th>HRS 高（平均 + 1 SD）</th></tr></thead>
     <tbody>
@@ -932,7 +940,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <p style="font-size:.88rem;color:var(--ink-2)">SmartPLS 的 Conditional direct effects 與 Simple slope analysis。HRS 愈低，HOI 對個人努力投入與團隊互動的影響愈強；HRS 高時，HOI 對團隊互動沒有影響。HOI → TII 的三條線在 HOI 約 +0.68 SD 處交叉：HOI 很高時，HRS 低的人團隊互動反而較多。</p>
   <p style="font-size:.88rem;color:var(--ink-2)"><b>可能的解釋：</b>Kerr 與 Bruun（1983）指出，個體愈認為自己的努力對團體成功並非必要，動機便愈低（p. 79）。認為自己在 AI 面前可被取代的成員（HRS 低）正處於這種處境，監督 AI 的意圖讓他們有不可省略的工作，因此 HOI 與投入、互動的關聯最強；認為自己不可取代的成員（HRS 高），投入不必靠監督 AI 來維持。研究限制：HRS 高的人 HOI 多集中在高分（平均 6.68，SD .59），斜率可能因此偏小。</p>
 
-  <p class="subhead">六、補充：條件間接效果（是否採用待老師決定）</p>
+  <p class="subhead">七、補充：條件間接效果（是否採用待老師決定）</p>
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th>路徑</th><th>HRS 低</th><th>HRS 平均</th><th>HRS 高</th></tr></thead>
     <tbody>
@@ -1077,7 +1085,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
     <li>
       <div>
         <h4>條件間接效果（當責 → HOI → IEC、TII，依 HRS 高低）要不要放進論文？</h4>
-        <p>SmartPLS 的 Conditional indirect effects 顯示，當責經由 HOI 影響投入與互動，在 HRS 低的人身上最強（→ IEC .280、→ TII .254），HRS 高時經由 HOI 影響 TII 的效果消失（.028，p = .672）。這屬於有調節的中介分析，與「不探討中介效果」（老師 10/19）不一致，數字見「正式分析結果」第六點。</p>
+        <p>SmartPLS 的 Conditional indirect effects 顯示，當責經由 HOI 影響投入與互動，在 HRS 低的人身上最強（→ IEC .280、→ TII .254），HRS 高時經由 HOI 影響 TII 的效果消失（.028，p = .672）。這屬於有調節的中介分析，與「不探討中介效果」（老師 10/19）不一致，數字見「正式分析結果」第七點。</p>
         <p><strong>請老師決定：</strong>不放；或當補充分析放進第四章（另需報告 index of moderated mediation）？</p>
       </div>
     </li>
