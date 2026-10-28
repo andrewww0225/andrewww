@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>刷題小程式</title>
+<title>土豆集散地</title>
 <style>
   :root {
     --bg: #f4f5f9;
@@ -226,7 +226,7 @@ function route() {
 /* ---------- 首頁 ---------- */
 function renderHome() {
   session = null;
-  document.title = '刷題小程式';
+  document.title = '土豆集散地';
   const cards = subjectOrder.filter(id => subjects[id]).map(id => {
     const s = subjects[id], w = wrongCount(id);
     return `<button class="card subject" onclick="go('#/s/${id}')">
@@ -234,7 +234,7 @@ function renderHome() {
       <div class="muted">${s.questions.length} 題${w ? `<span class="pill">錯題 ${w}</span>` : ''}</div></div>
       <span class="arrow">›</span></button>`;
   }).join('');
-  $app.innerHTML = `<h1>刷題小程式</h1><p class="muted" style="margin-top:0">選一個科目開始</p>
+  $app.innerHTML = `<h1>土豆集散地</h1><p class="muted" style="margin-top:0">選一個科目開始</p>
     ${cards || '<div class="card muted">目前沒有科目。</div>'}`;
 }
 
@@ -249,7 +249,7 @@ function renderSubject(id) {
   session = null;
   const s = subjects[id], total = s.questions.length, w = wrongCount(id);
   const last = store.get('quiz:last:' + id, null);
-  document.title = s.name + '｜刷題';
+  document.title = s.name + '｜土豆集散地';
   $app.innerHTML = `
     <div class="topbar"><button class="link-btn" onclick="go('#/')">‹ 所有科目</button></div>
     <h1>${esc(s.name)}</h1>
