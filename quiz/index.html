@@ -60,8 +60,11 @@
   .subject {
     display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer;
   }
-  .subject .name { font-weight: bold; font-size: 1.08em; }
-  .subject .arrow { margin-left: auto; color: var(--muted); font-size: 1.4em; }
+  .subject { min-height: 96px; padding: 22px 22px; border-radius: 16px; }
+  .subject .name { font-weight: bold; font-size: 1.3em; line-height: 1.35; }
+  .subject .muted { font-size: 1em; margin-top: 2px; }
+  .subject .arrow { margin-left: auto; color: var(--muted); font-size: 1.8em; }
+  @media (hover: hover) { .subject:hover { border-color: var(--accent); } }
   .pill {
     display: inline-block; font-size: .8em; padding: 1px 9px; border-radius: 99px;
     background: var(--bad-soft); color: var(--bad); margin-left: 6px; font-weight: normal;
