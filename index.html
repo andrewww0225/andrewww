@@ -896,8 +896,8 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <div class="qi-wrap"><table class="qi">
     <thead><tr><th></th><th>SRMR</th><th>d_ULS</th><th>d_G</th></tr></thead>
     <tbody>
-      <tr><td>saturated（門檻：SRMR &lt; .08；其餘 &lt; 95%）</td><td>.070</td><td>1.477（1.779）</td><td>.615（.676）</td></tr>
-      <tr><td>estimated（門檻：&lt; 99%）</td><td>.105（.119）</td><td>3.291（4.278）</td><td>.730（1.060）</td></tr>
+      <tr><td>saturated（門檻：&lt; 95%；SRMR 另看 .08）</td><td>.070（.077）</td><td>1.477（1.779）</td><td>.615（.676）</td></tr>
+      <tr><td>estimated（門檻：&lt; 95%）</td><td>.105（.083）</td><td>3.291（2.058）</td><td>.730（.678）</td></tr>
     </tbody>
   </table></div>
   <div class="qi-wrap"><table class="qi">
@@ -920,7 +920,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <p style="font-size:.88rem;color:var(--ink-2)">門檻：α、CR &gt; .70（探索性研究 .60–.70 可接受）；AVE &gt; .50；負荷量 &gt; .70（.40–.70 可接受）（Hair 等人，2022）。IEC 的 α 為 .699，寫成 .70；TII2 負荷量 .668。區辨效度：HTMT 最高為 IEC–TII .831，95% CI [.682, .968]，低於 .85 且上限小於 1；其次為 IEC–HOI .773。</p>
 
   <p class="subhead">四、配適度</p>
-  <p style="font-size:.88rem;color:var(--ink-2)">總覽中配適度表括號內為 bootstrap 分位數，原始值小於括號內的值即通過（Dijkstra 與 Henseler，2015）。全部通過。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">總覽中配適度表括號內為 bootstrap 分位數，原始值小於括號內的值即通過（Dijkstra 與 Henseler，2015）。saturated model 全部通過；estimated model 三項都高於 95% 分位數，於 5% 顯著水準下拒絕精確配適。</p>
   <p style="font-size:.88rem;color:var(--ink-2)">以不含交互作用項的主效果模型（HRS → IEC、TII 改畫成一般路徑）重跑：saturated SRMR .070、d_ULS 1.477、d_G .615 完全相同；estimated SRMR .105、d_ULS 3.295、d_G .739，與上表只差小數第三位。不論是否含交互作用項，SRMR 都是 .070。</p>
 
   <p class="subhead">五、假說檢定</p>
