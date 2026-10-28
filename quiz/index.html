@@ -326,11 +326,11 @@ function renderSubject(id) {
       <p class="muted">${w ? '只刷答錯過的題目，答對一次就會移出錯題本。' : '目前沒有錯題。練習或考試答錯的題目會自動收進來。'}</p>
       <div class="row"><button class="btn" ${w ? '' : 'disabled'} onclick="start('${id}','wrong')">刷錯題</button>
         ${w ? `<button class="link-btn" onclick="clearWrong('${id}')">清空錯題本</button>` : ''}</div>
+      <p class="muted" style="margin:10px 0 0;font-size:.9em">⚠️ 錯題記錄存在這台裝置的瀏覽器裡：手機和電腦各自分開，換瀏覽器、用無痕模式或清除瀏覽資料都會不見。</p>
     </div>
     <div class="card toggles">
       <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
       <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
-      <p class="muted" style="margin:4px 0 0">錯題記錄存在這台裝置的瀏覽器裡，手機和電腦各自分開。</p>
     </div>`;
 }
 
