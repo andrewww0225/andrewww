@@ -2,5 +2,7 @@
 window.QUIZ_SUBJECTS = [
   "logistics-ch1",
   "logistics-ch2",
-  "logistics-ch3"
+  "logistics-ch3",
+  "logistics-ch4",
+  "logistics-ch5"
 ];
