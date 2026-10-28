@@ -61,8 +61,8 @@
     display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer;
   }
   .subject { min-height: 96px; padding: 22px 22px; border-radius: 16px; }
-  .subject .name { font-weight: bold; font-size: 1.3em; line-height: 1.35; }
-  .subject .muted { font-size: 1em; margin-top: 2px; }
+  .subject .name { font-weight: bold; font-size: calc(1.3em + 4px); line-height: 1.35; }
+  .subject .muted { font-size: calc(1em + 4px); margin-top: 2px; }
   .subject .arrow { margin-left: auto; color: var(--muted); font-size: 1.8em; }
   @media (hover: hover) { .subject:hover { border-color: var(--accent); } }
   .pill {
