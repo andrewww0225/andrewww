@@ -140,6 +140,11 @@ window.QUIZ = {
   register(s) {
     s.issues = [];
     s.questions.forEach((q, i) => {
+      // ans 用選項字母寫答案（"B"；複選寫 "AC"），換成選項文字
+      if (q.ans && q.a === undefined && Array.isArray(q.opts)) {
+        const picked = [...q.ans].map(c => q.opts[LETTERS.indexOf(c)]);
+        q.a = picked.length > 1 ? picked : picked[0];
+      }
       const ans = Array.isArray(q.a) ? q.a : [q.a];
       if (!Array.isArray(q.opts) || q.opts.length < 2) s.issues.push(`第 ${i + 1} 題選項不足`);
       else if (!ans.every(a => q.opts.includes(a))) s.issues.push(`第 ${i + 1} 題的答案不在選項裡`);
