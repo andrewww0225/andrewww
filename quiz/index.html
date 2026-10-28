@@ -79,6 +79,13 @@
   }
   .toggles label { display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer; }
   .toggles input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1.5px solid var(--line); background: var(--card); border-radius: 99px; padding: 8px 14px;
+    cursor: pointer; min-height: 44px; text-align: left;
+  }
+  .chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: bold; }
+  .q-chapter { font-size: .82em; color: var(--muted); margin: -2px 0 6px; }
   .warn { background: var(--warn-soft); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; font-size: .92em; }
 
   /* question */
@@ -150,7 +157,21 @@ window.QUIZ = {
       else if (!ans.every(a => q.opts.includes(a))) s.issues.push(`第 ${i + 1} 題的答案不在選項裡`);
       q.key = hash(q.q + '|' + (q.opts || []).join('|'));
     });
-    subjects[s.id] = s;
+    if (!s.group) {
+      subjects[s.id] = s;
+      subjectOrder.push(s.id);
+      return;
+    }
+    // 有 group 的檔案是某科目的一章，併進同一個科目
+    let g = subjects[s.group];
+    if (!g) {
+      g = subjects[s.group] = { id: s.group, name: s.groupName, chapters: [], questions: [], issues: [] };
+      subjectOrder.push(s.group);
+    }
+    s.questions.forEach(q => { q.chapter = s.name; });
+    g.chapters.push({ name: s.name, count: s.questions.length });
+    g.questions.push(...s.questions);
+    g.issues.push(...s.issues.map(t => s.name + ' ' + t));
   }
 };
 
@@ -169,10 +190,26 @@ const prefs = Object.assign({ shuffleQ: true, shuffleO: true, practiceSize: 'all
 const savePrefs = () => store.set('quiz:prefs', prefs);
 const getWrong = id => store.get('quiz:wrong:' + id, {}) || {};
 const setWrong = (id, w) => store.set('quiz:wrong:' + id, w);
-const wrongCount = id => {
+const wrongCount = (id, qs = subjects[id].questions) => {
   const w = getWrong(id);
-  return subjects[id].questions.filter(q => w[q.key]).length;
+  return qs.filter(q => w[q.key]).length;
 };
+// 目前勾選的章節裡的題目；沒有勾或全勾就是整個科目
+const selectedChapters = id => ((prefs.chapters || {})[id] || []).filter(n => subjects[id].chapters.some(c => c.name === n));
+function pool(id) {
+  const s = subjects[id], sel = s.chapters ? selectedChapters(id) : [];
+  return sel.length ? s.questions.filter(q => sel.includes(q.chapter)) : s.questions;
+}
+function toggleChapter(id, name) {
+  prefs.chapters = prefs.chapters || {};
+  let sel = selectedChapters(id);
+  if (name === null) sel = [];
+  else sel = sel.includes(name) ? sel.filter(n => n !== name) : [...sel, name];
+  if (sel.length === subjects[id].chapters.length) sel = [];
+  prefs.chapters[id] = sel;
+  savePrefs();
+  renderSubject(id);
+}
 
 /* ---------- 工具 ---------- */
 const $app = document.getElementById('app');
@@ -239,7 +276,7 @@ function renderHome() {
     const s = subjects[id], w = wrongCount(id);
     return `<button class="card subject" onclick="go('#/s/${id}')">
       <div><div class="name">${esc(s.name)}</div>
-      <div class="muted">${s.questions.length} 題${w ? `<span class="pill">錯題 ${w}</span>` : ''}</div></div>
+      <div class="muted">${s.chapters ? s.chapters.length + ' 章・' : ''}${s.questions.length} 題${w ? `<span class="pill">錯題 ${w}</span>` : ''}</div></div>
       <span class="arrow">›</span></button>`;
   }).join('');
   $app.innerHTML = `<h1>土豆集散地</h1><p class="muted" style="margin-top:0">選一個科目開始</p>
@@ -255,14 +292,23 @@ function sizeSelect(name, value, total, choices) {
 
 function renderSubject(id) {
   session = null;
-  const s = subjects[id], total = s.questions.length, w = wrongCount(id);
+  const s = subjects[id], qs = pool(id), total = qs.length, w = wrongCount(id, qs);
   const last = store.get('quiz:last:' + id, null);
+  const sel = s.chapters ? selectedChapters(id) : [];
+  const chapterCard = s.chapters && s.chapters.length > 1 ? `
+    <div class="card"><h2>章節</h2><p class="muted" style="margin:0 0 10px">點章節可以只刷那幾章（可以多選），點「全部」就是整個科目。</p>
+      <div class="chips">
+        <button class="chip ${sel.length ? '' : 'on'}" onclick="toggleChapter('${id}', null)">全部 ${s.questions.length} 題</button>
+        ${s.chapters.map((c, k) => `<button class="chip ${sel.includes(c.name) ? 'on' : ''}"
+          onclick="toggleChapter('${id}', subjects['${id}'].chapters[${k}].name)">${esc(c.name)}<span class="muted"> ${c.count}</span></button>`).join('')}
+      </div></div>` : '';
   document.title = s.name + '｜土豆集散地';
   $app.innerHTML = `
     <div class="topbar"><button class="link-btn" onclick="go('#/')">‹ 所有科目</button></div>
     <h1>${esc(s.name)}</h1>
-    <p class="muted" style="margin-top:0">共 ${total} 題${last ? `　·　上次模擬考 ${last.score} / ${last.total}` : ''}</p>
+    <p class="muted" style="margin-top:0">${sel.length ? `已選 ${sel.length} 章・` : ''}共 ${total} 題${last ? `　·　上次模擬考 ${last.score} / ${last.total}` : ''}</p>
     ${s.issues.length ? `<div class="warn">題庫有問題，這些題目可能無法正確批改：${s.issues.map(esc).join('、')}</div>` : ''}
+    ${chapterCard}
     <div class="card mode">
       <h2>練習模式</h2>
       <p class="muted">一次一題，選完馬上知道對錯和正確答案。</p>
@@ -293,13 +339,13 @@ function clearWrong(id) {
 }
 
 function start(id, mode) {
-  const s = subjects[id];
+  const qs = pool(id);
   let items;
   if (mode === 'wrong') {
     const w = getWrong(id);
-    items = buildItems(s.questions.filter(q => w[q.key]), 'all');
+    items = buildItems(qs.filter(q => w[q.key]), 'all');
   } else {
-    items = buildItems(s.questions, mode === 'exam' ? prefs.examSize : prefs.practiceSize);
+    items = buildItems(qs, mode === 'exam' ? prefs.examSize : prefs.practiceSize);
   }
   if (!items.length) return alert('這個科目還沒有題目。');
   session = { subjectId: id, mode, items, i: 0, finished: false, shownAt: 0 };
@@ -341,6 +387,7 @@ function renderPractice() {
     <div class="progress"><div style="width:${done / items.length * 100}%"></div></div>
     <div class="card">
       <div class="q-meta"><span>第 ${i + 1} / ${items.length} 題 ${item.multi ? '<b>（複選）</b>' : ''}</span><span>答對 ${right} / ${done}</span></div>
+      ${item.q.chapter ? `<div class="q-chapter">${esc(item.q.chapter)}</div>` : ''}
       <div class="q-text">${esc(item.q.q)}</div>
       <div class="opts">${optButtons(item, i, 'pickPractice')}</div>
       ${feedbackHTML(item)}
@@ -439,7 +486,7 @@ function renderExam() {
     if (finished && session.onlyWrong && t.correct) return '';
     const cls = finished ? (t.correct ? 'done-ok' : 'done-bad') : (session.flagUnanswered && !t.picked.length ? 'unanswered' : '');
     return `<div class="card exam-q ${cls}" id="eq${idx}">
-      <div class="q-meta"><span>第 ${idx + 1} 題 ${t.multi ? '<b>（複選）</b>' : ''}</span></div>
+      <div class="q-meta"><span>第 ${idx + 1} 題 ${t.multi ? '<b>（複選）</b>' : ''}</span>${t.q.chapter ? `<span>${esc(t.q.chapter)}</span>` : ''}</div>
       <div class="q-text">${esc(t.q.q)}</div>
       <div class="opts">${optButtons(t, idx, 'pickExam')}</div>
       ${finished ? feedbackHTML(t) : ''}</div>`;
@@ -502,8 +549,8 @@ function loadSubjects() {
   let pending = ids.length;
   if (!pending) return route();
   ids.forEach(id => {
-    subjectOrder.push(id);
     const el = document.createElement('script');
+    el.async = false; // 照清單順序執行，章節順序才不會亂
     el.src = 'data/' + id + '.js';
     el.onload = el.onerror = () => { if (--pending === 0) route(); };
     document.head.appendChild(el);
