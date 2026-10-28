@@ -817,7 +817,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 </section>
 
 <header class="masthead" id="top">
-  <p class="masthead__eyebrow">畢業專題 · 第一章 · 第二章 · 第三章（草稿）· 口試備查</p>
+  <p class="masthead__eyebrow">畢業專題 · 第一章 · 第二章 · 第三章（草稿）· 第四章 · 口試備查</p>
   <h1>原文證據對照表</h1>
   <p>將論文中具有論證功能的敘述，逐條對回學術原文的可定位位置。教授問「這段引用在原文哪裡」時，照節次順序翻到該條即可。此表不重做文獻回顧，只做可追溯性查證。</p>
 </header>
@@ -841,6 +841,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <a href="#s231">2.3.1 人類角色重要性</a>
   <a href="#s232">2.3.2 調節作用</a>
   <a href="#s3" style="border-color:var(--indirect);color:var(--indirect)">第三章 研究方法（草稿 v1.2）</a>
+  <a href="#s4" style="border-color:var(--direct);color:var(--direct)">第四章 研究結果</a>
 </nav>
 
 <div class="finder" role="search"><input class="finder__in" type="search" placeholder="搜尋作者、關鍵字或條目代號（例：Stout、幻覺、s232-K）" aria-label="搜尋條目"><span class="finder__n" role="status"></span><button type="button" class="finder__x" hidden>清除</button></div>
@@ -1175,10 +1176,11 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 <div id="frag-s21"><p style="padding:2rem 0;color:var(--muted);font-family:var(--f-mono);font-size:.85rem;text-align:center">載入中…</p></div>
 <div id="frag-s23"><p style="padding:2rem 0;color:var(--muted);font-family:var(--f-mono);font-size:.85rem;text-align:center">載入中…</p></div>
 <div id="frag-s3"><p style="padding:2rem 0;color:var(--muted);font-family:var(--f-mono);font-size:.85rem;text-align:center">載入中…</p></div>
+<div id="frag-s4"><p style="padding:2rem 0;color:var(--muted);font-family:var(--f-mono);font-size:.85rem;text-align:center">載入中…</p></div>
 
 
 <footer>
-  第一章・第二章・第三章（草稿）原文證據對照表 · 依論文節次排序 · 頁碼標示採單篇 PDF 頁碼，括號內為印刷頁碼<br>
+  第一章・第二章・第三章（草稿）・第四章原文證據對照表 · 依論文節次排序 · 頁碼標示採單篇 PDF 頁碼，括號內為印刷頁碼<br>
   本表僅供口試查證，不修改論文內容
 </footer>
 
@@ -1449,7 +1451,8 @@ function initRevbar(){
     {id:'frag-s22',url:'frag/s22.html'},
     {id:'frag-s21',url:'frag/s21.html'},
     {id:'frag-s23',url:'frag/s23.html'},
-    {id:'frag-s3',url:'frag/s3.html'}
+    {id:'frag-s3',url:'frag/s3.html'},
+    {id:'frag-s4',url:'frag/s4.html'}
   ];
   function showError(el,url,err){
     var msg=(err&&err.message)?err.message:'未知錯誤';
