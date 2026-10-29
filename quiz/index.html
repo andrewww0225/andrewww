@@ -111,7 +111,8 @@
   .opt.right .key { background: var(--ok); color: #fff; }
   .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
   .opt.wrong .key { background: var(--bad); color: #fff; }
-  .opt:disabled { cursor: default; }
+  .opt:disabled, .opt.static { cursor: default; }
+  .browse-ch { margin: 22px 0 10px; font-size: 1.1em; }
   .feedback { margin-top: 14px; padding: 10px 14px; border-radius: 10px; font-weight: bold; }
   .feedback.ok { background: var(--ok-soft); color: var(--ok); }
   .feedback.bad { background: var(--bad-soft); color: var(--bad); }
@@ -156,6 +157,7 @@ window.QUIZ = {
       if (!Array.isArray(q.opts) || q.opts.length < 2) s.issues.push(`第 ${i + 1} 題選項不足`);
       else if (!ans.every(a => q.opts.includes(a))) s.issues.push(`第 ${i + 1} 題的答案不在選項裡`);
       q.key = hash(q.q + '|' + (q.opts || []).join('|'));
+      q.num = i + 1; // 課本原題號（資料檔照課本順序寫）
     });
     if (!s.group) {
       subjects[s.id] = s;
@@ -262,6 +264,7 @@ function route() {
   if (parts[0] === 's' && subjects[parts[1]]) {
     const id = parts[1], mode = parts[2];
     if (!mode) return renderSubject(id);
+    if (mode === 'browse') return renderBrowse(id);
     if (!session || session.subjectId !== id || session.mode !== mode) return location.replace('#/s/' + id);
     return mode === 'exam' ? renderExam() : renderPractice();
   }
@@ -328,10 +331,42 @@ function renderSubject(id) {
         ${w ? `<button class="link-btn" onclick="clearWrong('${id}')">清空錯題本</button>` : ''}</div>
       <p class="muted" style="margin:10px 0 0;font-size:.9em">⚠️ 錯題記錄存在這台裝置的瀏覽器裡：手機和電腦各自分開，換瀏覽器、用無痕模式或清除瀏覽資料都會不見。</p>
     </div>
+    <div class="card mode">
+      <h2>瀏覽題庫</h2>
+      <p class="muted">照課本原題號列出${sel.length ? '已選章節的' : '全部'}題目和答案，不計分。</p>
+      <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/browse')">打開題庫</button></div>
+    </div>
     <div class="card toggles">
       <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
       <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
     </div>`;
+}
+
+/* ---------- 瀏覽題庫 ---------- */
+function renderBrowse(id) {
+  session = null;
+  const s = subjects[id], qs = pool(id), w = getWrong(id), show = prefs.browseAns !== false;
+  let lastCh = null;
+  const cards = qs.map(q => {
+    const head = q.chapter && q.chapter !== lastCh ? `<h2 class="browse-ch">${esc(q.chapter)}</h2>` : '';
+    lastCh = q.chapter;
+    const ans = answersOf(q);
+    const opts = q.opts.map((o, k) => `<div class="opt static ${show && ans.includes(o) ? 'right' : ''}">
+      <span class="key">${LETTERS[k]}</span><span class="txt">${esc(o)}</span></div>`).join('');
+    return `${head}<div class="card">
+      <div class="q-meta"><span>第 ${q.num} 題 ${Array.isArray(q.a) ? '<b>（複選）</b>' : ''}</span>${w[q.key] ? `<span class="pill">錯過 ${w[q.key]} 次</span>` : ''}</div>
+      <div class="q-text">${esc(q.q)}</div>
+      <div class="opts">${opts}</div>
+      ${show ? `<div class="feedback ok">答案：${ans.map(a => LETTERS[q.opts.indexOf(a)]).join('')}${q.exp ? `<div class="exp">${esc(q.exp)}</div>` : ''}</div>` : ''}</div>`;
+  }).join('');
+  document.title = '瀏覽題庫｜' + s.name;
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="go('#/s/${id}')">‹ 回科目</button>
+      <span class="title">${esc(s.name)}・瀏覽題庫</span></div>
+    <div class="card toggles"><label><input type="checkbox" ${show ? 'checked' : ''}
+      onchange="prefs.browseAns=this.checked;savePrefs();renderBrowse('${id}')"> 顯示答案</label>
+      <p class="muted" style="margin:4px 0 0">共 ${qs.length} 題${s.chapters && selectedChapters(id).length ? '（只列已選章節，回科目頁可改）' : ''}</p></div>
+    ${cards}`;
 }
 
 function clearWrong(id) {
