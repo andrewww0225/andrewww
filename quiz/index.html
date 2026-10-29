@@ -112,7 +112,12 @@
   .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
   .opt.wrong .key { background: var(--bad); color: #fff; }
   .opt:disabled, .opt.static { cursor: default; }
-  .browse-ch { margin: 22px 0 10px; font-size: 1.1em; }
+  .browse-ch { margin: 22px 0 10px; font-size: 1.1em; scroll-margin-top: 76px; }
+  .jump {
+    position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 8px 0; margin: 0 0 6px;
+    display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .jump .chip { flex: 1 0 auto; white-space: nowrap; text-align: center; padding: 8px 6px; font-size: .9em; }
   .feedback { margin-top: 14px; padding: 10px 14px; border-radius: 10px; font-weight: bold; }
   .feedback.ok { background: var(--ok-soft); color: var(--ok); }
   .feedback.bad { background: var(--bad-soft); color: var(--bad); }
@@ -311,6 +316,11 @@ function renderSubject(id) {
     <h1>${esc(s.name)}</h1>
     <p class="muted" style="margin-top:0">${sel.length ? `已選 ${sel.length} 章・` : ''}共 ${total} 題${last ? `　·　上次模擬考 ${last.score} / ${last.total}` : ''}</p>
     ${s.issues.length ? `<div class="warn">題庫有問題，這些題目可能無法正確批改：${s.issues.map(esc).join('、')}</div>` : ''}
+    <div class="card mode">
+      <h2>瀏覽題庫</h2>
+      <p class="muted">照章節和課本原題號列出全部 ${s.questions.length} 題和答案，不計分。</p>
+      <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/browse')">打開題庫</button></div>
+    </div>
     ${chapterCard}
     <div class="card mode">
       <h2>練習模式</h2>
@@ -331,11 +341,6 @@ function renderSubject(id) {
         ${w ? `<button class="link-btn" onclick="clearWrong('${id}')">清空錯題本</button>` : ''}</div>
       <p class="muted" style="margin:10px 0 0;font-size:.9em">⚠️ 錯題記錄存在這台裝置的瀏覽器裡：手機和電腦各自分開，換瀏覽器、用無痕模式或清除瀏覽資料都會不見。</p>
     </div>
-    <div class="card mode">
-      <h2>瀏覽題庫</h2>
-      <p class="muted">照課本原題號列出${sel.length ? '已選章節的' : '全部'}題目和答案，不計分。</p>
-      <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/browse')">打開題庫</button></div>
-    </div>
     <div class="card toggles">
       <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
       <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
@@ -345,10 +350,12 @@ function renderSubject(id) {
 /* ---------- 瀏覽題庫 ---------- */
 function renderBrowse(id) {
   session = null;
-  const s = subjects[id], qs = pool(id), w = getWrong(id), show = prefs.browseAns !== false;
+  const s = subjects[id], qs = s.questions, w = getWrong(id), show = prefs.browseAns !== false;
+  const chs = s.chapters || [];
   let lastCh = null;
   const cards = qs.map(q => {
-    const head = q.chapter && q.chapter !== lastCh ? `<h2 class="browse-ch">${esc(q.chapter)}</h2>` : '';
+    const head = q.chapter && q.chapter !== lastCh
+      ? `<h2 class="browse-ch" id="bc${chs.findIndex(c => c.name === q.chapter)}">${esc(q.chapter)}</h2>` : '';
     lastCh = q.chapter;
     const ans = answersOf(q);
     const opts = q.opts.map((o, k) => `<div class="opt static ${show && ans.includes(o) ? 'right' : ''}">
@@ -365,7 +372,9 @@ function renderBrowse(id) {
       <span class="title">${esc(s.name)}・瀏覽題庫</span></div>
     <div class="card toggles"><label><input type="checkbox" ${show ? 'checked' : ''}
       onchange="prefs.browseAns=this.checked;savePrefs();renderBrowse('${id}')"> 顯示答案</label>
-      <p class="muted" style="margin:4px 0 0">共 ${qs.length} 題${s.chapters && selectedChapters(id).length ? '（只列已選章節，回科目頁可改）' : ''}</p></div>
+      <p class="muted" style="margin:4px 0 0">共 ${qs.length} 題</p></div>
+    ${chs.length > 1 ? `<div class="jump">${chs.map((c, k) => `<button class="chip"
+      onclick="document.getElementById('bc${k}').scrollIntoView()">${esc(c.name.split(' ')[0])}</button>`).join('')}</div>` : ''}
     ${cards}`;
 }
 
