@@ -953,6 +953,22 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </table></div>
   <p style="font-size:.88rem;color:var(--ink-2)">SmartPLS 的 Conditional indirect effects（bootstrap 結果檔；重跑 bootstrap 時 p 值會小幅變動，結論相同）。當責經由 HOI 影響投入與互動，在 HRS 低的人身上最強；HRS 高時，經由 HOI 影響團隊互動的效果消失。</p>
 
+  <p class="subhead">八、fsQCA</p>
+  <p style="font-size:.88rem;color:var(--ink-2)">6／4／2 直接法校準；頻次門檻 3（保留下來的組合最少 4 人，共 182 人）；原始一致性 ≥ .80、PRI ≥ .90。四種組合的原始一致性都在 .94 以上，只有「AD 高、當責高、HOI 低、HRS 高」（n = 4）的 PRI 偏低（IEC .867、TII .804），判為 0。中間解設當責、HOI、HRS 為 present，AD 不設方向。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th></th><th>IEC C1</th><th>IEC C2</th><th>TII C1</th><th>TII C2</th></tr></thead>
+    <tbody>
+      <tr><td>AD</td><td>•</td><td></td><td>•</td><td></td></tr>
+      <tr><td>當責</td><td>•</td><td>•</td><td>•</td><td>•</td></tr>
+      <tr><td>HOI</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+      <tr><td>HRS</td><td></td><td>•</td><td></td><td>•</td></tr>
+      <tr><td>原始／唯一覆蓋率</td><td>.697／.026</td><td>.895／.225</td><td>.717／.028</td><td>.899／.210</td></tr>
+      <tr><td>一致性</td><td>.966</td><td>.956</td><td>.951</td><td>.919</td></tr>
+      <tr><td>整體解覆蓋率／一致性</td><td colspan="2">.921／.949</td><td colspan="2">.927／.913</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">● 核心條件（簡約解只剩 HOI），• 邊緣條件，空白為不影響。必要條件：當責、HOI、HRS 的一致性對 IEC 為 .959、.970、.945，對 TII 為 .965、.967、.941，都高於 .90；AD 為 .724、.742。</p>
+
   <details class="fold" id="res-types">
   <summary class="subhead fold__sum">刪除問卷的判斷依據：「低」「很低」與三種類型</summary>
   <p style="font-size:.88rem;color:var(--ink-2)">構面分數為該構面題目平均（1–7 分）。以同意知情同意的 240 份計算平均數與標準差：低於平均數 1 個標準差為「低」（z ≤ −1），低於 2 個標準差為「很低」（z ≤ −2）。</p>
