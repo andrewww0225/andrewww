@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><title>題庫檢查</title></head>
+<body>
+<!-- 題庫檢查：用網站本身的 app.js 載入所有題庫，列出問題。由 tools/check-bank.ps1 用 Edge 無頭模式開啟並印出結果 -->
+<pre id="out">running…</pre>
+<script src="../quiz/app.js"></script>
+<script src="../quiz/data/subjects.js"></script>
+<script>
+(async () => {
+  const out = [], files = [];
+  const register = QUIZ.register;
+  QUIZ.register = s => { files.push(s); register(s); };
+  const load = src => new Promise(r => { const el = document.createElement('script'); el.src = src; el.onload = () => r(true); el.onerror = () => r(false); document.head.appendChild(el); });
+  const imgOk = src => new Promise(r => { const im = new Image(); im.onload = () => r(true); im.onerror = () => r(false); im.src = src; });
+  let problems = 0;
+  const err = t => { out.push('  ERROR ' + t); problems++; };
+  for (const id of window.QUIZ_SUBJECTS || []) {
+    const before = files.length;
+    if (!await load('../quiz/data/' + id + '.js')) { out.push(`ERROR data/${id}.js 載入失敗或不存在`); problems++; continue; }
+    const s = files[before];
+    if (!s) { out.push(`ERROR data/${id}.js 沒有呼叫 QUIZ.register（語法錯誤？）`); problems++; continue; }
+    if (s.id !== id) err(`檔名 ${id} 和 id "${s.id}" 不一致`);
+    const dist = {}, seen = {};
+    s.questions.forEach(q => { dist[q.ans] = (dist[q.ans] || 0) + 1; });
+    out.push(`${id.padEnd(16)} ${String(s.questions.length).padStart(3)} 題  答案分布 ${Object.keys(dist).sort().map(k => k + '=' + dist[k]).join(' ')}`);
+    s.issues.forEach(err);
+    s.questions.forEach(q => {
+      if (seen[q.key]) err(`第 ${q.num} 題和第 ${seen[q.key]} 題題目、選項完全相同`); else seen[q.key] = q.num;
+      if (new Set(q.opts).size < q.opts.length) err(`第 ${q.num} 題有重複選項`);
+    });
+    const srcs = [...new Set(s.questions.flatMap(q => [...expHtml(q).matchAll(/src="([^"]+)"/g)].map(m => m[1])))];
+    for (const src of srcs) if (!await imgOk('../quiz/' + src)) err(`缺投影片圖 quiz/${src}`);
+    if (srcs.length) out.push(`  投影片圖 ${srcs.length} 張`);
+  }
+  out.push(problems ? `共 ${problems} 個問題` : 'OK，沒有發現問題');
+  document.getElementById('out').textContent = out.join('\n');
+})();
+</script>
+</body>
+</html>
