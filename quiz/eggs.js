@@ -58,30 +58,60 @@ function eggPanel() {
       <button class="pct-btn" onclick="bumpEggPct(${i},1)" aria-label="增加 1%">＋</button></div>`).join('')}</div>
     <div class="row"><button class="link-btn" onclick="resetEggPct()">恢復全部平均</button></div></details>`;
 }
-let eggAudio = null;
+// 音效用 Web Audio 播：iPhone 只准在手指點下去的當下開始出聲，而彩蛋是計時冒出來的，
+// 所以第一次點畫面時先把 AudioContext 解鎖，之後就能隨時播；音量也靠 GainNode（iOS 會無視 Audio.volume）
+let eggCtx = null, eggGain = null, eggAudio = null; // eggAudio：正在播的音源陣列，沒在播是 null
+function eggAudioCtx() {
+  if (!eggCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} // iOS 16.4+：不受靜音開關影響
+    eggCtx = new AC();
+    eggGain = eggCtx.createGain();
+    eggGain.gain.value = EGG_VOLUME;
+    eggGain.connect(eggCtx.destination);
+  }
+  return eggCtx;
+}
+function unlockEggAudio() {
+  const ctx = eggAudioCtx();
+  if (!ctx || ctx.state === 'running') return;
+  ctx.resume();
+  const s = ctx.createBufferSource(); // 舊版 iOS 還要在點擊當下真的播一段（無聲）才算解鎖
+  s.buffer = ctx.createBuffer(1, 1, 22050);
+  s.connect(ctx.destination);
+  s.start(0);
+}
+['pointerdown', 'touchend', 'keydown'].forEach(ev => addEventListener(ev, unlockEggAudio, { capture: true, passive: true }));
 function stopEggAudio() {
-  if (eggAudio) { eggAudio.onended = null; eggAudio.pause(); eggAudio = null; }
+  if (eggAudio) eggAudio.forEach(s => { s.onended = null; try { s.stop(); } catch (e) {} });
+  eggAudio = null;
 }
-// 先讀到每個音檔的長度，回傳 Audio 物件陣列（讀不到的檔案跳過，全都讀不到就只出圖）
+// 先把音檔解碼好（同一個檔只下載一次），回傳 AudioBuffer 陣列（讀不到的跳過，全都讀不到就只出圖）
+const eggBuffers = {};
 function loadSounds(files) {
-  return Promise.all(files.map(f => new Promise(r => {
-    const a = new Audio('mat/' + encodeURIComponent(f) + '?v=' + EGG_SOUND_VER);
-    a.preload = 'auto';
-    a.volume = EGG_VOLUME;
-    a.onloadedmetadata = () => r(a);
-    a.onerror = () => r(null);
-  }))).then(as => as.filter(Boolean));
+  const ctx = eggAudioCtx();
+  if (!ctx) return Promise.resolve([]);
+  return Promise.all(files.map(f => eggBuffers[f] || (eggBuffers[f] =
+    fetch('mat/' + encodeURIComponent(f) + '?v=' + EGG_SOUND_VER)
+      .then(r => r.ok ? r.arrayBuffer() : Promise.reject())
+      .then(ab => new Promise(res => ctx.decodeAudioData(ab, res, () => res(null)))) // 舊版 Safari 只支援 callback 寫法
+      .catch(() => null)))).then(bs => bs.filter(Boolean));
 }
-function playSounds(audios) {
+function playSounds(buffers) {
   stopEggAudio();
-  let i = 0;
-  const next = () => {
-    if (i >= audios.length || !prefs.eggs) return (eggAudio = null);
-    eggAudio = audios[i++];
-    eggAudio.onended = next;
-    eggAudio.play().catch(() => {}); // 瀏覽器擋自動播放時就安靜出圖
-  };
-  next();
+  if (eggCtx.state !== 'running') return; // 還沒點過畫面（沒解鎖）就安靜出圖
+  let t = eggCtx.currentTime + 0.05;
+  eggAudio = buffers.map(b => {
+    const s = eggCtx.createBufferSource();
+    s.buffer = b;
+    s.connect(eggGain);
+    s.start(t); // 一個接一個排好時間
+    t += b.duration;
+    return s;
+  });
+  const sources = eggAudio;
+  sources[sources.length - 1].onended = () => { if (eggAudio === sources) eggAudio = null; };
 }
 function showEgg(pick) {
   const list = window.QUIZ_MAT || [];
