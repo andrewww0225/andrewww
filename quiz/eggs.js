@@ -8,6 +8,9 @@ const EGG_SOUNDS = {
   '16840372121284118242.webp': ['blame.m4a']
 };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
+const EGG_SOUND_VOLUME = { // 個別音檔另訂音量（原檔比較大聲的），沒列的用 EGG_VOLUME
+  'blame.m4a': 0.2
+};
 const EGG_SOUND_VER = '3'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
 // 每張圖的出現比例（%，總和 100）：預設平均，用戶在科目頁調過就用 prefs.eggPct，新加的圖先給平均值
 function eggPcts() {
@@ -61,16 +64,13 @@ function eggPanel() {
 }
 // 音效用 Web Audio 播：iPhone 只准在手指點下去的當下開始出聲，而彩蛋是計時冒出來的，
 // 所以第一次點畫面時先把 AudioContext 解鎖，之後就能隨時播；音量也靠 GainNode（iOS 會無視 Audio.volume）
-let eggCtx = null, eggGain = null, eggAudio = null; // eggAudio：正在播的音源陣列，沒在播是 null
+let eggCtx = null, eggAudio = null; // eggAudio：正在播的音源陣列，沒在播是 null
 function eggAudioCtx() {
   if (!eggCtx) {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} // iOS 16.4+：不受靜音開關影響
     eggCtx = new AC();
-    eggGain = eggCtx.createGain();
-    eggGain.gain.value = EGG_VOLUME;
-    eggGain.connect(eggCtx.destination);
   }
   return eggCtx;
 }
@@ -117,6 +117,7 @@ function loadSounds(files) {
     fetch('mat/' + encodeURIComponent(f) + '?v=' + EGG_SOUND_VER)
       .then(r => r.ok ? r.arrayBuffer() : Promise.reject())
       .then(ab => new Promise(res => ctx.decodeAudioData(ab, res, () => res(null)))) // 舊版 Safari 只支援 callback 寫法
+      .then(b => b && Object.assign(b, { eggVolume: EGG_SOUND_VOLUME[f] ?? EGG_VOLUME }))
       .catch(() => null)))).then(bs => bs.filter(Boolean));
 }
 function playSounds(buffers) {
@@ -126,7 +127,10 @@ function playSounds(buffers) {
   eggAudio = buffers.map(b => {
     const s = eggCtx.createBufferSource();
     s.buffer = b;
-    s.connect(eggGain);
+    const g = eggCtx.createGain();
+    g.gain.value = b.eggVolume;
+    s.connect(g);
+    g.connect(eggCtx.destination);
     s.start(t); // 一個接一個排好時間
     t += b.duration;
     return s;
