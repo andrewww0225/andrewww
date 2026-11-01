@@ -33,7 +33,7 @@ GitHub Pages：https://andrewww0225.github.io/andrewww/（repo andrewww0225/andr
   - 「投影片 pN」＝PDF 第 N 頁。
 - push：`powershell -NoProfile -ExecutionPolicy Bypass -File tools\push.ps1`
   - 只印一行 `PUSH OK remote = local = xxxxxxx`。
-  - 只有 Andrew 說 push 才跑（用 run_in_terminal，因為要用 git 認證）。
+  - 只有 Andrew 說 push 才跑。用 Bash 工具跑即可（run_in_terminal 會擋含中文的路徑）。
 
 ## 改網站的習慣
 
