@@ -144,15 +144,15 @@
   /* 彩蛋圖片：點擊會穿透，不影響作答 */
   .egg {
     position: fixed; z-index: 50; pointer-events: none; user-select: none; height: auto;
-    animation: egg-pop var(--dur) ease-in-out forwards;
+    animation: egg-pop var(--dur) ease forwards;
     filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .25));
   }
+  /* 慢慢淡入淡出、只微微飄動，不做縮放彈跳，看久了比較不累 */
   @keyframes egg-pop {
-    0% { opacity: 0; transform: rotate(var(--rot)) scale(.2); }
-    12% { opacity: 1; transform: rotate(var(--rot)) scale(1.08); }
-    18% { transform: rotate(var(--rot)) scale(1); }
-    85% { opacity: 1; transform: rotate(var(--rot)) scale(1); }
-    100% { opacity: 0; transform: rotate(var(--rot)) scale(.6); }
+    0% { opacity: 0; transform: rotate(var(--rot)) translateY(8px); }
+    15% { opacity: 1; transform: rotate(var(--rot)) translateY(0); }
+    85% { opacity: 1; transform: rotate(var(--rot)) translateY(0); }
+    100% { opacity: 0; transform: rotate(var(--rot)) translateY(-4px); }
   }
   @media (prefers-reduced-motion: reduce) {
     @keyframes egg-pop { 0%, 100% { opacity: 0; transform: rotate(var(--rot)); } 10%, 90% { opacity: 1; transform: rotate(var(--rot)); } }
