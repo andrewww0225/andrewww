@@ -73,9 +73,29 @@ function eggAudioCtx() {
   }
   return eggCtx;
 }
+// iPhone 的靜音開關會把 Web Audio 靜音；同時用 <audio> 循環播一段無聲音訊，iOS 就會把網頁當成媒體播放，不受靜音開關影響
+const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+let eggKeepAlive = null;
+function silentWavUrl() {
+  const n = 4410, v = new DataView(new ArrayBuffer(44 + n * 2)); // 0.1 秒、16-bit 單聲道的無聲 WAV
+  const str = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVEfmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 44100, true); v.setUint32(28, 88200, true);
+  v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, n * 2, true);
+  return URL.createObjectURL(new Blob([v.buffer], { type: 'audio/wav' }));
+}
 function unlockEggAudio() {
   const ctx = eggAudioCtx();
-  if (!ctx || ctx.state === 'running') return;
+  if (!ctx) return;
+  if (IS_IOS && prefs.eggs && !document.hidden) {
+    if (!eggKeepAlive) {
+      eggKeepAlive = new Audio(silentWavUrl());
+      eggKeepAlive.loop = true;
+      eggKeepAlive.setAttribute('x-webkit-airplay', 'deny');
+    }
+    if (eggKeepAlive.paused) eggKeepAlive.play().catch(() => {});
+  }
+  if (ctx.state === 'running') return;
   ctx.resume();
   const s = ctx.createBufferSource(); // 舊版 iOS 還要在點擊當下真的播一段（無聲）才算解鎖
   s.buffer = ctx.createBuffer(1, 1, 22050);
@@ -156,13 +176,16 @@ const eggBtn = () => (window.QUIZ_MAT || []).length ? `<button class="egg-btn ${
 function toggleEggs() {
   prefs.eggs = !prefs.eggs;
   savePrefs();
-  if (!prefs.eggs) { document.querySelectorAll('.egg').forEach(e => e.remove()); stopEggAudio(); }
+  if (!prefs.eggs) { document.querySelectorAll('.egg').forEach(e => e.remove()); stopEggAudio(); pauseKeepAlive(); }
   // 只換按鈕本身，不重畫整頁（模擬考作答中也不會被清掉）
   document.querySelectorAll('.egg-btn').forEach(b => { b.outerHTML = eggBtn(); });
   const cb = document.getElementById('eggToggle');
   if (cb) cb.checked = prefs.eggs;
 }
 window.addEventListener('hashchange', () => { if (!eggActive()) stopEggAudio(); });
+// 關掉彩蛋或切到背景時停掉 iOS 的無聲音訊，下次點畫面再開
+const pauseKeepAlive = () => { if (eggKeepAlive) eggKeepAlive.pause(); };
+document.addEventListener('visibilitychange', () => { if (document.hidden) pauseKeepAlive(); });
 (function eggLoop() {
   setTimeout(() => { showEgg(); eggLoop(); }, rand(30, 90) * 1000); // 每 30～90 秒隨機一次
 })();

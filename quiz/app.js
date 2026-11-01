@@ -74,14 +74,14 @@ function toggleChapter(id, name) {
 /* ---------- 工具 ---------- */
 const $app = document.getElementById('app');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-// 解析：題庫有設 slides 資料夾時，exp 裡寫到的「投影片 p16、p18」「p2～3」會把那幾頁的圖放在文字上面（點圖開原尺寸）
+// 解析：題庫有設 slides 資料夾時，exp 裡寫到的「投影片 p16、p18」「p2～3」會把那幾頁的圖放在文字上面
 function expHtml(q) {
   if (!q.exp) return '';
   const pages = new Set();
   if (q.slides) for (const m of q.exp.matchAll(/投影片\s*((?:p\d+(?:[～~–-]p?\d+)?[、,，\s]*)+)/g))
     for (const [, a, b] of m[1].matchAll(/p(\d+)(?:[～~–-]p?(\d+))?/g))
       for (let n = +a; n <= Math.min(+(b || a), +a + 5); n++) pages.add(n);
-  const imgs = [...pages].map(n => `<a href="${q.slides}p${n}.jpg" target="_blank" rel="noopener"><img class="slide" src="${q.slides}p${n}.jpg" loading="lazy" alt="投影片 p${n}"></a>`).join('');
+  const imgs = [...pages].map(n => `<img class="slide" src="${q.slides}p${n}.jpg" loading="lazy" alt="投影片 p${n}">`).join('');
   return `<div class="exp">${imgs}${esc(q.exp)}</div>`;
 }
 const LETTERS = 'ABCDEFGHIJ';
