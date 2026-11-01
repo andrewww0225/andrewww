@@ -371,7 +371,7 @@ function renderSubject(id) {
       <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
       <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
       ${(window.QUIZ_MAT || []).length ? `<label><input type="checkbox" id="eggToggle" ${prefs.eggs ? 'checked' : ''} onchange="prefs.eggs=this.checked;savePrefs()"> 🎉 彩蛋圖片（作答途中隨機冒出圖片）</label>
-      <label><input type="checkbox" ${prefs.eggWeight ? 'checked' : ''} onchange="prefs.eggWeight=this.checked;savePrefs()"> 💪 刺青哥更常出現（關掉就跟其他圖一樣機率）</label>` : ''}
+      <label><input type="checkbox" ${prefs.eggWeight ? 'checked' : ''} onchange="prefs.eggWeight=this.checked;savePrefs()"> 💪 館長更常出現（關掉就跟其他圖一樣機率）</label>` : ''}
     </div>`;
 }
 
