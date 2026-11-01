@@ -624,6 +624,16 @@ const EGG_SOUNDS = {
 };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
 const EGG_SOUND_VER = '3'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
+// 抽中權重：沒列的圖都是 1，數字越大越常出現
+const EGG_WEIGHT = {
+  '2760547738392319602.webp': 3
+};
+const eggW = n => EGG_WEIGHT[n] || 1;
+function pickEgg(list) {
+  let r = Math.random() * list.reduce((s, n) => s + eggW(n), 0);
+  for (const n of list) if ((r -= eggW(n)) < 0) return n;
+  return list[list.length - 1];
+}
 let eggAudio = null;
 function stopEggAudio() {
   if (eggAudio) { eggAudio.onended = null; eggAudio.pause(); eggAudio = null; }
@@ -652,11 +662,11 @@ function playSounds(audios) {
 function showEgg(pick) {
   const list = window.QUIZ_MAT || [];
   if (!list.length || !prefs.eggs || !eggActive() || document.hidden) return;
-  let name = pick || list[Math.floor(Math.random() * list.length)];
+  let name = pick || pickEgg(list);
   // 音效還在播時不再抽到有音效的圖，避免聲音接連重複
   if (!pick && EGG_SOUNDS[name] && eggAudio) {
     const quiet = list.filter(n => !EGG_SOUNDS[n]);
-    if (quiet.length) name = quiet[Math.floor(Math.random() * quiet.length)];
+    if (quiet.length) name = pickEgg(quiet);
   }
   const img = new Image();
   img.className = 'egg';
