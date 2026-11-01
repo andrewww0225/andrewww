@@ -633,14 +633,10 @@ const EGG_SOUNDS = {
 };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
 const EGG_SOUND_VER = '3'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
-// 預設抽中權重：沒列的圖都是 1，數字越大越常出現（用戶沒自己調比例時用這個）
-const EGG_WEIGHT = {
-  '2760547738392319602.webp': 3
-};
-// 每張圖的出現比例（%，總和 100）：用戶在科目頁調過就用 prefs.eggPct，新加的圖先給平均值
+// 每張圖的出現比例（%，總和 100）：預設平均，用戶在科目頁調過就用 prefs.eggPct，新加的圖先給平均值
 function eggPcts() {
   const list = window.QUIZ_MAT || [];
-  const w = list.map(n => prefs.eggPct ? (prefs.eggPct[n] ?? 100 / list.length) : (EGG_WEIGHT[n] || 1));
+  const w = list.map(n => prefs.eggPct ? (prefs.eggPct[n] ?? 100 / list.length) : 1);
   const sum = w.reduce((a, b) => a + b, 0);
   return Object.fromEntries(list.map((n, i) => [n, sum ? w[i] / sum * 100 : 100 / list.length]));
 }
@@ -663,8 +659,8 @@ function setEggPct(i, p) {
   refreshEggPct();
 }
 const bumpEggPct = (i, d) => setEggPct(i, eggPcts()[window.QUIZ_MAT[i]] + d);
-function resetEggPct(even) {
-  prefs.eggPct = even ? Object.fromEntries(window.QUIZ_MAT.map(n => [n, 1])) : null;
+function resetEggPct() {
+  prefs.eggPct = null;
   savePrefs();
   refreshEggPct();
 }
@@ -684,8 +680,7 @@ function eggPanel() {
       <button class="pct-btn" onclick="bumpEggPct(${i},-1)" aria-label="減少 1%">−</button>
       <input type="number" min="0" max="100" step="0.1" data-egg="${i}" value="${pct[n].toFixed(1)}" onchange="setEggPct(${i}, this.value)">%
       <button class="pct-btn" onclick="bumpEggPct(${i},1)" aria-label="增加 1%">＋</button></div>`).join('')}</div>
-    <div class="row"><button class="link-btn" onclick="resetEggPct(false)">恢復預設（館長 3 倍）</button>
-      <button class="link-btn" onclick="resetEggPct(true)">全部平均</button></div></details>`;
+    <div class="row"><button class="link-btn" onclick="resetEggPct()">恢復全部平均</button></div></details>`;
 }
 let eggAudio = null;
 function stopEggAudio() {
