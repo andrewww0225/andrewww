@@ -1,0 +1,467 @@
+/* ---------- 題庫註冊 ---------- */
+const subjects = Object.create(null);
+const subjectOrder = [];
+window.QUIZ = {
+  register(s) {
+    s.issues = [];
+    s.questions.forEach((q, i) => {
+      // ans 用選項字母寫答案（"B"；複選寫 "AC"），換成選項文字
+      if (q.ans && q.a === undefined && Array.isArray(q.opts)) {
+        const picked = [...q.ans].map(c => q.opts[LETTERS.indexOf(c)]);
+        q.a = picked.length > 1 ? picked : picked[0];
+      }
+      const ans = Array.isArray(q.a) ? q.a : [q.a];
+      if (!Array.isArray(q.opts) || q.opts.length < 2) s.issues.push(`第 ${i + 1} 題選項不足`);
+      else if (!ans.every(a => q.opts.includes(a))) s.issues.push(`第 ${i + 1} 題的答案不在選項裡`);
+      q.key = hash(q.q + '|' + (q.opts || []).join('|'));
+      q.num = i + 1; // 課本原題號（資料檔照課本順序寫）
+      if (s.slides) q.slides = s.slides;
+    });
+    if (!s.group) {
+      subjects[s.id] = s;
+      subjectOrder.push(s.id);
+      return;
+    }
+    // 有 group 的檔案是某科目的一章，併進同一個科目
+    let g = subjects[s.group];
+    if (!g) {
+      g = subjects[s.group] = { id: s.group, name: s.groupName, chapters: [], questions: [], issues: [] };
+      subjectOrder.push(s.group);
+    }
+    s.questions.forEach(q => { q.chapter = s.name; });
+    g.chapters.push({ name: s.name, count: s.questions.length });
+    g.questions.push(...s.questions);
+    g.issues.push(...s.issues.map(t => s.name + ' ' + t));
+  }
+};
+
+function hash(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
+
+/* ---------- 本機儲存（失敗時不影響使用） ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const prefs = Object.assign({ shuffleQ: true, shuffleO: true, practiceSize: 'all', examSize: '50', eggs: true, eggPct: null }, store.get('quiz:prefs', {}));
+const savePrefs = () => store.set('quiz:prefs', prefs);
+const getWrong = id => store.get('quiz:wrong:' + id, {}) || {};
+const setWrong = (id, w) => store.set('quiz:wrong:' + id, w);
+const wrongCount = (id, qs = subjects[id].questions) => {
+  const w = getWrong(id);
+  return qs.filter(q => w[q.key]).length;
+};
+// 目前勾選的章節裡的題目；沒有勾或全勾就是整個科目
+const selectedChapters = id => ((prefs.chapters || {})[id] || []).filter(n => subjects[id].chapters.some(c => c.name === n));
+function pool(id) {
+  const s = subjects[id], sel = s.chapters ? selectedChapters(id) : [];
+  return sel.length ? s.questions.filter(q => sel.includes(q.chapter)) : s.questions;
+}
+function toggleChapter(id, name) {
+  prefs.chapters = prefs.chapters || {};
+  let sel = selectedChapters(id);
+  if (name === null) sel = [];
+  else sel = sel.includes(name) ? sel.filter(n => n !== name) : [...sel, name];
+  if (sel.length === subjects[id].chapters.length) sel = [];
+  prefs.chapters[id] = sel;
+  savePrefs();
+  renderSubject(id);
+}
+
+/* ---------- 工具 ---------- */
+const $app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// 解析：題庫有設 slides 資料夾時，exp 裡寫到的「投影片 p16、p18」「p2～3」會把那幾頁的圖放在文字上面（點圖開原尺寸）
+function expHtml(q) {
+  if (!q.exp) return '';
+  const pages = new Set();
+  if (q.slides) for (const m of q.exp.matchAll(/投影片\s*((?:p\d+(?:[～~–-]p?\d+)?[、,，\s]*)+)/g))
+    for (const [, a, b] of m[1].matchAll(/p(\d+)(?:[～~–-]p?(\d+))?/g))
+      for (let n = +a; n <= Math.min(+(b || a), +a + 5); n++) pages.add(n);
+  const imgs = [...pages].map(n => `<a href="${q.slides}p${n}.jpg" target="_blank" rel="noopener"><img class="slide" src="${q.slides}p${n}.jpg" loading="lazy" alt="投影片 p${n}"></a>`).join('');
+  return `<div class="exp">${imgs}${esc(q.exp)}</div>`;
+}
+const LETTERS = 'ABCDEFGHIJ';
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+// 選項裡有「以上皆是」「選項(A)(B)」之類參照順序的字樣時，不打亂這題的選項
+const ORDER_BOUND = /以上|皆是|皆非|皆對|皆錯|兩者|前述|選項|[（(][A-Ea-e][)）]/;
+const answersOf = q => Array.isArray(q.a) ? q.a : [q.a];
+
+function buildItems(questions, size) {
+  let list = prefs.shuffleQ ? shuffle(questions) : [...questions];
+  if (size !== 'all') list = list.slice(0, Number(size));
+  return list.map(q => ({
+    q,
+    opts: prefs.shuffleO && !q.opts.some(o => ORDER_BOUND.test(o)) ? shuffle(q.opts) : [...q.opts],
+    multi: Array.isArray(q.a),
+    picked: [],
+    judged: false,
+    correct: false
+  }));
+}
+
+function judge(item) {
+  const ans = answersOf(item.q);
+  item.correct = item.picked.length === ans.length && item.picked.every(p => ans.includes(p));
+  item.judged = true;
+  if (!item.picked.length) return; // 模擬考沒寫的題目算錯，但不收進錯題本
+  // 答錯加進錯題本，答對就從錯題本移除
+  const w = getWrong(session.subjectId);
+  if (item.correct) delete w[item.q.key];
+  else w[item.q.key] = (w[item.q.key] || 0) + 1;
+  setWrong(session.subjectId, w);
+}
+
+/* ---------- 路由 ---------- */
+let session = null;
+const go = h => { if (location.hash === h) route(); else location.hash = h; };
+window.addEventListener('hashchange', route);
+
+function route() {
+  const parts = location.hash.replace(/^#\/?/, '').split('/');
+  if (parts[0] === 's' && subjects[parts[1]]) {
+    const id = parts[1], mode = parts[2];
+    if (!mode) return renderSubject(id);
+    if (mode === 'browse') return renderBrowse(id);
+    if (!session || session.subjectId !== id || session.mode !== mode) return location.replace('#/s/' + id);
+    return mode === 'exam' ? renderExam() : renderPractice();
+  }
+  renderHome();
+}
+
+/* ---------- 首頁 ---------- */
+function renderHome() {
+  session = null;
+  document.title = '土豆集散地';
+  const cards = subjectOrder.filter(id => subjects[id]).map(id => {
+    const s = subjects[id], w = wrongCount(id);
+    return `<button class="card subject" onclick="go('#/s/${id}')">
+      <div><div class="name">${esc(s.name)}</div>
+      <div class="muted">${s.chapters ? s.chapters.length + ' 章・' : ''}${s.questions.length} 題${w ? `<span class="pill">錯題 ${w}</span>` : ''}</div></div>
+      <span class="arrow">›</span></button>`;
+  }).join('');
+  $app.innerHTML = `<h1>土豆集散地</h1><p class="muted" style="margin-top:0">選一個科目開始</p>
+    ${cards || '<div class="card muted">目前沒有科目。</div>'}`;
+}
+
+/* ---------- 科目頁 ---------- */
+function sizeSelect(name, value, total, choices) {
+  const opts = choices.filter(n => n < total).map(n => `<option value="${n}" ${value == n ? 'selected' : ''}>${n} 題</option>`).join('');
+  return `<select onchange="prefs.${name}=this.value;savePrefs()">${opts}
+    <option value="all" ${value === 'all' || Number(value) >= total ? 'selected' : ''}>全部 ${total} 題</option></select>`;
+}
+
+function renderSubject(id) {
+  session = null;
+  const s = subjects[id], qs = pool(id), total = qs.length, w = wrongCount(id, qs);
+  const last = store.get('quiz:last:' + id, null);
+  const sel = s.chapters ? selectedChapters(id) : [];
+  const chapterCard = s.chapters && s.chapters.length > 1 ? `
+    <div class="card"><h2>章節</h2><p class="muted" style="margin:0 0 10px">點章節可以只刷那幾章（可以多選），點「全部」就是整個科目。</p>
+      <div class="chips">
+        <button class="chip ${sel.length ? '' : 'on'}" onclick="toggleChapter('${id}', null)">全部 ${s.questions.length} 題</button>
+        ${s.chapters.map((c, k) => `<button class="chip ${sel.includes(c.name) ? 'on' : ''}"
+          onclick="toggleChapter('${id}', subjects['${id}'].chapters[${k}].name)">${esc(c.name)}<span class="muted"> ${c.count}</span></button>`).join('')}
+      </div></div>` : '';
+  document.title = s.name + '｜土豆集散地';
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="go('#/')">‹ 所有科目</button></div>
+    <h1>${esc(s.name)}</h1>
+    <p class="muted" style="margin-top:0">${sel.length ? `已選 ${sel.length} 章・` : ''}共 ${total} 題${last ? `　·　上次模擬考 ${last.score} / ${last.total}` : ''}</p>
+    ${s.issues.length ? `<div class="warn">題庫有問題，這些題目可能無法正確批改：${s.issues.map(esc).join('、')}</div>` : ''}
+    <div class="card mode">
+      <h2>瀏覽題庫</h2>
+      <p class="muted">照章節和課本原題號列出全部 ${s.questions.length} 題和答案，不計分。</p>
+      <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/browse')">打開題庫</button></div>
+    </div>
+    ${chapterCard}
+    <div class="card mode">
+      <h2>練習模式</h2>
+      <p class="muted">一次一題，選完馬上知道對錯和正確答案。</p>
+      <div class="row">${sizeSelect('practiceSize', prefs.practiceSize, total, [10, 20, 50, 100])}
+        <button class="btn" onclick="start('${id}','practice')">開始練習</button></div>
+    </div>
+    <div class="card mode">
+      <h2>模擬考</h2>
+      <p class="muted">全部寫完再交卷，交卷後一次批改、算分數。</p>
+      <div class="row">${sizeSelect('examSize', prefs.examSize, total, [20, 50, 100])}
+        <button class="btn" onclick="start('${id}','exam')">開始考試</button></div>
+    </div>
+    <div class="card mode">
+      <h2>錯題本 ${w ? `<span class="pill">${w} 題</span>` : ''}</h2>
+      <p class="muted">${w ? '只刷答錯過的題目，答對一次就會移出錯題本。' : '目前沒有錯題。練習或考試答錯的題目會自動收進來。'}</p>
+      <div class="row"><button class="btn" ${w ? '' : 'disabled'} onclick="start('${id}','wrong')">刷錯題</button>
+        ${w ? `<button class="link-btn" onclick="clearWrong('${id}')">清空錯題本</button>` : ''}</div>
+      <p class="muted" style="margin:10px 0 0;font-size:.9em">⚠️ 錯題記錄存在這台裝置的瀏覽器裡：手機和電腦各自分開，換瀏覽器、用無痕模式或清除瀏覽資料都會不見。</p>
+    </div>
+    <div class="card toggles">
+      <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
+      <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
+      ${(window.QUIZ_MAT || []).length ? `<label><input type="checkbox" id="eggToggle" ${prefs.eggs ? 'checked' : ''} onchange="prefs.eggs=this.checked;savePrefs()"> 🎉 彩蛋圖片（作答途中隨機冒出圖片）</label>` : ''}
+      ${eggPanel()}
+    </div>`;
+}
+
+/* ---------- 瀏覽題庫 ---------- */
+function renderBrowse(id) {
+  session = null;
+  const s = subjects[id], qs = s.questions, w = getWrong(id), show = prefs.browseAns !== false;
+  const chs = s.chapters || [];
+  let lastCh = null;
+  const cards = qs.map(q => {
+    const head = q.chapter && q.chapter !== lastCh
+      ? `<h2 class="browse-ch" id="bc${chs.findIndex(c => c.name === q.chapter)}">${esc(q.chapter)}</h2>` : '';
+    lastCh = q.chapter;
+    const ans = answersOf(q);
+    const opts = q.opts.map((o, k) => `<div class="opt static ${show && ans.includes(o) ? 'right' : ''}">
+      <span class="key">${LETTERS[k]}</span><span class="txt">${esc(o)}</span></div>`).join('');
+    return `${head}<div class="card">
+      <div class="q-meta"><span>第 ${q.num} 題 ${Array.isArray(q.a) ? '<b>（複選）</b>' : ''}</span>${w[q.key] ? `<span class="pill">錯過 ${w[q.key]} 次</span>` : ''}</div>
+      <div class="q-text">${esc(q.q)}</div>
+      <div class="opts">${opts}</div>
+      ${show ? `<div class="feedback ok">答案：${ans.map(a => LETTERS[q.opts.indexOf(a)]).join('')}${expHtml(q)}</div>` : ''}</div>`;
+  }).join('');
+  document.title = '瀏覽題庫｜' + s.name;
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="go('#/s/${id}')">‹ 回科目</button>
+      <span class="title">${esc(s.name)}・瀏覽題庫</span>${eggBtn()}</div>
+    <div class="card toggles"><label><input type="checkbox" ${show ? 'checked' : ''}
+      onchange="prefs.browseAns=this.checked;savePrefs();renderBrowse('${id}')"> 顯示答案</label>
+      <p class="muted" style="margin:4px 0 0">共 ${qs.length} 題</p></div>
+    ${chs.length > 1 ? `<div class="jump">${chs.map((c, k) => `<button class="chip"
+      onclick="document.getElementById('bc${k}').scrollIntoView()">${esc(c.name.split(' ')[0])}</button>`).join('')}</div>` : ''}
+    ${cards}`;
+}
+
+function clearWrong(id) {
+  if (confirm('確定要清空這個科目的錯題本？')) { setWrong(id, {}); renderSubject(id); }
+}
+
+function start(id, mode) {
+  const qs = pool(id);
+  let items;
+  if (mode === 'wrong') {
+    const w = getWrong(id);
+    items = buildItems(qs.filter(q => w[q.key]), 'all');
+  } else {
+    items = buildItems(qs, mode === 'exam' ? prefs.examSize : prefs.practiceSize);
+  }
+  if (!items.length) return alert('這個科目還沒有題目。');
+  session = { subjectId: id, mode, items, i: 0, finished: false, shownAt: 0 };
+  go(`#/s/${id}/${mode}`);
+}
+
+/* ---------- 練習模式 / 錯題本 ---------- */
+function optButtons(item, idx, onPick) {
+  const ans = answersOf(item.q);
+  return item.opts.map((o, k) => {
+    let cls = 'opt';
+    if (item.judged) {
+      if (ans.includes(o)) cls += ' right';
+      else if (item.picked.includes(o)) cls += ' wrong';
+    } else if (item.picked.includes(o)) cls += ' picked';
+    return `<button class="${cls}" ${item.judged ? 'disabled' : ''} onclick="${onPick}(${idx},${k})">
+      <span class="key">${LETTERS[k]}</span><span class="txt">${esc(o)}</span></button>`;
+  }).join('');
+}
+
+function feedbackHTML(item) {
+  if (!item.judged) return '';
+  const exp = expHtml(item.q);
+  if (item.correct) return `<div class="feedback ok">✓ 答對了${exp}</div>`;
+  return `<div class="feedback bad">✗ 答錯了，正確答案：${esc(answersOf(item.q).join('、'))}${exp}</div>`;
+}
+
+function renderPractice() {
+  if (session.finished) return renderPracticeResult();
+  const { items, i } = session, item = items[i];
+  const done = items.filter(t => t.judged).length, right = items.filter(t => t.correct).length;
+  const title = session.mode === 'wrong' ? '錯題本' : '練習模式';
+  let action = '';
+  if (item.judged) action = `<button class="btn" onclick="nextQ()">${i + 1 < items.length ? '下一題' : '看結果'}</button>`;
+  else if (item.multi) action = `<button class="btn" ${item.picked.length ? '' : 'disabled'} onclick="confirmMulti()">確認答案</button>`;
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="quitSession()">‹ 結束</button>
+      <span class="title">${esc(subjects[session.subjectId].name)}・${title}</span>${eggBtn()}</div>
+    <div class="progress"><div style="width:${done / items.length * 100}%"></div></div>
+    <div class="card">
+      <div class="q-meta"><span>第 ${i + 1} / ${items.length} 題 ${item.multi ? '<b>（複選）</b>' : ''}</span><span>答對 ${right} / ${done}</span></div>
+      ${item.q.chapter ? `<div class="q-chapter">${esc(item.q.chapter)}</div>` : ''}
+      <div class="q-text">${esc(item.q.q)}</div>
+      <div class="opts">${optButtons(item, i, 'pickPractice')}</div>
+      ${feedbackHTML(item)}
+      <div class="actions">${action}</div>
+    </div>
+    <p class="hint kbd-hint">鍵盤：數字鍵選選項，Enter 確認／下一題</p>`;
+}
+
+function pickPractice(idx, k) {
+  const item = session.items[idx], o = item.opts[k];
+  // 剛換題的瞬間不接受點擊，避免連點「下一題」誤選到新題目的選項
+  if (item.judged || Date.now() - session.shownAt < 350) return;
+  if (item.multi) {
+    item.picked = item.picked.includes(o) ? item.picked.filter(p => p !== o) : [...item.picked, o];
+  } else {
+    item.picked = [o];
+    judge(item);
+  }
+  renderPractice();
+}
+
+function confirmMulti() {
+  const item = session.items[session.i];
+  if (!item.picked.length || item.judged) return;
+  judge(item);
+  renderPractice();
+}
+
+function nextQ() {
+  if (session.i + 1 < session.items.length) { session.i++; session.shownAt = Date.now(); }
+  else session.finished = true;
+  renderPractice();
+  window.scrollTo(0, 0);
+}
+
+function quitSession() {
+  const answered = session.items.some(t => t.judged || t.picked.length);
+  if (session.mode === 'exam' && !session.finished && answered && !confirm('還沒交卷，確定要離開？作答內容不會保留。')) return;
+  if (session.mode !== 'exam' && !session.finished && answered && session.items.some(t => t.judged)) {
+    session.finished = true;
+    return renderPracticeResult();
+  }
+  go('#/s/' + session.subjectId);
+}
+
+function renderPracticeResult() {
+  const judged = session.items.filter(t => t.judged), right = judged.filter(t => t.correct).length;
+  const wrongItems = judged.filter(t => !t.correct);
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="go('#/s/${session.subjectId}')">‹ 回科目</button><span class="title"></span>${eggBtn()}</div>
+    <div class="card" style="text-align:center">
+      <div class="muted">${session.mode === 'wrong' ? '錯題本' : '練習'}結束</div>
+      <div class="score">${right} / ${judged.length}</div>
+      <div class="muted">${judged.length ? Math.round(right / judged.length * 100) : 0}%</div>
+      <div class="actions" style="justify-content:center">
+        ${wrongItems.length ? `<button class="btn" onclick="redoWrong()">再練這次錯的 ${wrongItems.length} 題</button>` : ''}
+        <button class="btn secondary" onclick="go('#/s/${session.subjectId}')">回科目</button>
+      </div>
+    </div>
+    ${wrongItems.map(t => reviewCard(t)).join('')}`;
+}
+
+function reviewCard(t) {
+  return `<div class="card"><div class="q-text">${esc(t.q.q)}</div>
+    <div class="muted">你的答案：${esc(t.picked.join('、') || '未作答')}</div>
+    <div style="color:var(--ok);font-weight:bold">正確答案：${esc(answersOf(t.q).join('、'))}</div>
+    ${expHtml(t.q)}</div>`;
+}
+
+function redoWrong() {
+  const qs = session.items.filter(t => t.judged && !t.correct).map(t => t.q);
+  session = { subjectId: session.subjectId, mode: 'practice', items: buildItems(qs, 'all'), i: 0, finished: false, shownAt: 0 };
+  if (location.hash.endsWith('/practice')) renderPractice(); else go(`#/s/${session.subjectId}/practice`);
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 模擬考 ---------- */
+function renderExam() {
+  const { items, finished } = session;
+  const answered = items.filter(t => t.picked.length).length;
+  let head = '';
+  if (finished) {
+    const right = items.filter(t => t.correct).length;
+    head = `<div class="card" style="text-align:center">
+      <div class="muted">模擬考成績</div>
+      <div class="score">${right} / ${items.length}</div>
+      <div class="muted">${Math.round(right / items.length * 100)} 分（百分制）</div>
+      <div class="actions" style="justify-content:center">
+        <button class="btn" onclick="start('${session.subjectId}','exam')">再考一次</button>
+        <button class="btn secondary" onclick="go('#/s/${session.subjectId}')">回科目</button></div>
+      <label class="toggles" style="display:flex;justify-content:center;gap:8px;margin-top:10px;cursor:pointer">
+        <input type="checkbox" ${session.onlyWrong ? 'checked' : ''} onchange="session.onlyWrong=this.checked;renderExam()"> 只看錯的題目</label>
+    </div>`;
+  }
+  const qs = items.map((t, idx) => {
+    if (finished && session.onlyWrong && t.correct) return '';
+    const cls = finished ? (t.correct ? 'done-ok' : 'done-bad') : (session.flagUnanswered && !t.picked.length ? 'unanswered' : '');
+    return `<div class="card exam-q ${cls}" id="eq${idx}">
+      <div class="q-meta"><span>第 ${idx + 1} 題 ${t.multi ? '<b>（複選）</b>' : ''}</span>${t.q.chapter ? `<span>${esc(t.q.chapter)}</span>` : ''}</div>
+      <div class="q-text">${esc(t.q.q)}</div>
+      <div class="opts">${optButtons(t, idx, 'pickExam')}</div>
+      ${finished ? feedbackHTML(t) : ''}</div>`;
+  }).join('');
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="quitSession()">‹ ${finished ? '回科目' : '離開'}</button>
+      <span class="title">${esc(subjects[session.subjectId].name)}・模擬考</span>${eggBtn()}</div>
+    ${head}${qs}
+    ${finished ? '' : `<div class="sticky"><div class="inner"><span class="muted" id="answered">已作答 ${answered} / ${items.length}</span>
+      <button class="btn" onclick="submitExam()">交卷</button></div></div>`}`;
+}
+
+function pickExam(idx, k) {
+  const t = session.items[idx], o = t.opts[k];
+  if (session.finished) return;
+  if (t.multi) t.picked = t.picked.includes(o) ? t.picked.filter(p => p !== o) : [...t.picked, o];
+  else t.picked = [o];
+  // 只更新這一題，避免整頁重畫跳動
+  const card = document.getElementById('eq' + idx);
+  card.querySelector('.opts').innerHTML = optButtons(t, idx, 'pickExam');
+  card.classList.remove('unanswered');
+  document.getElementById('answered').textContent =
+    `已作答 ${session.items.filter(x => x.picked.length).length} / ${session.items.length}`;
+}
+
+function submitExam() {
+  const missing = session.items.filter(t => !t.picked.length).length;
+  if (missing && !confirm(`還有 ${missing} 題沒寫，確定要交卷？`)) {
+    session.flagUnanswered = true;
+    renderExam();
+    const first = session.items.findIndex(t => !t.picked.length);
+    document.getElementById('eq' + first).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  session.items.forEach(judge);
+  session.finished = true;
+  store.set('quiz:last:' + session.subjectId, {
+    score: session.items.filter(t => t.correct).length, total: session.items.length
+  });
+  renderExam();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 鍵盤（練習模式） ---------- */
+document.addEventListener('keydown', e => {
+  if (!session || session.mode === 'exam' || session.finished || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!/\/(practice|wrong)$/.test(location.hash) || e.target.closest('button, select, input')) return;
+  const item = session.items[session.i];
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= item.opts.length && !item.judged) pickPractice(session.i, n - 1);
+  else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (item.judged) nextQ(); else if (item.multi) confirmMulti();
+  }
+});
+
+/* ---------- 載入題庫 ---------- */
+function loadSubjects() {
+  const ids = window.QUIZ_SUBJECTS || [];
+  let pending = ids.length;
+  if (!pending) return route();
+  ids.forEach(id => {
+    const el = document.createElement('script');
+    el.async = false; // 照清單順序執行，章節順序才不會亂
+    el.src = 'data/' + id + '.js';
+    el.onload = el.onerror = () => { if (--pending === 0) route(); };
+    document.head.appendChild(el);
+  });
+}

@@ -3,6 +3,7 @@
 QUIZ.register({
   group: "finance", groupName: "財務規劃",
   id: "finance-ch2",
+  slides: "slides/finance-ch2/", // exp 提到的「投影片 pN」會在解析上方顯示這個資料夾裡的 pN.jpg
   name: "第二章 銷貨及收款",
   questions: [
     {q: "銷貨及收款流程設計的五個作業，正確順序為？", opts: ["徵信管理 → 客戶基本資料 → 立帳 → 收款 → 沖帳", "客戶基本資料 → 徵信管理 → 立帳 → 收款 → 沖帳", "客戶基本資料 → 立帳 → 徵信管理 → 沖帳 → 收款", "立帳 → 客戶基本資料 → 徵信管理 → 收款 → 沖帳"], ans: "B",

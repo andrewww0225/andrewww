@@ -3,6 +3,7 @@
 QUIZ.register({
   group: "finance", groupName: "財務規劃",
   id: "finance-ch1",
+  slides: "slides/finance-ch1/", // exp 提到的「投影片 pN」會在解析上方顯示這個資料夾裡的 pN.jpg
   name: "第一章 財務規劃總論",
   questions: [
     {q: "面對財務舞弊或錯誤，「事後追討」相較於「事前防範」的缺點是？", opts: ["速度快但需要法律協助", "不確定性高且成本大", "只適用於小額款項", "會降低員工士氣"], ans: "B",
