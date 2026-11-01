@@ -639,7 +639,7 @@ function showEgg() {
     }
     const dur = rand(2.5, 5);
     img.style.cssText = `width:${size}px;left:${Math.round(x)}px;top:${Math.round(rand(.08, .85) * vh - size / 2)}px;` +
-      `--rot:${Math.round(rand(-180, 180))}deg;--dur:${dur.toFixed(2)}s`;
+      `--rot:${Math.round(rand(-20, 20))}deg;--dur:${dur.toFixed(2)}s`;
     document.body.appendChild(img);
     setTimeout(() => img.remove(), dur * 1000 + 100);
   };
