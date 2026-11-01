@@ -620,6 +620,7 @@ const eggActive = () => /^#\/s\/[^/]+\/(practice|exam|wrong|browse)$/.test(locat
 // 有配音效的圖：出現時依序播放這些音檔，圖會停到音效播完
 const EGG_SOUNDS = { '2760547738392319602.webp': ['gym1.mp3', 'gym2.mp3', 'gym3.mp3'] };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
+const EGG_SOUND_VER = '2'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
 let eggAudio = null;
 function stopEggAudio() {
   if (eggAudio) { eggAudio.onended = null; eggAudio.pause(); eggAudio = null; }
@@ -627,7 +628,7 @@ function stopEggAudio() {
 // 先讀到每個音檔的長度，回傳 Audio 物件陣列（讀不到的檔案跳過，全都讀不到就只出圖）
 function loadSounds(files) {
   return Promise.all(files.map(f => new Promise(r => {
-    const a = new Audio('mat/' + encodeURIComponent(f));
+    const a = new Audio('mat/' + encodeURIComponent(f) + '?v=' + EGG_SOUND_VER);
     a.preload = 'auto';
     a.volume = EGG_VOLUME;
     a.onloadedmetadata = () => r(a);
