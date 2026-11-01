@@ -4,7 +4,8 @@ const eggActive = () => /^#\/s\/[^/]+\/(practice|exam|wrong|browse)$/.test(locat
 // 有配音效的圖：出現時依序播放這些音檔，圖會停到音效播完
 const EGG_SOUNDS = {
   '2760547738392319602.webp': ['gym1.mp3', 'gym2.mp3'],
-  '4701859718068680235.webp': ['suck.m4a']
+  '4701859718068680235.webp': ['suck.m4a'],
+  '16840372121284118242.webp': ['blame.m4a']
 };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
 const EGG_SOUND_VER = '3'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
