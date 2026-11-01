@@ -157,6 +157,15 @@
   @media (prefers-reduced-motion: reduce) {
     @keyframes egg-pop { 0%, 100% { opacity: 0; transform: rotate(var(--rot)); } 10%, 90% { opacity: 1; transform: rotate(var(--rot)); } }
   }
+  .egg-btn {
+    flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 14px;
+    border-radius: 99px; border: 2px solid #f0a020; background: #fff3d6; color: #8a5400;
+    font-weight: bold; font-size: .9em; cursor: pointer; white-space: nowrap;
+  }
+  .egg-btn.off { border-color: var(--line); background: var(--card); color: var(--muted); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .egg-btn:not(.off) { background: #3a2c10; color: #ffc65c; }
+  }
 </style>
 </head>
 <body>
@@ -210,7 +219,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
-const prefs = Object.assign({ shuffleQ: true, shuffleO: true, practiceSize: 'all', examSize: '50' }, store.get('quiz:prefs', {}));
+const prefs = Object.assign({ shuffleQ: true, shuffleO: true, practiceSize: 'all', examSize: '50', eggs: true }, store.get('quiz:prefs', {}));
 const savePrefs = () => store.set('quiz:prefs', prefs);
 const getWrong = id => store.get('quiz:wrong:' + id, {}) || {};
 const setWrong = (id, w) => store.set('quiz:wrong:' + id, w);
@@ -361,6 +370,7 @@ function renderSubject(id) {
     <div class="card toggles">
       <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
       <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
+      ${(window.QUIZ_MAT || []).length ? `<label><input type="checkbox" id="eggToggle" ${prefs.eggs ? 'checked' : ''} onchange="prefs.eggs=this.checked;savePrefs()"> 🎉 彩蛋圖片（作答途中隨機冒出圖片）</label>` : ''}
     </div>`;
 }
 
@@ -386,7 +396,7 @@ function renderBrowse(id) {
   document.title = '瀏覽題庫｜' + s.name;
   $app.innerHTML = `
     <div class="topbar"><button class="link-btn" onclick="go('#/s/${id}')">‹ 回科目</button>
-      <span class="title">${esc(s.name)}・瀏覽題庫</span></div>
+      <span class="title">${esc(s.name)}・瀏覽題庫</span>${eggBtn()}</div>
     <div class="card toggles"><label><input type="checkbox" ${show ? 'checked' : ''}
       onchange="prefs.browseAns=this.checked;savePrefs();renderBrowse('${id}')"> 顯示答案</label>
       <p class="muted" style="margin:4px 0 0">共 ${qs.length} 題</p></div>
@@ -444,7 +454,7 @@ function renderPractice() {
   else if (item.multi) action = `<button class="btn" ${item.picked.length ? '' : 'disabled'} onclick="confirmMulti()">確認答案</button>`;
   $app.innerHTML = `
     <div class="topbar"><button class="link-btn" onclick="quitSession()">‹ 結束</button>
-      <span class="title">${esc(subjects[session.subjectId].name)}・${title}</span></div>
+      <span class="title">${esc(subjects[session.subjectId].name)}・${title}</span>${eggBtn()}</div>
     <div class="progress"><div style="width:${done / items.length * 100}%"></div></div>
     <div class="card">
       <div class="q-meta"><span>第 ${i + 1} / ${items.length} 題 ${item.multi ? '<b>（複選）</b>' : ''}</span><span>答對 ${right} / ${done}</span></div>
@@ -498,7 +508,7 @@ function renderPracticeResult() {
   const judged = session.items.filter(t => t.judged), right = judged.filter(t => t.correct).length;
   const wrongItems = judged.filter(t => !t.correct);
   $app.innerHTML = `
-    <div class="topbar"><button class="link-btn" onclick="go('#/s/${session.subjectId}')">‹ 回科目</button></div>
+    <div class="topbar"><button class="link-btn" onclick="go('#/s/${session.subjectId}')">‹ 回科目</button><span class="title"></span>${eggBtn()}</div>
     <div class="card" style="text-align:center">
       <div class="muted">${session.mode === 'wrong' ? '錯題本' : '練習'}結束</div>
       <div class="score">${right} / ${judged.length}</div>
@@ -554,7 +564,7 @@ function renderExam() {
   }).join('');
   $app.innerHTML = `
     <div class="topbar"><button class="link-btn" onclick="quitSession()">‹ ${finished ? '回科目' : '離開'}</button>
-      <span class="title">${esc(subjects[session.subjectId].name)}・模擬考</span></div>
+      <span class="title">${esc(subjects[session.subjectId].name)}・模擬考</span>${eggBtn()}</div>
     ${head}${qs}
     ${finished ? '' : `<div class="sticky"><div class="inner"><span class="muted" id="answered">已作答 ${answered} / ${items.length}</span>
       <button class="btn" onclick="submitExam()">交卷</button></div></div>`}`;
@@ -609,7 +619,7 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const eggActive = () => /^#\/s\/[^/]+\/(practice|exam|wrong|browse)$/.test(location.hash);
 function showEgg() {
   const list = window.QUIZ_MAT || [];
-  if (!list.length || !eggActive() || document.hidden) return;
+  if (!list.length || !prefs.eggs || !eggActive() || document.hidden) return;
   const img = new Image();
   img.className = 'egg';
   img.alt = '';
@@ -634,6 +644,17 @@ function showEgg() {
     setTimeout(() => img.remove(), dur * 1000 + 100);
   };
   img.src = 'mat/' + encodeURIComponent(list[Math.floor(Math.random() * list.length)]);
+}
+const eggBtn = () => (window.QUIZ_MAT || []).length ? `<button class="egg-btn ${prefs.eggs ? '' : 'off'}"
+  onclick="toggleEggs()" aria-pressed="${prefs.eggs}" title="測驗途中隨機冒出圖片">${prefs.eggs ? '🎉 彩蛋：開' : '🙈 彩蛋：關'}</button>` : '';
+function toggleEggs() {
+  prefs.eggs = !prefs.eggs;
+  savePrefs();
+  if (!prefs.eggs) document.querySelectorAll('.egg').forEach(e => e.remove());
+  // 只換按鈕本身，不重畫整頁（模擬考作答中也不會被清掉）
+  document.querySelectorAll('.egg-btn').forEach(b => { b.outerHTML = eggBtn(); });
+  const cb = document.getElementById('eggToggle');
+  if (cb) cb.checked = prefs.eggs;
 }
 (function eggLoop() {
   setTimeout(() => { showEgg(); eggLoop(); }, rand(5, 30) * 1000);
