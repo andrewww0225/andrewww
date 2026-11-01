@@ -140,6 +140,23 @@
   .score { font-size: 2.6em; font-weight: bold; color: var(--accent); line-height: 1.2; }
   .hint { font-size: .82em; color: var(--muted); text-align: center; margin-top: 18px; }
   @media (hover: none) { .kbd-hint { display: none; } }
+
+  /* 彩蛋圖片：點擊會穿透，不影響作答 */
+  .egg {
+    position: fixed; z-index: 50; pointer-events: none; user-select: none; height: auto;
+    animation: egg-pop var(--dur) ease-in-out forwards;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .25));
+  }
+  @keyframes egg-pop {
+    0% { opacity: 0; transform: rotate(var(--rot)) scale(.2); }
+    12% { opacity: 1; transform: rotate(var(--rot)) scale(1.08); }
+    18% { transform: rotate(var(--rot)) scale(1); }
+    85% { opacity: 1; transform: rotate(var(--rot)) scale(1); }
+    100% { opacity: 0; transform: rotate(var(--rot)) scale(.6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @keyframes egg-pop { 0%, 100% { opacity: 0; transform: rotate(var(--rot)); } 10%, 90% { opacity: 1; transform: rotate(var(--rot)); } }
+  }
 </style>
 </head>
 <body>
@@ -587,6 +604,41 @@ document.addEventListener('keydown', e => {
   }
 });
 
+/* ---------- 彩蛋：練習、模擬考、題庫頁隨機冒出 mat/ 的圖 ---------- */
+const rand = (a, b) => a + Math.random() * (b - a);
+const eggActive = () => /^#\/s\/[^/]+\/(practice|exam|wrong|browse)$/.test(location.hash);
+function showEgg() {
+  const list = window.QUIZ_MAT || [];
+  if (!list.length || !eggActive() || document.hidden) return;
+  const img = new Image();
+  img.className = 'egg';
+  img.alt = '';
+  img.onload = () => {
+    if (!eggActive()) return;
+    const vw = innerWidth, vh = innerHeight;
+    const size = Math.round(rand(60, Math.min(260, vw * .35)));
+    const gutter = (vw - 760) / 2; // 題目欄兩側的空白
+    let x;
+    if (gutter >= size + 16) {
+      // 寬螢幕：整張放在左右空白處
+      x = Math.random() < .5 ? rand(8, gutter - size - 8) : vw - gutter + rand(8, gutter - size - 8);
+    } else {
+      // 手機：從左右邊緣探出頭，只露出一部分
+      const peek = rand(.3, .5) * size;
+      x = Math.random() < .5 ? peek - size : vw - peek;
+    }
+    const dur = rand(2.5, 5);
+    img.style.cssText = `width:${size}px;left:${Math.round(x)}px;top:${Math.round(rand(.08, .85) * vh - size / 2)}px;` +
+      `--rot:${Math.round(rand(-180, 180))}deg;--dur:${dur.toFixed(2)}s`;
+    document.body.appendChild(img);
+    setTimeout(() => img.remove(), dur * 1000 + 100);
+  };
+  img.src = 'mat/' + encodeURIComponent(list[Math.floor(Math.random() * list.length)]);
+}
+(function eggLoop() {
+  setTimeout(() => { showEgg(); eggLoop(); }, rand(5, 30) * 1000);
+})();
+
 /* ---------- 載入題庫 ---------- */
 function loadSubjects() {
   const ids = window.QUIZ_SUBJECTS || [];
@@ -602,6 +654,7 @@ function loadSubjects() {
 }
 </script>
 <script src="data/subjects.js"></script>
+<script src="data/mat.js"></script>
 <script>loadSubjects();</script>
 </body>
 </html>
