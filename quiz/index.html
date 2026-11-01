@@ -623,7 +623,7 @@ const EGG_SOUNDS = {
   '4701859718068680235.webp': ['suck.m4a']
 };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
-const EGG_SOUND_VER = '2'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
+const EGG_SOUND_VER = '3'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
 let eggAudio = null;
 function stopEggAudio() {
   if (eggAudio) { eggAudio.onended = null; eggAudio.pause(); eggAudio = null; }
