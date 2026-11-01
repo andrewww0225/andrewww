@@ -163,6 +163,14 @@
     font-weight: bold; font-size: .9em; cursor: pointer; white-space: nowrap;
   }
   .egg-btn.off { border-color: var(--line); background: var(--card); color: var(--muted); }
+  .egg-pct summary { cursor: pointer; padding: 8px 0; }
+  .egg-pct-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; margin: 8px 0; }
+  .egg-pct-row { display: flex; align-items: center; gap: 6px; }
+  .egg-pct-row img { width: 44px; height: 44px; object-fit: contain; flex: none; }
+  .toggles .egg-pct-row input { width: 4.2em; height: auto; padding: 6px 4px; text-align: right; font: inherit;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); }
+  .pct-btn { width: 34px; height: 34px; flex: none; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--text); font: inherit; cursor: pointer; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .egg-btn:not(.off) { background: #3a2c10; color: #ffc65c; }
   }
@@ -219,7 +227,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
-const prefs = Object.assign({ shuffleQ: true, shuffleO: true, practiceSize: 'all', examSize: '50', eggs: true, eggWeight: true }, store.get('quiz:prefs', {}));
+const prefs = Object.assign({ shuffleQ: true, shuffleO: true, practiceSize: 'all', examSize: '50', eggs: true, eggPct: null }, store.get('quiz:prefs', {}));
 const savePrefs = () => store.set('quiz:prefs', prefs);
 const getWrong = id => store.get('quiz:wrong:' + id, {}) || {};
 const setWrong = (id, w) => store.set('quiz:wrong:' + id, w);
@@ -370,8 +378,8 @@ function renderSubject(id) {
     <div class="card toggles">
       <label><input type="checkbox" ${prefs.shuffleQ ? 'checked' : ''} onchange="prefs.shuffleQ=this.checked;savePrefs()"> 題目順序隨機</label>
       <label><input type="checkbox" ${prefs.shuffleO ? 'checked' : ''} onchange="prefs.shuffleO=this.checked;savePrefs()"> 選項順序隨機</label>
-      ${(window.QUIZ_MAT || []).length ? `<label><input type="checkbox" id="eggToggle" ${prefs.eggs ? 'checked' : ''} onchange="prefs.eggs=this.checked;savePrefs()"> 🎉 彩蛋圖片（作答途中隨機冒出圖片）</label>
-      <label><input type="checkbox" ${prefs.eggWeight ? 'checked' : ''} onchange="prefs.eggWeight=this.checked;savePrefs()"> 💪 館長更常出現（關掉就跟其他圖一樣機率）</label>` : ''}
+      ${(window.QUIZ_MAT || []).length ? `<label><input type="checkbox" id="eggToggle" ${prefs.eggs ? 'checked' : ''} onchange="prefs.eggs=this.checked;savePrefs()"> 🎉 彩蛋圖片（作答途中隨機冒出圖片）</label>` : ''}
+      ${eggPanel()}
     </div>`;
 }
 
@@ -625,15 +633,59 @@ const EGG_SOUNDS = {
 };
 const EGG_VOLUME = 0.3; // 音量 0～1，1 是原檔音量
 const EGG_SOUND_VER = '3'; // 換掉音檔內容時改這個數字，瀏覽器才不會播到快取的舊檔
-// 抽中權重：沒列的圖都是 1，數字越大越常出現；設定裡的 💪 關掉時全部當 1
+// 預設抽中權重：沒列的圖都是 1，數字越大越常出現（用戶沒自己調比例時用這個）
 const EGG_WEIGHT = {
   '2760547738392319602.webp': 3
 };
-const eggW = n => (prefs.eggWeight && EGG_WEIGHT[n]) || 1;
+// 每張圖的出現比例（%，總和 100）：用戶在科目頁調過就用 prefs.eggPct，新加的圖先給平均值
+function eggPcts() {
+  const list = window.QUIZ_MAT || [];
+  const w = list.map(n => prefs.eggPct ? (prefs.eggPct[n] ?? 100 / list.length) : (EGG_WEIGHT[n] || 1));
+  const sum = w.reduce((a, b) => a + b, 0);
+  return Object.fromEntries(list.map((n, i) => [n, sum ? w[i] / sum * 100 : 100 / list.length]));
+}
 function pickEgg(list) {
-  let r = Math.random() * list.reduce((s, n) => s + eggW(n), 0);
-  for (const n of list) if ((r -= eggW(n)) < 0) return n;
+  const pct = eggPcts();
+  const total = list.reduce((s, n) => s + pct[n], 0);
+  if (!total) return list[Math.floor(Math.random() * list.length)];
+  let r = Math.random() * total;
+  for (const n of list) if ((r -= pct[n]) < 0) return n;
   return list[list.length - 1];
+}
+// 把第 i 張設成 p%，其他張照原本的比例分掉剩下的（原本都是 0 就平均分）
+function setEggPct(i, p) {
+  const list = window.QUIZ_MAT, cur = eggPcts(), name = list[i];
+  p = Math.min(100, Math.max(0, +p || 0));
+  const restOld = 100 - cur[name], restNew = 100 - p, others = list.length - 1;
+  prefs.eggPct = Object.fromEntries(list.map(n => [n, n === name ? p
+    : restOld > 0.0001 ? cur[n] * restNew / restOld : restNew / others]));
+  savePrefs();
+  refreshEggPct();
+}
+const bumpEggPct = (i, d) => setEggPct(i, eggPcts()[window.QUIZ_MAT[i]] + d);
+function resetEggPct(even) {
+  prefs.eggPct = even ? Object.fromEntries(window.QUIZ_MAT.map(n => [n, 1])) : null;
+  savePrefs();
+  refreshEggPct();
+}
+// 只更新數字，不重畫整頁（面板保持展開）
+function refreshEggPct() {
+  const pct = eggPcts();
+  document.querySelectorAll('[data-egg]').forEach(el => { el.value = pct[window.QUIZ_MAT[+el.dataset.egg]].toFixed(1); });
+}
+function eggPanel() {
+  const list = window.QUIZ_MAT || [];
+  if (!list.length) return '';
+  const pct = eggPcts();
+  return `<details class="egg-pct"><summary>🎛️ 調整每張圖的出現比例</summary>
+    <p class="muted">調高一張，其他張會照原本的比例一起降，總和維持 100%。</p>
+    <div class="egg-pct-list">${list.map((n, i) => `<div class="egg-pct-row">
+      <img src="mat/${encodeURIComponent(n)}" loading="lazy" alt="">
+      <button class="pct-btn" onclick="bumpEggPct(${i},-1)" aria-label="減少 1%">−</button>
+      <input type="number" min="0" max="100" step="0.1" data-egg="${i}" value="${pct[n].toFixed(1)}" onchange="setEggPct(${i}, this.value)">%
+      <button class="pct-btn" onclick="bumpEggPct(${i},1)" aria-label="增加 1%">＋</button></div>`).join('')}</div>
+    <div class="row"><button class="link-btn" onclick="resetEggPct(false)">恢復預設（館長 3 倍）</button>
+      <button class="link-btn" onclick="resetEggPct(true)">全部平均</button></div></details>`;
 }
 let eggAudio = null;
 function stopEggAudio() {
