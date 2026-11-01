@@ -617,14 +617,42 @@ document.addEventListener('keydown', e => {
 /* ---------- 彩蛋：練習、模擬考、題庫頁隨機冒出 mat/ 的圖 ---------- */
 const rand = (a, b) => a + Math.random() * (b - a);
 const eggActive = () => /^#\/s\/[^/]+\/(practice|exam|wrong|browse)$/.test(location.hash);
-function showEgg() {
+// 有配音效的圖：出現時依序播放這些音檔，圖會停到音效播完
+const EGG_SOUNDS = { '2760547738392319602.webp': ['gym1.mp3', 'gym2.mp3', 'gym3.mp3'] };
+let eggAudio = null;
+function stopEggAudio() {
+  if (eggAudio) { eggAudio.onended = null; eggAudio.pause(); eggAudio = null; }
+}
+// 先讀到每個音檔的長度，回傳 Audio 物件陣列（讀不到的檔案跳過，全都讀不到就只出圖）
+function loadSounds(files) {
+  return Promise.all(files.map(f => new Promise(r => {
+    const a = new Audio('mat/' + encodeURIComponent(f));
+    a.preload = 'auto';
+    a.onloadedmetadata = () => r(a);
+    a.onerror = () => r(null);
+  }))).then(as => as.filter(Boolean));
+}
+function playSounds(audios) {
+  stopEggAudio();
+  let i = 0;
+  const next = () => {
+    if (i >= audios.length || !prefs.eggs) return (eggAudio = null);
+    eggAudio = audios[i++];
+    eggAudio.onended = next;
+    eggAudio.play().catch(() => {}); // 瀏覽器擋自動播放時就安靜出圖
+  };
+  next();
+}
+function showEgg(pick) {
   const list = window.QUIZ_MAT || [];
   if (!list.length || !prefs.eggs || !eggActive() || document.hidden) return;
+  const name = pick || list[Math.floor(Math.random() * list.length)];
   const img = new Image();
   img.className = 'egg';
   img.alt = '';
-  img.onload = () => {
-    if (!eggActive()) return;
+  const sounds = EGG_SOUNDS[name] ? loadSounds(EGG_SOUNDS[name]) : Promise.resolve([]);
+  img.onload = () => sounds.then(audios => {
+    if (!eggActive() || !prefs.eggs) return;
     const vw = innerWidth, vh = innerHeight;
     const size = Math.round(rand(60, Math.min(260, vw * .35)));
     const gutter = (vw - 760) / 2; // 題目欄兩側的空白
@@ -637,25 +665,28 @@ function showEgg() {
       const peek = rand(.3, .5) * size;
       x = Math.random() < .5 ? peek - size : vw - peek;
     }
-    const dur = rand(2.5, 5);
+    const soundLen = audios.reduce((t, a) => t + a.duration, 0);
+    const dur = soundLen ? soundLen + .6 : rand(2.5, 5);
     img.style.cssText = `width:${size}px;left:${Math.round(x)}px;top:${Math.round(rand(.08, .85) * vh - size / 2)}px;` +
       `--rot:${Math.round(rand(-20, 20))}deg;--dur:${dur.toFixed(2)}s`;
     document.body.appendChild(img);
     setTimeout(() => img.remove(), dur * 1000 + 100);
-  };
-  img.src = 'mat/' + encodeURIComponent(list[Math.floor(Math.random() * list.length)]);
+    if (audios.length) playSounds(audios);
+  });
+  img.src = 'mat/' + encodeURIComponent(name);
 }
 const eggBtn = () => (window.QUIZ_MAT || []).length ? `<button class="egg-btn ${prefs.eggs ? '' : 'off'}"
   onclick="toggleEggs()" aria-pressed="${prefs.eggs}" title="測驗途中隨機冒出圖片">${prefs.eggs ? '🎉 彩蛋：開' : '🙈 彩蛋：關'}</button>` : '';
 function toggleEggs() {
   prefs.eggs = !prefs.eggs;
   savePrefs();
-  if (!prefs.eggs) document.querySelectorAll('.egg').forEach(e => e.remove());
+  if (!prefs.eggs) { document.querySelectorAll('.egg').forEach(e => e.remove()); stopEggAudio(); }
   // 只換按鈕本身，不重畫整頁（模擬考作答中也不會被清掉）
   document.querySelectorAll('.egg-btn').forEach(b => { b.outerHTML = eggBtn(); });
   const cb = document.getElementById('eggToggle');
   if (cb) cb.checked = prefs.eggs;
 }
+window.addEventListener('hashchange', () => { if (!eggActive()) stopEggAudio(); });
 (function eggLoop() {
   setTimeout(() => { showEgg(); eggLoop(); }, rand(5, 30) * 1000);
 })();
