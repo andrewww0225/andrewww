@@ -700,7 +700,7 @@ function toggleEggs() {
 }
 window.addEventListener('hashchange', () => { if (!eggActive()) stopEggAudio(); });
 (function eggLoop() {
-  setTimeout(() => { showEgg(); eggLoop(); }, rand(5, 30) * 1000);
+  setTimeout(() => { showEgg(); eggLoop(); }, rand(30, 90) * 1000); // 每 30～90 秒隨機一次
 })();
 
 /* ---------- 載入題庫 ---------- */
