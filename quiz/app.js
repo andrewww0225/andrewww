@@ -138,6 +138,7 @@ function route() {
     if (!mode) return renderSubject(id);
     if (mode === 'browse') return renderBrowse(id);
     if (mode === 'essay' && essaysOf(id).length) return renderEssay(id);
+    if (mode === 'guess' && guessesOf(id).length) return renderEssay(id, 'guess');
     if (!session || session.subjectId !== id || session.mode !== mode) return location.replace('#/s/' + id);
     return mode === 'exam' ? renderExam() : renderPractice();
   }
@@ -194,6 +195,11 @@ function renderSubject(id) {
       <p class="muted">老師圈的 ${essaysOf(id).length} 題簡答題，附課本整理的答案和出處。</p>
       <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/essay')">打開重點表</button></div>
     </div>` : ''}
+    ${guessesOf(id).length ? `<div class="card mode">
+      <h2>Claude 推測之申論題可能題目</h2>
+      <p class="muted">依課本頁面推測的 ${guessesOf(id).length} 題申論方向和答題重點，不是老師說會考的。</p>
+      <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/guess')">打開推測題</button></div>
+    </div>` : ''}
     ${chapterCard}
     <div class="card mode">
       <h2>練習模式</h2>
@@ -222,22 +228,34 @@ function renderSubject(id) {
     </div>`;
 }
 
-/* ---------- 簡答題重點（data/essays.js） ---------- */
+/* ---------- 簡答題重點（data/essays.js）／申論推測（data/guesses.js） ---------- */
 const essaysOf = id => (window.QUIZ_ESSAYS || {})[id] || [];
-function renderEssay(id) {
+const guessesOf = id => (window.QUIZ_GUESSES || {})[id] || [];
+const ESSAY_KINDS = {
+  essay: { title: '簡答題重點', list: essaysOf, note: '答案照課本原文整理' },
+  guess: { title: 'Claude 推測之申論題可能題目', list: guessesOf,
+    note: '這些是 Claude 依課本頁面（含學長姐畫線）推測的，不是老師說會考的；★ 是比較建議優先準備的題目' }
+};
+function renderEssay(id, kind = 'essay') {
   session = null;
-  const s = subjects[id], list = essaysOf(id), show = prefs.essayAns !== false;
-  const rows = list.map((e, i) => `<tr>
-      <th scope="row"><span class="essay-n">${i + 1}.</span> ${esc(e.q)}<div class="muted essay-src">${esc(e.src)}</div></th>
+  const s = subjects[id], k = ESSAY_KINDS[kind], list = k.list(id), show = prefs.essayAns !== false;
+  let lastCh = null;
+  const rows = list.map((e, i) => {
+    // 有寫 ch 的題目照章節分段
+    const head = e.ch && e.ch !== lastCh ? `<tr class="essay-ch"><th colspan="2">${esc(e.ch)}</th></tr>` : '';
+    lastCh = e.ch;
+    return `${head}<tr>
+      <th scope="row"><span class="essay-n">${i + 1}.</span> ${e.star ? '<span class="pill">★ 優先</span> ' : ''}${esc(e.q)}<div class="muted essay-src">${esc(e.src)}</div></th>
       <td>${!show ? '<span class="muted">（答案已遮住）</span>'
-        : e.a ? e.a : '<span class="pill">待補：還沒拿到課本頁面</span>'}</td></tr>`).join('');
-  document.title = '簡答題重點｜' + s.name;
+        : e.a ? e.a : '<span class="pill">待補：還沒拿到課本頁面</span>'}</td></tr>`;
+  }).join('');
+  document.title = k.title + '｜' + s.name;
   $app.innerHTML = `
     <div class="topbar"><button class="link-btn" onclick="go('#/s/${id}')">‹ 回科目</button>
-      <span class="title">${esc(s.name)}・簡答題重點</span></div>
+      <span class="title">${esc(s.name)}・${k.title}</span></div>
     <div class="card toggles"><label><input type="checkbox" ${show ? 'checked' : ''}
-      onchange="prefs.essayAns=this.checked;savePrefs();renderEssay('${id}')"> 顯示答案</label>
-      <p class="muted" style="margin:4px 0 0">共 ${list.length} 題・答案照課本原文整理</p></div>
+      onchange="prefs.essayAns=this.checked;savePrefs();renderEssay('${id}','${kind}')"> 顯示答案</label>
+      <p class="muted" style="margin:4px 0 0">共 ${list.length} 題・${k.note}</p></div>
     <div class="card essay-wrap"><table class="essay">
       <thead><tr><th scope="col">題目</th><th scope="col">答案</th></tr></thead>
       <tbody>${rows}</tbody></table></div>`;

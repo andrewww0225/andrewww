@@ -17,6 +17,7 @@ GitHub Pages：https://andrewww0225.github.io/andrewww/（repo andrewww0225/andr
 | `data/<科目>-ch<N>.js` | 一章一檔：`QUIZ.register({group, groupName, id, name, slides?, questions:[{q, opts, ans:"B", exp?}]})`，題目照課本原題號排 |
 | `data/mat.js` | 彩蛋圖片清單（靜態網站讀不到資料夾，新增圖片要加在這） |
 | `data/essays.js` | 簡答題重點 `QUIZ_ESSAYS[科目id] = [{q, a(HTML), src}]`；有資料的科目才會在科目頁出現入口（`#/s/<科目>/essay`）。答案只照課本照片寫，不從選擇題推 |
+| `data/guesses.js` | Claude 推測之申論題 `QUIZ_GUESSES[科目id] = [{ch, q, a(HTML), src, star?}]`，入口 `#/s/<科目>/guess`，和簡答題共用 `renderEssay()`；只照課本照片寫 |
 | `mat/` | 彩蛋圖片與音效 |
 | `slides/<id>/p<N>.jpg` | 投影片頁圖；資料檔有 `slides` 時，exp 裡的「投影片 p16、p2～3」會顯示對應圖片 |
 

@@ -186,3 +186,8 @@ select {
   .essay tbody th { width: auto; padding-bottom: 4px; }
   .essay td { border-top: 0; padding-top: 0; }
 }
+.essay tr.essay-ch th { background: var(--accent-soft); color: var(--accent); font-size: .95em; padding: 8px 14px; }
+.essay td table { border-collapse: collapse; margin: 6px 0; font-size: .92em; }
+.essay td table th, .essay td table td { border: 1px solid var(--line); padding: 4px 8px; width: auto; display: table-cell; }
+.essay td .tbl { overflow-x: auto; }
+.essay td table tr { display: table-row; } /* 答案裡的小表格，手機版也維持表格 */
