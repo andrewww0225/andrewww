@@ -29,6 +29,7 @@ GitHub Pages：https://andrewww0225.github.io/andrewww/（repo andrewww0225/andr
   - 用無頭 Edge 跑 `tools/check.html`（直接用網站的 app.js）。
   - 印出各章題數、答案分布、格式錯誤、重複題、缺少的投影片圖。
   - 新增或修改題庫後先跑這個，不用開瀏覽器。
+  - 要用 PowerShell 工具跑（先設 `[Console]::OutputEncoding = [Text.Encoding]::UTF8`）；從 Bash 呼叫會印「Could not read report」。
 - 投影片轉圖：`powershell -NoProfile -ExecutionPolicy Bypass -File tools\pdf-pages.ps1 -Pdf <pdf> -OutDir quiz\slides\<id> -Pages "3,14,15"`
   - 用 Windows 內建 PDF 引擎，輸出 1280px jpg。
   - 「投影片 pN」＝PDF 第 N 頁。
