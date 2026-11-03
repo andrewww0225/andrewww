@@ -451,11 +451,34 @@ function renderExam() {
       ${finished ? feedbackHTML(t) : ''}</div>`;
   }).join('');
   $app.innerHTML = `
-    <div class="topbar"><button class="link-btn" onclick="quitSession()">‹ ${finished ? '回科目' : '離開'}</button>
-      <span class="title">${esc(subjects[session.subjectId].name)}・模擬考</span>${eggBtn()}</div>
+    <div class="topbar exam-top"><button class="link-btn" onclick="quitSession()">‹ ${finished ? '回科目' : '離開'}</button>
+      <span class="title">${esc(subjects[session.subjectId].name)}・模擬考</span>${eggBtn()}
+      <button class="qpad-toggle" onclick="toggleQpad()" aria-expanded="false" aria-controls="qpad">題號 <span class="arrow">▾</span></button></div>
+    <nav class="qpad" id="qpad" aria-label="題號盤">${items.map((t, idx) =>
+      `<button class="${qpadCls(t)}" data-q="${idx}" onclick="jumpQ(${idx})">${idx + 1}</button>`).join('')}</nav>
     ${head}${qs}
     ${finished ? '' : `<div class="sticky"><div class="inner"><span class="muted" id="answered">已作答 ${answered} / ${items.length}</span>
       <button class="btn" onclick="submitExam()">交卷</button></div></div>`}`;
+}
+
+// 題號盤：灰色＝還沒寫、綠色＝寫了；交卷後改成對（綠）錯（紅）；按「交卷」時沒寫的會標紅框
+function qpadCls(t) {
+  if (session.finished) return t.correct ? 'ok' : 'bad';
+  return (t.picked.length ? 'done' : '') + (session.flagUnanswered && !t.picked.length ? ' miss' : '');
+}
+function jumpQ(idx) {
+  const card = document.getElementById('eq' + idx);
+  if (!card) return; // 「只看錯的題目」時對的題目不在頁面上
+  card.scrollIntoView({ block: 'center' });
+  toggleQpad(false);
+}
+// 寬螢幕題號盤固定在左邊；窄螢幕收在右上角的「題號 ▾」裡
+function toggleQpad(open) {
+  const pad = document.getElementById('qpad'), btn = document.querySelector('.qpad-toggle');
+  if (!pad || !btn) return;
+  open = open ?? !pad.classList.contains('open');
+  pad.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
 }
 
 function pickExam(idx, k) {
@@ -467,6 +490,8 @@ function pickExam(idx, k) {
   const card = document.getElementById('eq' + idx);
   card.querySelector('.opts').innerHTML = optButtons(t, idx, 'pickExam');
   card.classList.remove('unanswered');
+  const key = document.querySelector(`.qpad [data-q="${idx}"]`);
+  if (key) key.className = qpadCls(t);
   document.getElementById('answered').textContent =
     `已作答 ${session.items.filter(x => x.picked.length).length} / ${session.items.length}`;
 }
