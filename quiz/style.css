@@ -168,3 +168,20 @@ select {
   :root:not([data-theme="light"]) .egg-btn:not(.off) { background: #3a2c10; color: #ffc65c; }
 }
 .slide { display: block; width: 100%; max-width: 560px; height: auto; margin: 4px 0 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+/* 申論題重點表：寬螢幕兩欄，手機改成上下排 */
+.essay-wrap { padding: 0; overflow: hidden; }
+.essay { width: 100%; border-collapse: collapse; }
+.essay th, .essay td { text-align: left; vertical-align: top; padding: 12px 14px; border-top: 1px solid var(--line); }
+.essay thead th { border-top: 0; background: var(--accent-soft); font-size: .9em; }
+.essay tbody th { width: 34%; font-weight: bold; }
+.essay td ul, .essay td ol { margin: 0; padding-left: 1.3em; }
+.essay td li { margin: 2px 0; }
+.essay td p { margin: 0 0 6px; }
+.essay-n { color: var(--accent); }
+.essay-src { font-weight: normal; font-size: .82em; margin-top: 4px; }
+@media (max-width: 640px) {
+  .essay thead { display: none; }
+  .essay tr, .essay th, .essay td { display: block; width: auto; }
+  .essay tbody th { width: auto; padding-bottom: 4px; }
+  .essay td { border-top: 0; padding-top: 0; }
+}

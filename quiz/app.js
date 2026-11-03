@@ -133,6 +133,7 @@ function route() {
     const id = parts[1], mode = parts[2];
     if (!mode) return renderSubject(id);
     if (mode === 'browse') return renderBrowse(id);
+    if (mode === 'essay' && essaysOf(id).length) return renderEssay(id);
     if (!session || session.subjectId !== id || session.mode !== mode) return location.replace('#/s/' + id);
     return mode === 'exam' ? renderExam() : renderPractice();
   }
@@ -184,6 +185,11 @@ function renderSubject(id) {
       <p class="muted">照章節和課本原題號列出全部 ${s.questions.length} 題和答案，不計分。</p>
       <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/browse')">打開題庫</button></div>
     </div>
+    ${essaysOf(id).length ? `<div class="card mode">
+      <h2>申論題重點</h2>
+      <p class="muted">老師圈的 ${essaysOf(id).length} 題申論／簡答題，附課本整理的答案和出處。</p>
+      <div class="row"><button class="btn secondary" onclick="go('#/s/${id}/essay')">打開重點表</button></div>
+    </div>` : ''}
     ${chapterCard}
     <div class="card mode">
       <h2>練習模式</h2>
@@ -210,6 +216,27 @@ function renderSubject(id) {
       ${(window.QUIZ_MAT || []).length ? `<label><input type="checkbox" id="eggToggle" ${prefs.eggs ? 'checked' : ''} onchange="prefs.eggs=this.checked;savePrefs()"> 🎉 彩蛋圖片（作答途中隨機冒出圖片）</label>` : ''}
       ${eggPanel()}
     </div>`;
+}
+
+/* ---------- 申論題重點（data/essays.js） ---------- */
+const essaysOf = id => (window.QUIZ_ESSAYS || {})[id] || [];
+function renderEssay(id) {
+  session = null;
+  const s = subjects[id], list = essaysOf(id), show = prefs.essayAns !== false;
+  const rows = list.map((e, i) => `<tr>
+      <th scope="row"><span class="essay-n">${i + 1}.</span> ${esc(e.q)}<div class="muted essay-src">${esc(e.src)}</div></th>
+      <td>${!show ? '<span class="muted">（答案已遮住）</span>'
+        : e.a ? e.a : '<span class="pill">待補：還沒拿到課本頁面</span>'}</td></tr>`).join('');
+  document.title = '申論題重點｜' + s.name;
+  $app.innerHTML = `
+    <div class="topbar"><button class="link-btn" onclick="go('#/s/${id}')">‹ 回科目</button>
+      <span class="title">${esc(s.name)}・申論題重點</span></div>
+    <div class="card toggles"><label><input type="checkbox" ${show ? 'checked' : ''}
+      onchange="prefs.essayAns=this.checked;savePrefs();renderEssay('${id}')"> 顯示答案</label>
+      <p class="muted" style="margin:4px 0 0">共 ${list.length} 題・答案照課本原文整理</p></div>
+    <div class="card essay-wrap"><table class="essay">
+      <thead><tr><th scope="col">題目</th><th scope="col">答案</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>`;
 }
 
 /* ---------- 瀏覽題庫 ---------- */
