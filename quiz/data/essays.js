@@ -1,4 +1,4 @@
-// 申論／簡答題重點：key 是科目 id（同 QUIZ.register 的 group），每題 {q, a, src}
+// 簡答題重點：key 是科目 id（同 QUIZ.register 的 group），每題 {q, a, src}
 // a 是答案 HTML，照課本原句整理；a 為 null 代表還沒拿到課本頁面，頁面會顯示「待補」
 // src 是課本出處，照片看不到頁碼的只寫章節
 window.QUIZ_ESSAYS = {
