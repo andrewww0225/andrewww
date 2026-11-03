@@ -158,9 +158,8 @@ function showEgg(pick) {
     const gutter = (vw - 760) / 2; // 題目欄兩側的空白
     let x;
     if (gutter >= size + 16) {
-      // 寬螢幕：整張放在左右空白處；模擬考左邊有題號盤，只放右邊
-      const padOnLeft = document.querySelector('.qpad') && vw >= 1240;
-      x = !padOnLeft && Math.random() < .5 ? rand(8, gutter - size - 8) : vw - gutter + rand(8, gutter - size - 8);
+      // 寬螢幕：整張放在左右空白處（模擬考的題號盤圖層較高，會蓋在彩蛋上面）
+      x = Math.random() < .5 ? rand(8, gutter - size - 8) : vw - gutter + rand(8, gutter - size - 8);
     } else {
       // 手機：從左右邊緣探出頭，只露出一部分
       const peek = rand(.3, .5) * size;
