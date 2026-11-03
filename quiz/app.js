@@ -74,15 +74,19 @@ function toggleChapter(id, name) {
 /* ---------- 工具 ---------- */
 const $app = document.getElementById('app');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-// 解析：題庫有設 slides 資料夾時，exp 裡寫到的「投影片 p16、p18」「p2～3」會把那幾頁的圖放在文字上面
-function expHtml(q) {
-  if (!q.exp) return '';
+// 投影片圖：題庫有設 slides 資料夾時，exp 裡寫到的「投影片 p16、p18」「p2～3」那幾頁
+function slidesHtml(q) {
+  if (!q.exp || !q.slides) return '';
   const pages = new Set();
-  if (q.slides) for (const m of q.exp.matchAll(/投影片\s*((?:p\d+(?:[～~–-]p?\d+)?[、,，\s]*)+)/g))
+  for (const m of q.exp.matchAll(/投影片\s*((?:p\d+(?:[～~–-]p?\d+)?[、,，\s]*)+)/g))
     for (const [, a, b] of m[1].matchAll(/p(\d+)(?:[～~–-]p?(\d+))?/g))
       for (let n = +a; n <= Math.min(+(b || a), +a + 5); n++) pages.add(n);
-  const imgs = [...pages].map(n => `<img class="slide" src="${q.slides}p${n}.jpg" loading="lazy" alt="投影片 p${n}">`).join('');
-  return `<div class="exp">${imgs}${esc(q.exp)}</div>`;
+  return [...pages].map(n => `<img class="slide" src="${q.slides}p${n}.jpg" loading="lazy" alt="投影片 p${n}">`).join('');
+}
+// 解析：預設把投影片放在文字上面；練習模式傳 false，圖改放到「下一題」按鈕下面，才不會把按鈕擠下去
+function expHtml(q, withSlides = true) {
+  if (!q.exp) return '';
+  return `<div class="exp">${withSlides ? slidesHtml(q) : ''}${esc(q.exp)}</div>`;
 }
 const LETTERS = 'ABCDEFGHIJ';
 function shuffle(arr) {
@@ -304,7 +308,7 @@ function optButtons(item, idx, onPick) {
 
 function feedbackHTML(item) {
   if (!item.judged) return '';
-  const exp = expHtml(item.q);
+  const exp = expHtml(item.q, false);
   if (item.correct) return `<div class="feedback ok">✓ 答對了${exp}</div>`;
   return `<div class="feedback bad">✗ 答錯了，正確答案：${esc(answersOf(item.q).join('、'))}${exp}</div>`;
 }
@@ -328,6 +332,7 @@ function renderPractice() {
       <div class="opts">${optButtons(item, i, 'pickPractice')}</div>
       ${feedbackHTML(item)}
       <div class="actions">${action}</div>
+      ${item.judged ? slidesHtml(item.q) : ''}
     </div>
     <p class="hint kbd-hint">鍵盤：數字鍵選選項，Enter 確認／下一題</p>`;
 }

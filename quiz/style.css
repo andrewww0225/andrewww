@@ -168,6 +168,7 @@ select {
   :root:not([data-theme="light"]) .egg-btn:not(.off) { background: #3a2c10; color: #ffc65c; }
 }
 .slide { display: block; width: 100%; max-width: 560px; height: auto; margin: 4px 0 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.actions + .slide { margin-top: 16px; } /* 練習模式：投影片在「下一題」按鈕下面 */
 /* 簡答題重點表：寬螢幕兩欄，手機改成上下排 */
 .essay-wrap { padding: 0; overflow: hidden; }
 .essay { width: 100%; border-collapse: collapse; }
