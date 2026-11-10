@@ -825,6 +825,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 <nav class="toc">
   <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
   <a href="#results" style="border-color:var(--direct);color:var(--direct);font-weight:700">◆ 正式分析結果</a>
+  <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（3 條）</a>
   <a href="#askprof" class="toc-ask">◆ 問老師清單（1 項）</a>
   <a href="#s11">1.1–1.2 研究背景與動機</a>
   <a href="#s221-lit-latan">2.1.1 社會懈怠的起源</a>
@@ -868,6 +869,31 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
     <span class="legend__v">原文一律取自 PDF 文字層逐字複製。找不到即標「無法確認原文位置」，不推測頁碼、不補寫原文。</span>
   </div>
 </div>
+
+<!-- ═══════════════ 組員待查證 ═══════════════ -->
+<section class="section" id="newev">
+  <div class="section__head">
+    <span class="section__num">查證</span>
+    <h2 class="section__title">組員待查證：3 條</h2>
+    <span class="section__meta">點條目代號跳到該條；三篇的原文 PDF 都還沒收，查證前要先取得原文</span>
+  </div>
+  <p style="font-size:.9rem;margin:0 0 1rem">每條要找出能支持論文句子的原文句與頁碼（印刷頁），找不到就寫「無法確認原文位置」。</p>
+  <div class="vbar">
+    <span class="revbar__count">已查證 <b class="vbar__n">0</b> / <span class="vbar__total">3</span></span>
+    <button type="button" class="revbar__hide vbar__hide" aria-pressed="false">隱藏已查證</button>
+    <span class="revbar__status vbar__status" role="status"></span>
+  </div>
+  <div class="qi-wrap">
+    <table class="qi">
+      <thead><tr><th>條目</th><th>論文位置</th><th>論文句子</th><th>文獻</th><th>原文在哪</th><th class="vchk__th">已查</th></tr></thead>
+      <tbody>
+        <tr data-vid="s4-U"><td class="loc"><a href="#s4-U">s4-U</a></td><td>4.2</td><td>自我評價較高者，其行為較不受工作角色條件影響</td><td>Pierce 等人 (1993)</td><td class="loc">PDF 未收；找自尊高者受角色條件影響較小的結果句</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-U 已查證"></td></tr>
+        <tr data-vid="s4-V"><td class="loc"><a href="#s4-V">s4-V</a></td><td>4.2</td><td>一般自我效能會減弱認知需求對認知努力之正向效果</td><td>Pillai 等人 (2011)</td><td class="loc">PDF 未收；找摘要或結果段的結論句</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-V 已查證"></td></tr>
+        <tr data-vid="s4-W"><td class="loc"><a href="#s4-W">s4-W</a></td><td>4.3</td><td>為排除交互作用係由HOI之曲線關係所致，加入HOI之二次項</td><td>Ganzach (1997)</td><td class="loc">作者網站有全文；找「漏放二次項會讓交互作用誤導」的句子</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-W 已查證"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
 <!-- ═══════════════ 正式分析結果 ═══════════════ -->
 <section class="section" id="results">
@@ -7173,13 +7199,13 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <div class="section__head">
     <span class="section__num">4</span>
     <h2 class="section__title">第四章 · 研究結果</h2>
-    <span class="section__meta">Notion 第四章 · 12 篇文獻 · 20 條證據</span>
+    <span class="section__meta">Notion 第四章 · 15 篇文獻 · 23 條證據</span>
   </div>
 
 
   <div class="prov">
     <span class="prov__lab">依據</span>
-    <p>Notion「第四章」<a href="https://app.notion.com/p/40795422bcd180269a89c838168a5ab8" target="_blank" rel="noopener noreferrer">↗</a>（含 4.4 fsQCA）。只收正文與表註實際引用的來源；已在第二、三章收錄的文獻，引文相同處指回該節。</p>
+    <p>Notion「第四章」<a href="https://app.notion.com/p/41395422bcd1813196c6ff9c8d0127e3" target="_blank" rel="noopener noreferrer">↗</a>（主版本，無 fsQCA）；4.4 fsQCA 的條目依「第四章 有fsQCA」<a href="https://app.notion.com/p/40795422bcd180269a89c838168a5ab8" target="_blank" rel="noopener noreferrer">↗</a>。只收正文與表註實際引用的來源；已在第二、三章收錄的文獻，引文相同處指回該節。</p>
   </div>
 
   <p class="subhead">相關文獻證據</p>
@@ -7663,6 +7689,71 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
     </div>
   </article>
 
+  <!-- ── Pierce, Gardner, Dunham, & Cummings (1993) ── -->
+  <div class="srchead" id="s4-lit-pierce"><span class="srchead__n">文獻 13</span><h3>Pierce, Gardner, Dunham, &amp; Cummings (1993)</h3><span class="srchead__ver">原文未收 · 書目已核對 Crossref</span></div>
+  <p class="drive"><span style="color:var(--muted)">原文 PDF 未收，需先取得</span></p>
+  <dl class="biblio">
+    <dt>完整文獻資訊</dt>
+    <dd class="cite">Pierce, J. L., Gardner, D. G., Dunham, R. B., &amp; Cummings, L. L. (1993). Moderation by organization-based self-esteem of role condition–employee response relationships. <em>Academy of Management Journal, 36</em>(2), 271–288.</dd>
+    <dt>DOI</dt><dd><code>10.2307/256523</code></dd>
+  </dl>
+
+  <article class="entry" id="s4-U">
+    <div class="entry__rail"><span class="entry__key">U</span><span class="chip chip--add">待查證</span></div>
+    <div class="entry__body">
+      <p class="claim">4.2 替代關係段：「此型態與行為可塑性（behavioral plasticity）之觀點一致：自我評價較高者，其行為較不受工作角色條件影響（Pierce等人, 1993）」。</p>
+      <p class="role"><b>作用</b>H4 負向調節的理論名稱（行為可塑性）</p>
+      <div class="src">
+        <div class="src__none">尚未讀到 PDF，沒有可逐字對照的原文。篇名只說「以組織為基礎的自尊調節角色條件與員工反應之關係」，沒有寫出方向。要找的是：自尊高者受角色條件（角色模糊、衝突、負荷、環境支持）影響較小的結果句，以及 behavioral plasticity 一詞出現的頁碼。</div>
+      </div>
+      <p class="support"><b>如何支持論述：</b>待查。</p>
+      <div class="note note--warn"><span class="note__lab">限制</span>本文的調節變項是組織自尊、自變項是負面角色條件；HRS 不是自尊，HOI 也不是角色條件，論文寫成「觀點一致」，不是直接驗證。</div>
+    </div>
+  </article>
+
+  <!-- ── Pillai, Goldsmith, & Giebelhausen (2011) ── -->
+  <div class="srchead" id="s4-lit-pillai"><span class="srchead__n">文獻 14</span><h3>Pillai, Goldsmith, &amp; Giebelhausen (2011)</h3><span class="srchead__ver">原文未收 · 書目已核對 Crossref</span></div>
+  <p class="drive"><span style="color:var(--muted)">原文 PDF 未收，需先取得</span></p>
+  <dl class="biblio">
+    <dt>完整文獻資訊</dt>
+    <dd class="cite">Pillai, K. G., Goldsmith, R. E., &amp; Giebelhausen, M. (2011). Negative moderating effect of general self-efficacy on the relationship between need for cognition and cognitive effort. <em>Psychological Reports, 109</em>(1), 127–136.</dd>
+    <dt>DOI</dt><dd><code>10.2466/04.07.11.PR0.109.4.127-136</code>（DOI 字串含 109.4，Crossref 登記為第 1 期）</dd>
+  </dl>
+
+  <article class="entry" id="s4-V">
+    <div class="entry__rail"><span class="entry__key">V</span><span class="chip chip--add">待查證</span></div>
+    <div class="entry__body">
+      <p class="claim">4.2 替代關係段：「Pillai等人（2011）也發現，一般自我效能會減弱認知需求對認知努力之正向效果。」</p>
+      <p class="role"><b>作用</b>與本研究相同型態的負向調節實證（自我信念減弱內在動機對努力的效果）</p>
+      <div class="src">
+        <div class="src__none">尚未讀到 PDF。篇名即寫明「一般自我效能對認知需求與認知努力之關係有負向調節效果」，方向與論文一致；要找的是摘要或結果段的結論句、樣本與頁碼。</div>
+      </div>
+      <p class="support"><b>如何支持論述：</b>篇名與論文句子方向相同；逐字原文待查。</p>
+      <div class="note note--warn"><span class="note__lab">限制</span>本文的調節變項是一般自我效能，不是角色重要性；結果是認知努力，不是團隊互動。</div>
+    </div>
+  </article>
+
+  <!-- ── Ganzach (1997) ── -->
+  <div class="srchead" id="s4-lit-ganzach"><span class="srchead__n">文獻 15</span><h3>Ganzach (1997)</h3><span class="srchead__ver">原文未收 · 書目已核對 Crossref · 讀過摘要</span></div>
+  <p class="drive"><span style="color:var(--muted)">原文 PDF 未收；作者網站有全文</span>　<a class="drive__link" href="https://www.tau.ac.il/~yoavgn/files/misleading_interactions.pdf" target="_blank" rel="noopener noreferrer">作者網站 PDF ↗</a></p>
+  <dl class="biblio">
+    <dt>完整文獻資訊</dt>
+    <dd class="cite">Ganzach, Y. (1997). Misleading interaction and curvilinear terms. <em>Psychological Methods, 2</em>(3), 235–247.</dd>
+    <dt>DOI</dt><dd><code>10.1037/1082-989X.2.3.235</code></dd>
+  </dl>
+
+  <article class="entry" id="s4-W">
+    <div class="entry__rail"><span class="entry__key">W</span><span class="chip chip--add">待查證</span></div>
+    <div class="entry__body">
+      <p class="claim">4.3 天花板段：「為排除交互作用係由HOI之曲線關係所致（Ganzach, 1997），本研究另於模型中加入HOI之二次項。HOI²對IEC（β = 0.111，p = 0.082）與TII（β = 0.080，p = 0.332）之效果均未達顯著，而HRS × HOI對IEC（β = −0.228，p = 0.001）與TII（β = −0.278，p = 0.002）之交互作用項仍顯著為負，表示負向調節效果並非HOI之曲線關係所造成。」</p>
+      <p class="role"><b>作用</b>HOI² 穩健性檢驗的依據</p>
+      <div class="src">
+        <div class="src__none">摘要（特拉維夫大學研究網站）說明：預測變項相關時，漏放所需的二次項，可能讓交互作用看起來是加乘或抵銷，但實際是曲線關係；二次項與乘積項應一起檢驗。逐字原文與頁碼待從 PDF 查。</div>
+      </div>
+      <p class="support"><b>如何支持論述：</b>摘要的論點與論文「為排除交互作用係由曲線關係所致」相符；數字來自本研究 SmartPLS 輸出（x9 HOI^2.xlsx）。</p>
+      <div class="note note--warn"><span class="note__lab">限制</span>本研究只加入 HOI²，沒有加 HRS²；Ganzach 建議兩個變項的二次項都放，口試若被問，可說主要疑慮是 HOI 的天花板。</div>
+    </div>
+  </article>
 </section>
 
 </div>
