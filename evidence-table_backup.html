@@ -875,9 +875,9 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <div class="section__head">
     <span class="section__num">查證</span>
     <h2 class="section__title">組員待查證：3 條</h2>
-    <span class="section__meta">點條目代號跳到該條；三篇的原文 PDF 都還沒收，查證前要先取得原文</span>
+    <span class="section__meta">點條目代號跳到該條，再點文獻標頭的「Drive 原文 PDF」翻到下表頁數</span>
   </div>
-  <p style="font-size:.9rem;margin:0 0 1rem">每條要找出能支持論文句子的原文句與頁碼（印刷頁），找不到就寫「無法確認原文位置」。</p>
+  <p style="font-size:.9rem;margin:0 0 1rem">PDF 頁＝打開檔案看到的第幾頁；印刷頁＝期刊頁眉上的頁碼。Pierce 等人（1993）是 JSTOR 掃描檔，第 1 頁是 JSTOR 封面，文字層有字黏在一起，Ctrl+F 不一定搜得到，請直接翻到表上的 PDF 頁。</p>
   <div class="vbar">
     <span class="revbar__count">已查證 <b class="vbar__n">0</b> / <span class="vbar__total">3</span></span>
     <button type="button" class="revbar__hide vbar__hide" aria-pressed="false">隱藏已查證</button>
@@ -887,9 +887,9 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
     <table class="qi">
       <thead><tr><th>條目</th><th>論文位置</th><th>論文句子</th><th>文獻</th><th>原文在哪</th><th class="vchk__th">已查</th></tr></thead>
       <tbody>
-        <tr data-vid="s4-U"><td class="loc"><a href="#s4-U">s4-U</a></td><td>4.2</td><td>自我評價較高者，其行為較不受工作角色條件影響</td><td>Pierce 等人 (1993)</td><td class="loc">PDF 未收；找自尊高者受角色條件影響較小的結果句</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-U 已查證"></td></tr>
-        <tr data-vid="s4-V"><td class="loc"><a href="#s4-V">s4-V</a></td><td>4.2</td><td>一般自我效能會減弱認知需求對認知努力之正向效果</td><td>Pillai 等人 (2011)</td><td class="loc">PDF 未收；找摘要或結果段的結論句</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-V 已查證"></td></tr>
-        <tr data-vid="s4-W"><td class="loc"><a href="#s4-W">s4-W</a></td><td>4.3</td><td>為排除交互作用係由HOI之曲線關係所致，加入HOI之二次項</td><td>Ganzach (1997)</td><td class="loc">作者網站有全文；找「漏放二次項會讓交互作用誤導」的句子</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-W 已查證"></td></tr>
+        <tr data-vid="s4-U"><td class="loc"><a href="#s4-U">s4-U</a></td><td>4.2</td><td>自我評價較高者，其行為較不受工作角色條件影響</td><td>Pierce 等人 (1993)</td><td class="loc">印刷 p.271（PDF p.2）摘要；印刷 p.283（PDF p.14）討論第一段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-U 已查證"></td></tr>
+        <tr data-vid="s4-V"><td class="loc"><a href="#s4-V">s4-V</a></td><td>4.2</td><td>一般自我效能會減弱認知需求對認知努力之正向效果</td><td>Pillai 等人 (2011)</td><td class="loc">印刷 p.127（PDF p.1）摘要；印刷 p.133（PDF p.7）Discussion 第一段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-V 已查證"></td></tr>
+        <tr data-vid="s4-W"><td class="loc"><a href="#s4-W">s4-W</a></td><td>4.3</td><td>為排除交互作用係由HOI之曲線關係所致，加入HOI之二次項</td><td>Ganzach (1997)</td><td class="loc">印刷 p.235（PDF p.1）摘要 (a)、(c)</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-W 已查證"></td></tr>
       </tbody>
     </table>
   </div>
@@ -7690,8 +7690,8 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </article>
 
   <!-- ── Pierce, Gardner, Dunham, & Cummings (1993) ── -->
-  <div class="srchead" id="s4-lit-pierce"><span class="srchead__n">文獻 13</span><h3>Pierce, Gardner, Dunham, &amp; Cummings (1993)</h3><span class="srchead__ver">原文未收 · 書目已核對 Crossref</span></div>
-  <p class="drive"><span style="color:var(--muted)">原文 PDF 未收，需先取得</span></p>
+  <div class="srchead" id="s4-lit-pierce"><span class="srchead__n">文獻 13</span><h3>Pierce, Gardner, Dunham, &amp; Cummings (1993)</h3><span class="srchead__ver ok">正式版 · JSTOR 掃描 · 印刷頁 = PDF + 269</span></div>
+  <p class="drive"><a class="drive__link" href="https://drive.google.com/file/d/14_Yb6hXqquc87E87z-h8MKRhdmkprXWZ/view" target="_blank" rel="noopener noreferrer">Drive 原文 PDF ↗</a></p>
   <dl class="biblio">
     <dt>完整文獻資訊</dt>
     <dd class="cite">Pierce, J. L., Gardner, D. G., Dunham, R. B., &amp; Cummings, L. L. (1993). Moderation by organization-based self-esteem of role condition–employee response relationships. <em>Academy of Management Journal, 36</em>(2), 271–288.</dd>
@@ -7699,43 +7699,67 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </dl>
 
   <article class="entry" id="s4-U">
-    <div class="entry__rail"><span class="entry__key">U</span><span class="chip chip--add">待查證</span></div>
+    <div class="entry__rail"><span class="entry__key">U</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">4.2 替代關係段：「此型態與行為可塑性（behavioral plasticity）之觀點一致：自我評價較高者，其行為較不受工作角色條件影響（Pierce等人, 1993）」。</p>
       <p class="role"><b>作用</b>H4 負向調節的理論名稱（行為可塑性）</p>
       <div class="src">
-        <div class="src__none">尚未讀到 PDF，沒有可逐字對照的原文。篇名只說「以組織為基礎的自尊調節角色條件與員工反應之關係」，沒有寫出方向。要找的是：自尊高者受角色條件（角色模糊、衝突、負荷、環境支持）影響較小的結果句，以及 behavioral plasticity 一詞出現的頁碼。</div>
+        <div class="src__en"><span class="src__lab">學術原文 · p.271（摘要）</span>
+          <p>“<strong>Behavioral plasticity theory</strong> is offered as an explanation for the moderating effects of self-esteem on role perception-employee response relationships. According to this theory, because <strong>individuals with low self-esteem are more reactive than their counterparts with high self-esteem</strong>, they are more susceptible to adverse role conditions, such as role conflict, ambiguity, and overload, and a poor work environment and poor supervisory support.”</p>
+        </div>
+        <div class="src__zh"><span class="src__lab">中文翻譯 · p.271</span>
+          <p>「本文以<strong>行為可塑性理論</strong>解釋自尊對角色知覺與員工反應之關係的調節效果。依此理論，<strong>低自尊者比高自尊者更容易起反應</strong>，因此較易受角色衝突、模糊、負荷過重、工作環境不佳與主管支持不足等不利角色條件影響。」</p>
+        </div>
+        <div class="src__en"><span class="src__lab">學術原文 · p.283（討論）</span>
+          <p>“our results generally support the hypothesis that <strong>individuals with low self-esteem, when compared to people with high self-esteem, react with greater intensity to characteristics of their work environments</strong>, whether those characteristics are good (a supportive supervisor) or bad (role conflict).”</p>
+        </div>
+        <div class="src__zh"><span class="src__lab">中文翻譯 · p.283</span>
+          <p>「結果大致支持以下假說：<strong>低自尊者相較於高自尊者，對工作環境特徵的反應更強烈</strong>，不論該特徵是好的（支持的主管）或壞的（角色衝突）。」</p>
+        </div>
       </div>
-      <p class="support"><b>如何支持論述：</b>待查。</p>
-      <div class="note note--warn"><span class="note__lab">限制</span>本文的調節變項是組織自尊、自變項是負面角色條件；HRS 不是自尊，HOI 也不是角色條件，論文寫成「觀點一致」，不是直接驗證。</div>
+      <ul class="locus"><li><b>印刷</b>p. 271 ／ <b>PDF</b>p. 2　·　<b>印刷</b>p. 283 ／ <b>PDF</b>p. 14</li></ul>
+      <p class="support"><b>如何支持論述：</b>「自尊高者較不受角色條件影響」與「behavioral plasticity」都逐字對應；p. 283 說明好的條件也一樣，不限負面條件。</p>
+      <div class="note note--warn"><span class="note__lab">限制</span>本文的調節變項是組織自尊，結果是滿意度與績效；HRS 不是自尊，HOI 也不是工作環境特徵，所以論文寫「觀點一致」，不是直接驗證。</div>
     </div>
   </article>
 
   <!-- ── Pillai, Goldsmith, & Giebelhausen (2011) ── -->
-  <div class="srchead" id="s4-lit-pillai"><span class="srchead__n">文獻 14</span><h3>Pillai, Goldsmith, &amp; Giebelhausen (2011)</h3><span class="srchead__ver">原文未收 · 書目已核對 Crossref</span></div>
-  <p class="drive"><span style="color:var(--muted)">原文 PDF 未收，需先取得</span></p>
+  <div class="srchead" id="s4-lit-pillai"><span class="srchead__n">文獻 14</span><h3>Pillai, Goldsmith, &amp; Giebelhausen (2011)</h3><span class="srchead__ver ok">正式版 · 印刷頁 = PDF + 126</span></div>
+  <p class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1cnnOM0GwIi7bNdVuYrbqzZBDFll_A26j/view" target="_blank" rel="noopener noreferrer">Drive 原文 PDF ↗</a></p>
   <dl class="biblio">
     <dt>完整文獻資訊</dt>
     <dd class="cite">Pillai, K. G., Goldsmith, R. E., &amp; Giebelhausen, M. (2011). Negative moderating effect of general self-efficacy on the relationship between need for cognition and cognitive effort. <em>Psychological Reports, 109</em>(1), 127–136.</dd>
-    <dt>DOI</dt><dd><code>10.2466/04.07.11.PR0.109.4.127-136</code>（DOI 字串含 109.4，Crossref 登記為第 1 期）</dd>
+    <dt>DOI</dt><dd><code>10.2466/04.07.11.PR0.109.4.127-136</code>（DOI 字串含 109.4；首頁印「2011, 109, 1, 127-136」，即第 1 期）</dd>
   </dl>
 
   <article class="entry" id="s4-V">
-    <div class="entry__rail"><span class="entry__key">V</span><span class="chip chip--add">待查證</span></div>
+    <div class="entry__rail"><span class="entry__key">V</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">4.2 替代關係段：「Pillai等人（2011）也發現，一般自我效能會減弱認知需求對認知努力之正向效果。」</p>
       <p class="role"><b>作用</b>與本研究相同型態的負向調節實證（自我信念減弱內在動機對努力的效果）</p>
       <div class="src">
-        <div class="src__none">尚未讀到 PDF。篇名即寫明「一般自我效能對認知需求與認知努力之關係有負向調節效果」，方向與論文一致；要找的是摘要或結果段的結論句、樣本與頁碼。</div>
+        <div class="src__en"><span class="src__lab">學術原文 · p.127（摘要）</span>
+          <p>“This study demonstrates <strong>the negative moderating effect of general self-efficacy on the relationship between need for cognition</strong>, which refers to stable individual differences in people's tendencies to engage in and enjoy cognitive activity, <strong>and cognitive effort</strong>. This negative moderating effect of general self-efficacy has been termed “<strong>plasticity</strong>.””</p>
+        </div>
+        <div class="src__zh"><span class="src__lab">中文翻譯 · p.127</span>
+          <p>「本研究證實<strong>一般自我效能對認知需求與認知努力之關係具有負向調節效果</strong>（認知需求指個人投入並享受認知活動之穩定傾向）。一般自我效能的這種負向調節效果被稱為<strong>可塑性</strong>。」</p>
+        </div>
+        <div class="src__en"><span class="src__lab">學術原文 · p.133（討論）</span>
+          <p>“The results illustrate the behavioral plasticity phenomenon in which relationships that depend on ability or motivation are different for individuals with low versus high general self-efficacy, and <strong>extend it from external influences to internal states</strong>.”</p>
+        </div>
+        <div class="src__zh"><span class="src__lab">中文翻譯 · p.133</span>
+          <p>「結果呈現行為可塑性現象：依賴能力或動機的關係，在一般自我效能高低者之間不同；並<strong>將此現象從外在影響延伸到內在狀態</strong>。」</p>
+        </div>
       </div>
-      <p class="support"><b>如何支持論述：</b>篇名與論文句子方向相同；逐字原文待查。</p>
-      <div class="note note--warn"><span class="note__lab">限制</span>本文的調節變項是一般自我效能，不是角色重要性；結果是認知努力，不是團隊互動。</div>
+      <ul class="locus"><li><b>印刷</b>p. 127 ／ <b>PDF</b>p. 1　·　<b>印刷</b>p. 133 ／ <b>PDF</b>p. 7</li></ul>
+      <p class="support"><b>如何支持論述：</b>負向調節的方向與變項都逐字對應。p. 133 把可塑性延伸到內在狀態，可回答「HOI 是個人意圖，不是外在因素」的質疑。</p>
+      <div class="note note--warn"><span class="note__lab">限制</span>本文的調節變項是一般自我效能，不是角色重要性；樣本是 144 名美國大學生，結果是認知努力，不是團隊互動。</div>
     </div>
   </article>
 
   <!-- ── Ganzach (1997) ── -->
-  <div class="srchead" id="s4-lit-ganzach"><span class="srchead__n">文獻 15</span><h3>Ganzach (1997)</h3><span class="srchead__ver">原文未收 · 書目已核對 Crossref · 讀過摘要</span></div>
-  <p class="drive"><span style="color:var(--muted)">原文 PDF 未收；作者網站有全文</span>　<a class="drive__link" href="https://www.tau.ac.il/~yoavgn/files/misleading_interactions.pdf" target="_blank" rel="noopener noreferrer">作者網站 PDF ↗</a></p>
+  <div class="srchead" id="s4-lit-ganzach"><span class="srchead__n">文獻 15</span><h3>Ganzach (1997)</h3><span class="srchead__ver ok">正式版 · 印刷頁 = PDF + 234</span></div>
+  <p class="drive"><a class="drive__link" href="https://drive.google.com/file/d/1j8mZvwROkyauwKwIu77tqa85mvji_ciw/view" target="_blank" rel="noopener noreferrer">Drive 原文 PDF ↗</a></p>
   <dl class="biblio">
     <dt>完整文獻資訊</dt>
     <dd class="cite">Ganzach, Y. (1997). Misleading interaction and curvilinear terms. <em>Psychological Methods, 2</em>(3), 235–247.</dd>
@@ -7743,15 +7767,21 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   </dl>
 
   <article class="entry" id="s4-W">
-    <div class="entry__rail"><span class="entry__key">W</span><span class="chip chip--add">待查證</span></div>
+    <div class="entry__rail"><span class="entry__key">W</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">4.3 天花板段：「為排除交互作用係由HOI之曲線關係所致（Ganzach, 1997），本研究另於模型中加入HOI之二次項。HOI²對IEC（β = 0.111，p = 0.082）與TII（β = 0.080，p = 0.332）之效果均未達顯著，而HRS × HOI對IEC（β = −0.228，p = 0.001）與TII（β = −0.278，p = 0.002）之交互作用項仍顯著為負，表示負向調節效果並非HOI之曲線關係所造成。」</p>
       <p class="role"><b>作用</b>HOI² 穩健性檢驗的依據</p>
       <div class="src">
-        <div class="src__none">摘要（特拉維夫大學研究網站）說明：預測變項相關時，漏放所需的二次項，可能讓交互作用看起來是加乘或抵銷，但實際是曲線關係；二次項與乘積項應一起檢驗。逐字原文與頁碼待從 PDF 查。</div>
+        <div class="src__en"><span class="src__lab">學術原文 · p.235（摘要）</span>
+          <p>“(a) <strong>If the appropriate quadratic terms are not added to the estimated model, then the observed interaction may indicate a synergistic (offsetting) relationship</strong> between the independent variables, whereas the true relationship is, in fact, offsetting (synergistic). … (c) If the appropriate product and quadratic terms are not examined simultaneously, then the observed interactive or curvilinear relationships may be nonsignificant when such relationships exist.”</p>
+        </div>
+        <div class="src__zh"><span class="src__lab">中文翻譯 · p.235</span>
+          <p>「(a) <strong>若模型未加入應有的二次項，觀察到的交互作用可能顯示自變項之間是加乘（抵銷）關係</strong>，但真正的關係其實是抵銷（加乘）。……(c) 若乘積項與二次項未同時檢驗，實際存在的交互或曲線關係可能看起來不顯著。」</p>
+        </div>
       </div>
-      <p class="support"><b>如何支持論述：</b>摘要的論點與論文「為排除交互作用係由曲線關係所致」相符；數字來自本研究 SmartPLS 輸出（x9 HOI^2.xlsx）。</p>
-      <div class="note note--warn"><span class="note__lab">限制</span>本研究只加入 HOI²，沒有加 HRS²；Ganzach 建議兩個變項的二次項都放，口試若被問，可說主要疑慮是 HOI 的天花板。</div>
+      <ul class="locus"><li><b>印刷</b>p. 235 ／ <b>PDF</b>p. 1</li></ul>
+      <p class="support"><b>如何支持論述：</b>(a) 逐字對應「交互作用可能由漏放的二次項造成」；本研究把 HOI² 和 HRS × HOI 放在同一模型，也符合 (c) 同時檢驗的建議。數字來自本研究 SmartPLS 輸出（x9 HOI^2.xlsx）。</p>
+      <div class="note note--warn"><span class="note__lab">限制</span>本研究只加入 HOI²，沒有加 HRS²；Ganzach 的範例是兩個變項的二次項都放，口試若被問，可說主要疑慮是 HOI 的天花板。</div>
     </div>
   </article>
 </section>
