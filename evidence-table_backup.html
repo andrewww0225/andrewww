@@ -810,9 +810,9 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 <section class="survey" id="survey" aria-label="正式問卷回收進度">
   <div class="survey__head">
     <span class="survey__lab">正式問卷回收進度</span>
-    <span class="survey__num"><b>243</b>（可用 212）/ 200 份 · 106%</span>
+    <span class="survey__num"><b>243</b>（可用 212）/ 250 份 · 85%</span>
   </div>
-  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="212" aria-label="已回收 243 份，可用 212 份，目標 200 份"><div class="survey__fill" style="width:100%"></div></div>
+  <div class="survey__bar" role="progressbar" aria-valuemin="0" aria-valuemax="250" aria-valuenow="212" aria-label="已回收 243 份，可用 212 份，目標 250 份"><div class="survey__fill" style="width:85%"></div></div>
   <p style="margin:.5rem 0 0;font-size:.82rem;color:var(--ink-2)">商管 139、資訊 19、資管 13、其他 41</p>
 </section>
 
@@ -1024,71 +1024,6 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
     </tbody>
   </table></div>
   <p style="font-size:.88rem;color:var(--ink-2)">同一類型沒有整批刪除，搜尋只刪了對指標有幫助的幾筆；若要寫成刪除規則，同類型的人要一起刪。</p>
-  </details>
-
-  <details class="fold" id="res-cands">
-  <summary class="subhead fold__sum">其他候選組合（X1–X8）與測試</summary>
-  <ul style="font-size:.88rem;color:var(--ink-2)">
-    <li>沒有明顯特徵的 6 筆（121、131、153、163、200、244）加回後：X4 即為 X9；X5 降為 α、負荷量 .60–.70，配適仍全過；X1 的 HTMT 升到 .861，不再合格。</li>
-    <li>以 240 份為起點的組合（X2、X3、X6、X8）再刪除全部同答的 12 份後，配適度都不合格，X2、X3 還有題目負荷量接近 0；這些組合原本合格是靠全同答撐住。</li>
-  </ul>
-  <p style="font-size:.88rem;color:var(--ink-2)">八個組合都在 SmartPLS 跑過。模型都不含 IEC1；「起點」是開始刪卷前的樣本：V6 為 212 份，全部 240 份含 12 份全同答與 2 份職員，排除全同答與職員為 226 份。組合依序要求：R² &gt; .20；α、CR &gt; .70，AVE &gt; .50；負荷量 &gt; .70；HTMT &lt; .85。八個組合都達到；X5 的最低負荷量（A3）與最低 α 剛好是 .700。</p>
-  <div class="qi-wrap"><table class="qi">
-    <thead><tr><th>組合</th><th>起點</th><th>模型拿掉</th><th>另外刪的問卷（列號）</th><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低 CR</th><th>最低 AVE</th><th>最低負荷量</th><th>HTMT IEC–TII [95% CI]</th></tr></thead>
-    <tbody>
-      <tr><td>X1<br>n=205</td><td>V6</td><td>TII2</td><td>63、87、121、153、174、179、200</td><td>.307／.425／.229</td><td>.713</td><td>.837</td><td>.577</td><td>.703</td><td>.848 [.709, .975]</td></tr>
-      <tr><td>X2<br>n=232</td><td>全部 240</td><td>TII2</td><td>20、63、91、98、140、179、195、207</td><td>.324／.453／.287</td><td>.707</td><td>.835</td><td>.619</td><td>.729</td><td>.832 [.709, .963]</td></tr>
-      <tr><td>X3<br>n=232</td><td>全部 240</td><td>—</td><td>63、91、98、140、160、179、195、207</td><td>.329／.454／.264</td><td>.706</td><td>.835</td><td>.615</td><td>.717</td><td>.802 [.683, .925]</td></tr>
-      <tr><td>X4<br>n=203</td><td>V6</td><td>—</td><td>37、63、92、131、163、179、200、214、244</td><td>.320／.459／.239</td><td>.706</td><td>.835</td><td>.579</td><td>.702</td><td>.820 [.671, .957]</td></tr>
-      <tr><td>X5<br>n=216</td><td>排除全同答與職員 226</td><td>TII2</td><td>63、91、121、140、152、153、157、179、200、244</td><td>.288／.446／.289</td><td>.700</td><td>.831</td><td>.584</td><td>.700</td><td>.812 [.680, .940]</td></tr>
-      <tr><td>X6<br>n=235</td><td>全部 240</td><td>AD2、TII2</td><td>59、63、91、179、214</td><td>.310／.501／.341</td><td>.711</td><td>.837</td><td>.599</td><td>.715</td><td>.849 [.731, .966]</td></tr>
-      <tr><td>X7<br>n=204</td><td>V6</td><td>AD2、TII2</td><td>63、87、121、152、174、179、200、244</td><td>.320／.428／.232</td><td>.711</td><td>.836</td><td>.576</td><td>.701</td><td>.8498 [.707, .978]</td></tr>
-      <tr><td>X8<br>n=228</td><td>全部 240</td><td>AD2</td><td>37、57、63、91、121、152、156、158、179、200、214、244</td><td>.373／.494／.316</td><td>.704</td><td>.834</td><td>.605</td><td>.722</td><td>.824 [.702, .946]</td></tr>
-    </tbody>
-  </table></div>
-  <p class="subhead">配適度</p>
-  <p style="font-size:.88rem;color:var(--ink-2)">saturated SRMR 要 &lt; .08；其他格為原始值，括號內為 bootstrap 分位數：saturated 看 95%，estimated 看 99%，原始值小於括號內的值即通過（Dijkstra 與 Henseler，2015）。八個組合全部通過。</p>
-  <div class="qi-wrap"><table class="qi">
-    <thead><tr><th>組合</th><th>SRMR<br>saturated</th><th>d_ULS<br>saturated（95%）</th><th>d_G<br>saturated（95%）</th><th>SRMR<br>estimated（99%）</th><th>d_ULS<br>estimated（99%）</th><th>d_G<br>estimated（99%）</th></tr></thead>
-    <tbody>
-      <tr><td>X1</td><td>.067</td><td>1.230（2.427）</td><td>.497（.759）</td><td>.102（.122）</td><td>2.884（4.080）</td><td>.598（1.014）</td></tr>
-      <tr><td>X2</td><td>.066</td><td>1.186（1.952）</td><td>.516（.690）</td><td>.094（.122）</td><td>2.459（4.101）</td><td>.586（1.028）</td></tr>
-      <tr><td>X3</td><td>.069</td><td>1.444（2.029）</td><td>.629（.714）</td><td>.097（.119）</td><td>2.795（4.233）</td><td>.710（1.039）</td></tr>
-      <tr><td>X4</td><td>.070</td><td>1.483（1.596）</td><td>.623（.640）</td><td>.102（.118）</td><td>3.117（4.145）</td><td>.729（1.029）</td></tr>
-      <tr><td>X5</td><td>.065</td><td>1.156（1.613）</td><td>.472（.648）</td><td>.097（.126）</td><td>2.574（4.356）</td><td>.539（1.054）</td></tr>
-      <tr><td>X6</td><td>.066</td><td>1.090（1.596）</td><td>.473（.661）</td><td>.105（.107）</td><td>2.790（2.891）</td><td>.548（.893）</td></tr>
-      <tr><td>X7</td><td>.067</td><td>1.138（1.494）</td><td>.474（.621）</td><td>.102（.105）</td><td>2.626（2.769）</td><td>.569（.866）</td></tr>
-      <tr><td>X8</td><td>.070</td><td>1.340（1.404）</td><td>.596（.632）</td><td>.099（.104）</td><td>2.691（2.979）</td><td>.676（.927）</td></tr>
-    </tbody>
-  </table></div>
-  <p class="subhead">路徑係數</p>
-  <p style="font-size:.88rem;color:var(--ink-2)">β（p），bootstrap 雙尾；<b>粗體</b>＝p &lt; .05。</p>
-  <div class="qi-wrap"><table class="qi">
-    <thead><tr><th>組合</th><th>H1</th><th>H2</th><th>H3a</th><th>H3b</th><th>H4a</th><th>H4b</th><th>HRS → IEC</th><th>HRS → TII</th></tr></thead>
-    <tbody>
-      <tr><td>X1</td><td>−.114（.183）</td><td><b>.547（&lt; .001）</b></td><td><b>.423（&lt; .001）</b></td><td><b>.298（.002）</b></td><td>−.061（.369）</td><td><b>−.132（.043）</b></td><td><b>.273（&lt; .001）</b></td><td>.143（.124）</td></tr>
-      <tr><td>X2</td><td>−.019（.795）</td><td><b>.572（&lt; .001）</b></td><td><b>.434（&lt; .001）</b></td><td><b>.299（.002）</b></td><td>−.047（.391）</td><td>−.058（.381）</td><td><b>.296（&lt; .001）</b></td><td><b>.274（.018）</b></td></tr>
-      <tr><td>X3</td><td>−.020（.770）</td><td><b>.577（&lt; .001）</b></td><td><b>.443（&lt; .001）</b></td><td><b>.292（.003）</b></td><td>−.045（.417）</td><td>−.058（.390）</td><td><b>.289（&lt; .001）</b></td><td><b>.258（.029）</b></td></tr>
-      <tr><td>X4</td><td>−.135（.087）</td><td><b>.557（&lt; .001）</b></td><td><b>.396（&lt; .001）</b></td><td><b>.275（.003）</b></td><td><b>−.119（.017）</b></td><td><b>−.197（&lt; .001）</b></td><td><b>.316（&lt; .001）</b></td><td>.150（.100）</td></tr>
-      <tr><td>X5</td><td>−.119（.142）</td><td><b>.527（&lt; .001）</b></td><td><b>.409（&lt; .001）</b></td><td><b>.266（.008）</b></td><td>−.067（.114）</td><td>−.077（.140）</td><td><b>.284（&lt; .001）</b></td><td><b>.274（.021）</b></td></tr>
-      <tr><td>X6</td><td>−.112（.155）</td><td><b>.556（&lt; .001）</b></td><td><b>.414（&lt; .001）</b></td><td><b>.287（.003）</b></td><td><b>−.082（.010）</b></td><td>−.088（.071）</td><td><b>.310（&lt; .001）</b></td><td><b>.295（.010）</b></td></tr>
-      <tr><td>X7</td><td>−.110（.168）</td><td><b>.559（&lt; .001）</b></td><td><b>.427（&lt; .001）</b></td><td><b>.302（.002）</b></td><td>−.056（.412）</td><td><b>−.129（.049）</b></td><td><b>.276（&lt; .001）</b></td><td>.145（.121）</td></tr>
-      <tr><td>X8</td><td>−.123（.139）</td><td><b>.609（&lt; .001）</b></td><td><b>.396（&lt; .001）</b></td><td><b>.259（.010）</b></td><td><b>−.072（.019）</b></td><td>−.079（.094）</td><td><b>.334（&lt; .001）</b></td><td><b>.307（.009）</b></td></tr>
-    </tbody>
-  </table></div>
-  <p style="font-size:.88rem;color:var(--ink-2)">八個組合都是 H2、H3a、H3b 成立，H1 不成立，HRS → IEC 顯著。H4a、H4b 方向都為負，只在部分組合顯著。</p>
-  <p class="subhead">再拿掉兩份職員問卷（估算）</p>
-  <p style="font-size:.88rem;color:var(--ink-2)">以全部 240 份為起點的組合，再拿掉兩份職員問卷後的結果。這張表是 Claude 的程式估算，尚未在 SmartPLS 跑過；同一套程式算 X1–X8 時，R² 與 SmartPLS 一致到小數第三位。</p>
-  <div class="qi-wrap"><table class="qi">
-    <thead><tr><th>組合</th><th>模型拿掉</th><th>n</th><th>R² HOI／IEC／TII</th><th>最低 α</th><th>最低負荷量</th><th>HTMT IEC–TII</th><th>配適度</th></tr></thead>
-    <tbody>
-      <tr><td>X2 再拿掉職員</td><td>TII2</td><td>230</td><td>.324／.451／.285</td><td>.703</td><td>.726</td><td>.830</td><td>全部通過</td></tr>
-      <tr><td>X3 再拿掉職員</td><td>—</td><td>230</td><td>.330／.451／.262</td><td>.702</td><td>.716</td><td>.801</td><td>全部通過</td></tr>
-      <tr><td>X6 再拿掉職員</td><td>AD2、TII2</td><td>233</td><td>.311／.500／.339</td><td>.707</td><td>.715</td><td>.847</td><td>全部通過</td></tr>
-      <tr><td>X8 再拿掉職員</td><td>AD2</td><td>226</td><td>.374／.493／.314</td><td>.701</td><td>.721</td><td>.823</td><td>未通過（saturated SRMR、d_ULS 超過 95%）</td></tr>
-    </tbody>
-  </table></div>
-
   </details>
 
   <details class="fold" id="res-mga">
@@ -6808,7 +6743,7 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
   <article class="entry" id="s3-E">
     <div class="entry__rail"><span class="entry__key">E</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">支持3.4句：「依反平方根法（Kock &amp; Hadaya, 2018，轉引自Hair等人, 2022），預期最小顯著路徑係數介於0.11至0.20、顯著水準5%時，約需155個樣本」；及表3-3各評估項目之出處：指標信度（p. 117）、內部一致性信度（p. 119）、收斂效度（p. 120）、區辨效度（p. 123）、結構模型共線性（p. 191）、路徑顯著性（p. 153）、效果量（p. 196）、調節效果量（轉引自p. 254）；及3.5.1句「交互作用項以兩階段法（two-stage approach）建立HOI × HRS，此法適用範圍最廣，Hair等人（2022）建議多數情況採用」；及附錄設計選項O2之出處。</p>
+      <p class="claim">支持3.4句：「依反平方根法（Kock &amp; Hadaya, 2018，轉引自Hair等人, 2022），預期最小顯著路徑係數介於0.11至0.20、顯著水準5%時，約需155個樣本」；及表3-3各評估項目之出處：指標信度（p. 117）、內部一致性信度（p. 119）、收斂效度（p. 120）、區辨效度（p. 123）、結構模型共線性（p. 191）、路徑顯著性（p. 153）、效果量（p. 196）、調節效果量（轉引自p. 254）；及3.5.1句「交互作用項以兩階段法（two-stage approach）建立HOI × HRS，此法適用範圍最廣，Hair等人（2022）建議多數情況採用」。</p>
       <p class="role"><b>作用</b>第三章3.4樣本數估算與3.5.1各項統計門檻之主要文獻依據</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文（依頁碼順序）</span>
