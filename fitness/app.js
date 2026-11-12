@@ -44,6 +44,13 @@ function normalize(d) {
   if (d.tabata && typeof d.tabata === 'object') s.tabata = { ...s.tabata, ...d.tabata };
   if (!Array.isArray(s.tabata.moves)) s.tabata.moves = clone(DEFAULT_TABATA.moves);
   if (Array.isArray(d.exercises) && d.exercises.length) s.exercises = d.exercises;
+  /* 舊資料沒有「詳細姿勢」：內建動作補上預設內容，自訂動作補空清單 */
+  s.exercises.forEach(e => {
+    if (!Array.isArray(e.details)) {
+      const def = DEFAULT_EXERCISES.find(x => x.id === e.id);
+      e.details = def ? clone(def.details) : [];
+    }
+  });
   if (d.plans && d.plans.A && d.plans.B && Array.isArray(d.plans.A.items) && Array.isArray(d.plans.B.items)) s.plans = d.plans;
   if (Array.isArray(d.sessions)) s.sessions = d.sessions.filter(x => x && Array.isArray(x.items) && typeof x.date === 'string');
   if (d.active && Array.isArray(d.active.items) && d.active.items.length) s.active = d.active;
@@ -247,7 +254,7 @@ VIEWS.workout = () => {
   const a = state.active;
   const i = a.idx;
   const it = a.items[i];
-  const ex = exById(it.exId) || { how: '', mistakes: '' };
+  const ex = exById(it.exId) || { how: '', mistakes: '', details: [] };
   const prev = lastItem(it.exId);
   const hint = progressHint(it.exId, it.band, it.max);
   const isLast = i === a.items.length - 1;
@@ -265,6 +272,10 @@ VIEWS.workout = () => {
         <ul>${PROGRESS_WAYS.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
       <h3>做法</h3><p class="how">${esc(ex.how)}</p>
       <h3>容易犯的錯</h3><p class="mistakes">${esc(ex.mistakes)}</p>
+      ${ex.details.length ? `<details class="more" ${state.settings.showDetails ? 'open' : ''}>
+        <summary>詳細姿勢</summary>
+        <dl>${ex.details.map(d => `<dt>${esc(d.label)}</dt><dd>${esc(d.text)}</dd>`).join('')}</dl>
+      </details>` : ''}
       ${prev ? `<p class="muted prev">上次（${fmtDate(prev.session.date)}）：${prev.item.sets.filter(s => s.done).map(s => s.reps).join('、')} 下</p>` : ''}
     </section>
     <section class="sets">
@@ -612,6 +623,7 @@ VIEWS.settings = () => {
         <label class="field"><span>名稱</span><input type="text" data-path="exercises.${i}.name" data-keep="1" value="${esc(e.name)}"></label>
         <label class="field"><span>做法（不超過 3 行）</span><textarea rows="4" data-path="exercises.${i}.how">${esc(e.how)}</textarea></label>
         <label class="field"><span>容易犯的錯</span><textarea rows="3" data-path="exercises.${i}.mistakes">${esc(e.mistakes)}</textarea></label>
+        <label class="field"><span>詳細姿勢（一行一項，格式是「標題：內容」）</span><textarea rows="10" data-path="exercises.${i}.details" data-type="details">${esc(e.details.map(d => d.label + '：' + d.text).join('\n'))}</textarea></label>
         <button type="button" class="btn small danger-text" data-act="exDel" data-i="${i}">刪除這個動作</button>
       </details>`).join('')}
       <button type="button" class="btn" data-act="exAdd">＋ 新增自訂動作</button>
@@ -782,7 +794,7 @@ const actions = {
     save(); render();
   },
   exAdd: () => {
-    state.exercises.push({ id: 'ex' + Date.now(), name: '新動作', how: '', mistakes: '' });
+    state.exercises.push({ id: 'ex' + Date.now(), name: '新動作', how: '', mistakes: '', details: [] });
     save(); render();
     const all = document.querySelectorAll('.exedit');
     const last = all[all.length - 1];
@@ -830,6 +842,14 @@ function showTip(el) {
 document.addEventListener('focusin', e => { if (e.target.matches && e.target.matches('[data-tip]')) showTip(e.target); });
 document.addEventListener('pointerover', e => { if (e.pointerType === 'mouse' && e.target.matches && e.target.matches('[data-tip]')) showTip(e.target); });
 
+/* 記住「詳細姿勢」要展開還是收起來（toggle 事件不會往上傳，所以用捕獲階段） */
+document.addEventListener('toggle', e => {
+  if (e.target.matches && e.target.matches('details.more') && state.settings.showDetails !== e.target.open) {
+    state.settings.showDetails = e.target.open;
+    save();
+  }
+}, true);
+
 /* ---------- 輸入欄位 ---------- */
 document.addEventListener('input', e => {
   const el = e.target;
@@ -867,6 +887,10 @@ document.addEventListener('change', e => {
     }
   } else if (type === 'bool') v = el.checked;
   else if (type === 'lines') v = el.value.split('\n').map(s => s.trim()).filter(Boolean);
+  else if (type === 'details') v = el.value.split('\n').map(s => s.trim()).filter(Boolean).map(s => {
+    const k = s.search(/[：:]/);
+    return k > 0 ? { label: s.slice(0, k).trim(), text: s.slice(k + 1).trim() } : { label: '補充', text: s };
+  });
   else {
     v = el.value.trim();
     if (!v && el.dataset.keep) { el.value = getPath(path); return; }
