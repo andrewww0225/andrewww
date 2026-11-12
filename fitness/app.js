@@ -27,7 +27,7 @@ const rirLabel = r => r === 3 ? '3 以上' : String(r);
 /* ---------- 狀態 ---------- */
 function freshState() {
   return {
-    version: 1,
+    version: 2,
     settings: clone(DEFAULT_SETTINGS),
     tabata: clone(DEFAULT_TABATA),
     exercises: clone(DEFAULT_EXERCISES),
@@ -42,6 +42,11 @@ function normalize(d) {
   if (!d || typeof d !== 'object') return s;
   if (d.settings && typeof d.settings === 'object') s.settings = { ...s.settings, ...d.settings };
   if (d.tabata && typeof d.tabata === 'object') s.tabata = { ...s.tabata, ...d.tabata };
+  /* 第 1 版的資料：Tabata 還是舊預設（2 輪、輪間休息 60 秒）就換成影片的 4 輪、30 秒 */
+  if ((d.version || 1) < 2 && s.tabata.rounds === 2 && s.tabata.roundRest === 60) {
+    s.tabata.rounds = DEFAULT_TABATA.rounds;
+    s.tabata.roundRest = DEFAULT_TABATA.roundRest;
+  }
   if (!Array.isArray(s.tabata.moves) || JSON.stringify(s.tabata.moves) === JSON.stringify(OLD_TABATA_MOVES)) s.tabata.moves = clone(DEFAULT_TABATA.moves);
   if (Array.isArray(d.exercises) && d.exercises.length) s.exercises = d.exercises;
   /* 舊資料沒有「詳細姿勢」：內建動作補上預設內容，自訂動作補空清單 */
@@ -487,7 +492,7 @@ VIEWS.tabata = () => {
     </section>
     <section class="card">
       <h2>影片範本</h2>
-      <p class="sub">照 ZEROX FITNESS COACH 的 Tabata 影片。按「套用」會把下面的動作清單換成那一組。</p>
+      <p class="sub">照 ZEROX FITNESS COACH 的 Tabata 影片。影片是做 4 輪，輪間休息越短越好。按「套用」會把下面的動作清單換成那一組。</p>
       ${TABATA_PRESETS.map(p => `<div class="preset">
         <div class="preset-name">${esc(p.name)}<span>${p.moves.length ? p.moves.length + ' 個動作' : '動作清單還沒填'}</span></div>
         <div class="btn-row">
@@ -500,7 +505,7 @@ VIEWS.tabata = () => {
       <h2>設定</h2>
       <div class="grid2">
         ${numField('輪數', 'tabata.rounds', 1, 20, t.rounds)}
-        ${numField('輪間休息（秒）', 'tabata.roundRest', 0, 600, t.roundRest)}
+        ${numField('輪間休息（秒，越短越好）', 'tabata.roundRest', 0, 600, t.roundRest)}
         ${numField('動作（秒）', 'tabata.work', 5, 120, t.work)}
         ${numField('休息（秒）', 'tabata.rest', 0, 120, t.rest)}
         ${numField('每輪循環數', 'tabata.cycles', 1, 20, t.cycles)}

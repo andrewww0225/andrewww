@@ -87,9 +87,9 @@ while ($l.IsListening) {
 
 ```js
 {
-  version: 1,
+  version: 2,
   settings: { restSec: 75, sound: true, vibrate: true, theme: "auto", showDetails: true },
-  tabata: { work: 20, rest: 10, cycles: 8, rounds: 2, roundRest: 60, moves: ["深蹲 Squat", "…"] },
+  tabata: { work: 20, rest: 10, cycles: 8, rounds: 4, roundRest: 30, moves: ["深蹲 Squat", "…"] },
   exercises: [ { id: "lateral", name: "側平舉", how: "…", mistakes: "…",
                 details: [ { label: "腳的位置", text: "…" } ] } ],   // 詳細姿勢
   plans: {

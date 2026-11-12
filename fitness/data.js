@@ -117,8 +117,8 @@ const DEFAULT_TABATA = {
   work: 20,
   rest: 10,
   cycles: 8,
-  rounds: 2,
-  roundRest: 60,
+  rounds: 4,
+  roundRest: 30,
   moves: [
     '深蹲 Squat',
     '跪姿伏地挺身 Kneeling Push up',
@@ -134,7 +134,7 @@ const DEFAULT_TABATA = {
 /* 第一版的預設動作；手機上如果還存著這一組，載入時會換成新的預設 */
 const OLD_TABATA_MOVES = ['開合跳', '深蹲', '登山者', '原地高抬腿'];
 
-/* Tabata 範本：照 ZEROX FITNESS COACH 的影片。moves 留空代表動作清單還沒填，只顯示影片連結 */
+/* Tabata 範本：照 ZEROX FITNESS COACH 的影片。影片是做 4 輪，輪間休息越短越好 */
 const TABATA_PRESETS = [
   {
     id: 'beginner',
@@ -146,7 +146,16 @@ const TABATA_PRESETS = [
     id: 'intermediate',
     name: '進階（全身）',
     video: 'https://youtu.be/zCPaKDSGIDk',
-    moves: []
+    moves: [
+      '窄距深蹲 Narrow Stance Squat',
+      '棒式轉伏地挺身 Plank to Push up',
+      '踢臀跑 Butt Kicker',
+      '腳踏車捲腹 Bicycle Crunches',
+      '側弓箭步 Side Lunges',
+      '仰臥摸腳尖 Toe Touches',
+      '髖伸展 Hip Extension',
+      '俄羅斯轉體 Russian Twist'
+    ]
   }
 ];
 
