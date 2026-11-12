@@ -42,7 +42,7 @@ function normalize(d) {
   if (!d || typeof d !== 'object') return s;
   if (d.settings && typeof d.settings === 'object') s.settings = { ...s.settings, ...d.settings };
   if (d.tabata && typeof d.tabata === 'object') s.tabata = { ...s.tabata, ...d.tabata };
-  if (!Array.isArray(s.tabata.moves)) s.tabata.moves = clone(DEFAULT_TABATA.moves);
+  if (!Array.isArray(s.tabata.moves) || JSON.stringify(s.tabata.moves) === JSON.stringify(OLD_TABATA_MOVES)) s.tabata.moves = clone(DEFAULT_TABATA.moves);
   if (Array.isArray(d.exercises) && d.exercises.length) s.exercises = d.exercises;
   /* 舊資料沒有「詳細姿勢」：內建動作補上預設內容，自訂動作補空清單 */
   s.exercises.forEach(e => {
@@ -486,6 +486,17 @@ VIEWS.tabata = () => {
       <button type="button" class="btn primary big" data-act="tbStart">開始</button>
     </section>
     <section class="card">
+      <h2>影片範本</h2>
+      <p class="sub">照 ZEROX FITNESS COACH 的 Tabata 影片。按「套用」會把下面的動作清單換成那一組。</p>
+      ${TABATA_PRESETS.map(p => `<div class="preset">
+        <div class="preset-name">${esc(p.name)}<span>${p.moves.length ? p.moves.length + ' 個動作' : '動作清單還沒填'}</span></div>
+        <div class="btn-row">
+          ${p.moves.length ? `<button type="button" class="btn small" data-act="tbPreset" data-id="${p.id}">套用</button>` : ''}
+          <a class="btn small" href="${esc(p.video)}" target="_blank" rel="noopener noreferrer">看影片</a>
+        </div>
+      </div>`).join('')}
+    </section>
+    <section class="card">
       <h2>設定</h2>
       <div class="grid2">
         ${numField('輪數', 'tabata.rounds', 1, 20, t.rounds)}
@@ -756,6 +767,13 @@ const actions = {
   restSkip: () => restStop(),
 
   tbStart: () => tabataStart(),
+  tbPreset: el => {
+    const p = TABATA_PRESETS.find(x => x.id === el.dataset.id);
+    if (!p || !p.moves.length) return;
+    state.tabata.moves = clone(p.moves);
+    state.tabata.cycles = p.moves.length;
+    save(); render(); toast(`已套用「${p.name}」的動作`);
+  },
   tbPause: () => {
     if (!tb.running) return;
     if (tb.paused) {

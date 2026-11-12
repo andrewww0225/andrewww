@@ -257,6 +257,10 @@ body[data-route="workout"] #tabs { display: none; }
 .tb-time { font-size: 120px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
 .tb-move { font-size: 22px; font-weight: 600; min-height: 36px; margin-bottom: 20px; }
 
+.preset { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; }
+.preset-name { font-weight: 600; }
+.preset-name span { display: block; font-size: 13px; font-weight: 400; color: var(--muted); }
+
 /* 圖表 */
 .chart { display: block; width: 100%; height: auto; }
 .c-grid { stroke: var(--grid); stroke-width: 1; }

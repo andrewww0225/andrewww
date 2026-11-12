@@ -119,8 +119,36 @@ const DEFAULT_TABATA = {
   cycles: 8,
   rounds: 2,
   roundRest: 60,
-  moves: ['開合跳', '深蹲', '登山者', '原地高抬腿']
+  moves: [
+    '深蹲 Squat',
+    '跪姿伏地挺身 Kneeling Push up',
+    '動態弓箭步 Dynamic Lunges',
+    '原地高抬腿 High Knee',
+    '蜘蛛爬 Spider Crawl',
+    '抬腿 Leg Lifts',
+    '棒式開合跳 Plank Jack',
+    '屈膝捲腹 Knee Crunches'
+  ]
 };
+
+/* 第一版的預設動作；手機上如果還存著這一組，載入時會換成新的預設 */
+const OLD_TABATA_MOVES = ['開合跳', '深蹲', '登山者', '原地高抬腿'];
+
+/* Tabata 範本：照 ZEROX FITNESS COACH 的影片。moves 留空代表動作清單還沒填，只顯示影片連結 */
+const TABATA_PRESETS = [
+  {
+    id: 'beginner',
+    name: '初階（全身）',
+    video: 'https://youtu.be/UVYn8FmMbPc',
+    moves: DEFAULT_TABATA.moves
+  },
+  {
+    id: 'intermediate',
+    name: '進階（全身）',
+    video: 'https://youtu.be/zCPaKDSGIDk',
+    moves: []
+  }
+];
 
 const CHECKLIST = [
   '彈力帶整條看過、拉一下，沒有裂縫或缺口',
