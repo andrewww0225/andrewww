@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>彈力帶訓練</title>
+<meta name="description" content="在家用彈力帶練上半身的個人訓練指引與紀錄">
+<meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="彈力帶訓練">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="view"></main>
+
+<div id="restbar" hidden>
+  <div class="rb-fill"></div>
+  <div class="rb-main"><span class="rb-label">休息</span><span class="rb-time">0:00</span></div>
+  <div class="rb-btns">
+    <button type="button" data-act="restAdj" data-d="-15">−15 秒</button>
+    <button type="button" data-act="restAdj" data-d="15">＋15 秒</button>
+    <button type="button" data-act="restSkip">跳過</button>
+  </div>
+</div>
+
+<nav id="tabs" aria-label="主選單">
+  <a href="#/" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>首頁</a>
+  <a href="#/tabata" data-tab="tabata"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Tabata</a>
+  <a href="#/history" data-tab="history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg>歷史</a>
+  <a href="#/progress" data-tab="progress"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4M4 20h16M7 15l4-5 3 3 5-7"/></svg>進度</a>
+  <a href="#/settings" data-tab="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>設定</a>
+</nav>
+
+<div id="modal" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="data.js"></script>
+<script src="device.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

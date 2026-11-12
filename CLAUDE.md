@@ -4,6 +4,7 @@ GitHub Pages：https://andrewww0225.github.io/andrewww/（repo andrewww0225/andr
 
 - 根目錄 `index.html`、`frag/`、`evidence-table_backup.html` 是論文證據對照表，由 `D:/學校/專題/查證工具/sync.pl` 從備份同步過來，不要在這裡直接改。
 - `quiz/` 是測驗網站「土豆集散地」，下面都是它的說明。
+- `fitness/` 是彈力帶訓練 app（純靜態 PWA，資料存 localStorage），說明在 `fitness/README.md`；新增或改名檔案時要同步改 `fitness/sw.js` 的 `ASSETS` 並把 `CACHE` 版本加 1。
 
 ## quiz/ 結構
 
