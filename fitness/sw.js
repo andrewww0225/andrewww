@@ -1,5 +1,5 @@
 /* 離線快取：安裝時把所有檔案存起來；之後先回快取，同時在背景抓新版，下次開啟就會更新。 */
-const CACHE = 'bandfit-v1';
+const CACHE = 'bandfit-v4';
 const ASSETS = [
   './',
   'index.html',

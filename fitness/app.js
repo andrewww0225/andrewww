@@ -27,7 +27,7 @@ const rirLabel = r => r === 3 ? '3 以上' : String(r);
 /* ---------- 狀態 ---------- */
 function freshState() {
   return {
-    version: 1,
+    version: 2,
     settings: clone(DEFAULT_SETTINGS),
     tabata: clone(DEFAULT_TABATA),
     exercises: clone(DEFAULT_EXERCISES),
@@ -42,8 +42,20 @@ function normalize(d) {
   if (!d || typeof d !== 'object') return s;
   if (d.settings && typeof d.settings === 'object') s.settings = { ...s.settings, ...d.settings };
   if (d.tabata && typeof d.tabata === 'object') s.tabata = { ...s.tabata, ...d.tabata };
-  if (!Array.isArray(s.tabata.moves)) s.tabata.moves = clone(DEFAULT_TABATA.moves);
+  /* 第 1 版的資料：Tabata 還是舊預設（2 輪、輪間休息 60 秒）就換成影片的 4 輪、30 秒 */
+  if ((d.version || 1) < 2 && s.tabata.rounds === 2 && s.tabata.roundRest === 60) {
+    s.tabata.rounds = DEFAULT_TABATA.rounds;
+    s.tabata.roundRest = DEFAULT_TABATA.roundRest;
+  }
+  if (!Array.isArray(s.tabata.moves) || JSON.stringify(s.tabata.moves) === JSON.stringify(OLD_TABATA_MOVES)) s.tabata.moves = clone(DEFAULT_TABATA.moves);
   if (Array.isArray(d.exercises) && d.exercises.length) s.exercises = d.exercises;
+  /* 舊資料沒有「詳細姿勢」：內建動作補上預設內容，自訂動作補空清單 */
+  s.exercises.forEach(e => {
+    if (!Array.isArray(e.details)) {
+      const def = DEFAULT_EXERCISES.find(x => x.id === e.id);
+      e.details = def ? clone(def.details) : [];
+    }
+  });
   if (d.plans && d.plans.A && d.plans.B && Array.isArray(d.plans.A.items) && Array.isArray(d.plans.B.items)) s.plans = d.plans;
   if (Array.isArray(d.sessions)) s.sessions = d.sessions.filter(x => x && Array.isArray(x.items) && typeof x.date === 'string');
   if (d.active && Array.isArray(d.active.items) && d.active.items.length) s.active = d.active;
@@ -247,7 +259,7 @@ VIEWS.workout = () => {
   const a = state.active;
   const i = a.idx;
   const it = a.items[i];
-  const ex = exById(it.exId) || { how: '', mistakes: '' };
+  const ex = exById(it.exId) || { how: '', mistakes: '', details: [] };
   const prev = lastItem(it.exId);
   const hint = progressHint(it.exId, it.band, it.max);
   const isLast = i === a.items.length - 1;
@@ -265,6 +277,10 @@ VIEWS.workout = () => {
         <ul>${PROGRESS_WAYS.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
       <h3>做法</h3><p class="how">${esc(ex.how)}</p>
       <h3>容易犯的錯</h3><p class="mistakes">${esc(ex.mistakes)}</p>
+      ${ex.details.length ? `<details class="more" ${state.settings.showDetails ? 'open' : ''}>
+        <summary>詳細姿勢</summary>
+        <dl>${ex.details.map(d => `<dt>${esc(d.label)}</dt><dd>${esc(d.text)}</dd>`).join('')}</dl>
+      </details>` : ''}
       ${prev ? `<p class="muted prev">上次（${fmtDate(prev.session.date)}）：${prev.item.sets.filter(s => s.done).map(s => s.reps).join('、')} 下</p>` : ''}
     </section>
     <section class="sets">
@@ -475,10 +491,21 @@ VIEWS.tabata = () => {
       <button type="button" class="btn primary big" data-act="tbStart">開始</button>
     </section>
     <section class="card">
+      <h2>影片範本</h2>
+      <p class="sub">照 ZEROX FITNESS COACH 的 Tabata 影片。影片是做 4 輪，輪間休息越短越好。按「套用」會把下面的動作清單換成那一組。</p>
+      ${TABATA_PRESETS.map(p => `<div class="preset">
+        <div class="preset-name">${esc(p.name)}<span>${p.moves.length ? p.moves.length + ' 個動作' : '動作清單還沒填'}</span></div>
+        <div class="btn-row">
+          ${p.moves.length ? `<button type="button" class="btn small" data-act="tbPreset" data-id="${p.id}">套用</button>` : ''}
+          <a class="btn small" href="${esc(p.video)}" target="_blank" rel="noopener noreferrer">看影片</a>
+        </div>
+      </div>`).join('')}
+    </section>
+    <section class="card">
       <h2>設定</h2>
       <div class="grid2">
         ${numField('輪數', 'tabata.rounds', 1, 20, t.rounds)}
-        ${numField('輪間休息（秒）', 'tabata.roundRest', 0, 600, t.roundRest)}
+        ${numField('輪間休息（秒，越短越好）', 'tabata.roundRest', 0, 600, t.roundRest)}
         ${numField('動作（秒）', 'tabata.work', 5, 120, t.work)}
         ${numField('休息（秒）', 'tabata.rest', 0, 120, t.rest)}
         ${numField('每輪循環數', 'tabata.cycles', 1, 20, t.cycles)}
@@ -612,6 +639,7 @@ VIEWS.settings = () => {
         <label class="field"><span>名稱</span><input type="text" data-path="exercises.${i}.name" data-keep="1" value="${esc(e.name)}"></label>
         <label class="field"><span>做法（不超過 3 行）</span><textarea rows="4" data-path="exercises.${i}.how">${esc(e.how)}</textarea></label>
         <label class="field"><span>容易犯的錯</span><textarea rows="3" data-path="exercises.${i}.mistakes">${esc(e.mistakes)}</textarea></label>
+        <label class="field"><span>詳細姿勢（一行一項，格式是「標題：內容」）</span><textarea rows="10" data-path="exercises.${i}.details" data-type="details">${esc(e.details.map(d => d.label + '：' + d.text).join('\n'))}</textarea></label>
         <button type="button" class="btn small danger-text" data-act="exDel" data-i="${i}">刪除這個動作</button>
       </details>`).join('')}
       <button type="button" class="btn" data-act="exAdd">＋ 新增自訂動作</button>
@@ -744,6 +772,13 @@ const actions = {
   restSkip: () => restStop(),
 
   tbStart: () => tabataStart(),
+  tbPreset: el => {
+    const p = TABATA_PRESETS.find(x => x.id === el.dataset.id);
+    if (!p || !p.moves.length) return;
+    state.tabata.moves = clone(p.moves);
+    state.tabata.cycles = p.moves.length;
+    save(); render(); toast(`已套用「${p.name}」的動作`);
+  },
   tbPause: () => {
     if (!tb.running) return;
     if (tb.paused) {
@@ -782,7 +817,7 @@ const actions = {
     save(); render();
   },
   exAdd: () => {
-    state.exercises.push({ id: 'ex' + Date.now(), name: '新動作', how: '', mistakes: '' });
+    state.exercises.push({ id: 'ex' + Date.now(), name: '新動作', how: '', mistakes: '', details: [] });
     save(); render();
     const all = document.querySelectorAll('.exedit');
     const last = all[all.length - 1];
@@ -830,6 +865,14 @@ function showTip(el) {
 document.addEventListener('focusin', e => { if (e.target.matches && e.target.matches('[data-tip]')) showTip(e.target); });
 document.addEventListener('pointerover', e => { if (e.pointerType === 'mouse' && e.target.matches && e.target.matches('[data-tip]')) showTip(e.target); });
 
+/* 記住「詳細姿勢」要展開還是收起來（toggle 事件不會往上傳，所以用捕獲階段） */
+document.addEventListener('toggle', e => {
+  if (e.target.matches && e.target.matches('details.more') && state.settings.showDetails !== e.target.open) {
+    state.settings.showDetails = e.target.open;
+    save();
+  }
+}, true);
+
 /* ---------- 輸入欄位 ---------- */
 document.addEventListener('input', e => {
   const el = e.target;
@@ -867,6 +910,10 @@ document.addEventListener('change', e => {
     }
   } else if (type === 'bool') v = el.checked;
   else if (type === 'lines') v = el.value.split('\n').map(s => s.trim()).filter(Boolean);
+  else if (type === 'details') v = el.value.split('\n').map(s => s.trim()).filter(Boolean).map(s => {
+    const k = s.search(/[：:]/);
+    return k > 0 ? { label: s.slice(0, k).trim(), text: s.slice(k + 1).trim() } : { label: '補充', text: s };
+  });
   else {
     v = el.value.trim();
     if (!v && el.dataset.keep) { el.value = getPath(path); return; }
