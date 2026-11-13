@@ -5,6 +5,7 @@
 ## 功能
 
 - 首頁依最近一次的紀錄建議今天做訓練日 A 還是 B，可以手動切換。
+- 內建 24 個彈力帶動作（肩膀、背、胸、手臂、腿和臀、核心）。首頁選「自選」可以臨時勾幾個動作來做；訓練中也能臨時加動作。
 - 訓練畫面一次顯示一個動作：用哪條帶子、目標組數與次數、做法、容易犯的錯。每組可以打勾、填實際次數、選「還剩幾下餘力」。
 - 每次開始前會先跳出檢查清單。
 - 打勾後自動開始組間休息倒數，結束時有提示音和震動。
@@ -87,17 +88,18 @@ while ($l.IsListening) {
 
 ```js
 {
-  version: 2,
+  version: 3,
   settings: { restSec: 75, sound: true, vibrate: true, theme: "auto", showDetails: true },
   tabata: { work: 20, rest: 10, cycles: 8, rounds: 4, roundRest: 30, moves: ["深蹲 Squat", "…"] },
-  exercises: [ { id: "lateral", name: "側平舉", how: "…", mistakes: "…",
+  exercises: [ { id: "lateral", group: "肩膀", band: 5, sets: 3, min: 12, max: 20,   // 部位與建議值（自選訓練用）
+                name: "側平舉", how: "…", mistakes: "…",
                 details: [ { label: "腳的位置", text: "…" } ] } ],   // 詳細姿勢
   plans: {
     A: { title: "肩膀和上背", items: [ { exId: "lateral", band: 5, sets: 3, min: 12, max: 20 } ] },
     B: { title: "胸和肩", items: [ /* … */ ] }
   },
   sessions: [ {
-    id: "s1731400000000", date: "2026-11-12", startedAt: 1731400000000, endedAt: 1731401500000, plan: "A",
+    id: "s1731400000000", date: "2026-11-12", startedAt: 1731400000000, endedAt: 1731401500000, plan: "A",   // plan："A"、"B" 或 "F"（自選訓練）
     items: [ { exId: "lateral", name: "側平舉", band: 5, min: 12, max: 20, targetSets: 3,
                sets: [ { done: true, reps: 15, rir: 2 } ] } ]   // rir 是餘力：0、1、2、3（3 代表 3 以上）
   } ],
