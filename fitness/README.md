@@ -4,7 +4,7 @@
 
 ## 功能
 
-- 首頁依最近一次的紀錄建議今天做訓練日 A 還是 B，可以手動切換。
+- 訓練日有 A 到 F 六套（肩膀和上背、胸和肩、胸、背、手臂、腿和臀）。首頁會挑最久沒練的一套，再搭一套部位不重疊的，推薦像「A＋C」這樣的搭配；可以手動改成一套或別的兩套。
 - 內建 24 個彈力帶動作（肩膀、背、胸、手臂、腿和臀、核心）。首頁選「自選」可以臨時勾幾個動作來做；訓練中也能臨時加動作。
 - 訓練畫面一次顯示一個動作：用哪條帶子、目標組數與次數、做法、容易犯的錯。每組可以打勾、填實際次數、選「還剩幾下餘力」。
 - 首頁有「本週日程」（哪天練 A、B、Tabata、休息，照實際紀錄往下排）和建議訓練時間；日程可在設定頁改。
@@ -90,7 +90,7 @@ while ($l.IsListening) {
 
 ```js
 {
-  version: 3,
+  version: 4,
   settings: { restSec: 75, sound: true, vibrate: true, theme: "auto", showDetails: true,
               bandDays: [0, 2, 4], tabataDays: [1, 5], trainTime: "" },   // 每週日程：0＝星期一 … 6＝星期日
   tabata: { work: 20, rest: 10, cycles: 8, rounds: 4, roundRest: 30, moves: ["深蹲 Squat", "…"] },
@@ -99,11 +99,12 @@ while ($l.IsListening) {
                 details: [ { label: "腳的位置", text: "…" } ] } ],   // 詳細姿勢
   plans: {
     A: { title: "肩膀和上背", items: [ { exId: "lateral", band: 5, sets: 3, min: 12, max: 20 } ] },
-    B: { title: "胸和肩", items: [ /* … */ ] }
+    B: { title: "胸和肩", items: [ /* … */ ] },
+    C: { title: "胸", items: [ /* … */ ] }   // 字母就是訓練日代號，預設 A 到 F，可在設定頁新增刪除
   },
   routines: [ { id: "full", title: "全身", note: "…", items: [ /* 和 plans 的 items 同格式 */ ] } ],   // 其他菜單
   sessions: [ {
-    id: "s1731400000000", date: "2026-11-12", startedAt: 1731400000000, endedAt: 1731401500000, plan: "A",   // plan："A"、"B"、"F"（自選訓練）或 "M"（其他菜單，另有 title 記菜單名稱）
+    id: "s1731400000000", date: "2026-11-12", startedAt: 1731400000000, endedAt: 1731401500000, plan: "A",   // plan：訓練日字母，同一天做兩套就是 "AC"；"free"＝自選訓練；"menu"＝其他菜單（另有 title 記菜單名稱）
     items: [ { exId: "lateral", name: "側平舉", band: 5, min: 12, max: 20, targetSets: 3,
                sets: [ { done: true, reps: 15, rir: 2 } ] } ]   // rir 是餘力：0、1、2、3（3 代表 3 以上）
   } ],
