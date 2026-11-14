@@ -535,10 +535,44 @@ const DEFAULT_PLANS = {
       { exId: 'row', band: 10, sets: 3, min: 10, max: 15 },
       { exId: 'pullapart', band: 5, sets: 2, min: 15, max: 20 }
     ]
+  },
+  C: {
+    title: '胸',
+    items: [
+      { exId: 'chestpress', band: 10, sets: 3, min: 8, max: 15 },
+      { exId: 'pushup', band: 10, sets: 3, min: 6, max: 12 },
+      { exId: 'chestfly', band: 5, sets: 3, min: 12, max: 15 }
+    ]
+  },
+  D: {
+    title: '背',
+    items: [
+      { exId: 'row', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'pulldown', band: 5, sets: 3, min: 10, max: 15 },
+      { exId: 'bentrow', band: 10, sets: 2, min: 10, max: 15 },
+      { exId: 'shrug', band: 10, sets: 2, min: 12, max: 15 }
+    ]
+  },
+  E: {
+    title: '手臂',
+    items: [
+      { exId: 'curl', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'triext', band: 5, sets: 3, min: 10, max: 15 },
+      { exId: 'trikick', band: 5, sets: 2, min: 12, max: 15 }
+    ]
+  },
+  F: {
+    title: '腿和臀',
+    items: [
+      { exId: 'squat', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'deadlift', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'bridge', band: 10, sets: 3, min: 12, max: 20 },
+      { exId: 'calf', band: 10, sets: 2, min: 15, max: 20 }
+    ]
   }
 };
 
-/* 其他菜單：A、B 以外的組合，可在設定頁編輯。不影響 A、B 的交替順序 */
+/* 其他菜單：訓練日以外的現成組合，可在設定頁編輯。不影響訓練日的推薦順序 */
 const DEFAULT_ROUTINES = [
   {
     id: 'full',

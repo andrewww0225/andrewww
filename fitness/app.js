@@ -22,12 +22,15 @@ const mmss = sec => `${Math.floor(sec / 60)}:${pad(sec % 60)}`;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const weekStart = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
 const bandLabel = kg => (BANDS.find(b => b.kg === kg) || { label: kg + ' kg 帶子' }).label;
-/* 可以傳 'A' 這種代號，或整筆訓練紀錄（菜單要顯示名稱） */
+/* 訓練代號：'A'、'AC'（同一天做兩套）這種字母組合，或 'free'（自選）、'menu'（菜單）。
+   可以傳代號，或整筆訓練紀錄（菜單要顯示名稱） */
+const isLetters = p => typeof p === 'string' && p !== 'free' && p !== 'menu';
+const planKeys = () => Object.keys(state.plans).sort();
 const planLabel = s => {
   const p = typeof s === 'string' ? s : s.plan;
-  if (p === 'F') return '自選訓練';
-  if (p === 'M') return '菜單「' + ((s && s.title) || '未命名') + '」';
-  return '訓練日 ' + p;
+  if (p === 'free') return '自選訓練';
+  if (p === 'menu') return '菜單「' + ((s && s.title) || '未命名') + '」';
+  return '訓練日 ' + String(p).split('').join('＋');
 };
 const exPreset = ex => ({ exId: ex.id, band: ex.band, sets: ex.sets, min: ex.min, max: ex.max });
 const exMeta = ex => `${ex.band} kg · ${ex.sets} 組 × ${ex.min}–${ex.max} 下`;
@@ -36,7 +39,7 @@ const rirLabel = r => r === 3 ? '3 以上' : String(r);
 /* ---------- 狀態 ---------- */
 function freshState() {
   return {
-    version: 3,
+    version: 4,
     settings: clone(DEFAULT_SETTINGS),
     tabata: clone(DEFAULT_TABATA),
     exercises: clone(DEFAULT_EXERCISES),
@@ -78,9 +81,18 @@ function normalize(d) {
     Object.keys(GENERIC).forEach(k => { if (typeof e[k] !== 'number') e[k] = def ? def[k] : GENERIC[k]; });
   });
   if (Array.isArray(d.routines)) s.routines = d.routines.filter(r => r && Array.isArray(r.items));
-  if (d.plans && d.plans.A && d.plans.B && Array.isArray(d.plans.A.items) && Array.isArray(d.plans.B.items)) s.plans = d.plans;
+  if (d.plans && typeof d.plans === 'object' && Object.keys(d.plans).length && Object.values(d.plans).every(p => p && Array.isArray(p.items))) {
+    s.plans = d.plans;
+    /* 第 4 版加了訓練日 C 到 F：舊資料補進來一次 */
+    if ((d.version || 1) < 4) Object.keys(DEFAULT_PLANS).forEach(k => { if (!s.plans[k]) s.plans[k] = clone(DEFAULT_PLANS[k]); });
+  }
   if (Array.isArray(d.sessions)) s.sessions = d.sessions.filter(x => x && Array.isArray(x.items) && typeof x.date === 'string');
   if (d.active && Array.isArray(d.active.items) && d.active.items.length) s.active = d.active;
+  /* 第 4 版把自選和菜單的代號從 F、M 改成 free、menu，讓字母留給訓練日 */
+  if ((d.version || 1) < 4) [...s.sessions, s.active].forEach(x => {
+    if (x && x.plan === 'F') x.plan = 'free';
+    else if (x && x.plan === 'M') x.plan = 'menu';
+  });
   return s;
 }
 
@@ -108,23 +120,50 @@ function applySettings() {
 }
 
 /* ---------- 推薦與進階判斷 ---------- */
+/* 每個訓練日最近一次是哪天做的 */
+function lastDoneMap() {
+  const last = {};
+  sessionsAsc().forEach(s => { if (isLetters(s.plan)) s.plan.split('').forEach(k => { last[k] = s.date; }); });
+  return last;
+}
+
+/* 一套訓練日練到哪些部位 */
+function planFocus(k) {
+  const set = new Set();
+  state.plans[k].items.forEach(it => { const ex = exById(it.exId); if (ex) set.add(ex.group); });
+  return set;
+}
+
+/* 推薦搭配：先挑最久沒練的一套，再搭一套部位不重疊、也是最久沒練的 */
+function pickPair(last) {
+  const keys = planKeys().filter(k => state.plans[k].items.some(it => exById(it.exId)));
+  if (!keys.length) return [];
+  const age = k => last[k] || '';
+  const order = [...keys].sort((x, y) => age(x) < age(y) ? -1 : age(x) > age(y) ? 1 : x < y ? -1 : 1);
+  const main = order[0], f = planFocus(main);
+  const partner = order.slice(1).find(k => ![...planFocus(k)].some(g => f.has(g)));
+  return partner ? [main, partner].sort() : [main];
+}
+
+const pairLabel = ks => ks.join('＋');
+const pairTitle = ks => ks.map(k => state.plans[k].title).join(' ＋ ');
+
 function recommend() {
   const all = sessionsAsc();
   const last = all[all.length - 1];
   const today = ymd(new Date());
   const ws = weekStart(new Date());
   const weekCount = all.filter(s => parseYmd(s.date) >= ws).length;
-  if (!last) return { plan: 'A', note: '還沒有訓練紀錄，從訓練日 A 開始。', weekCount };
-  /* A、B 交替只看最近一次的 A 或 B；自選訓練不影響順序，但一樣算休息間隔 */
-  const lastAB = all.filter(s => s.plan === 'A' || s.plan === 'B').pop();
-  const plan = lastAB && lastAB.plan === 'A' ? 'B' : 'A';
+  const letters = pickPair(lastDoneMap());
+  const name = pairLabel(letters);
+  if (!last) return { letters, note: `還沒有訓練紀錄，從訓練日 ${name} 開始。`, weekCount };
   const gap = dayDiff(last.date, today);
   const lp = planLabel(last);
   let note;
-  if (gap <= 0) note = `今天已經練過${lp}了。下一次是訓練日 ${plan}，中間至少隔一天。`;
-  else if (gap === 1) note = `昨天剛練過${lp}，今天建議休息；明天再練訓練日 ${plan}。`;
-  else note = `上次是 ${fmtDate(last.date)}的${lp}，已經隔了 ${gap} 天，今天練訓練日 ${plan}。`;
-  return { plan, note, weekCount, rest: gap <= 1 };
+  if (gap <= 0) note = `今天已經練過${lp}了。下一次是訓練日 ${name}，中間至少隔一天。`;
+  else if (gap === 1) note = `昨天剛練過${lp}，今天建議休息；明天再練訓練日 ${name}。`;
+  else note = `上次是 ${fmtDate(last.date)}的${lp}，已經隔了 ${gap} 天，今天練訓練日 ${name}。`;
+  return { letters, note, weekCount, rest: gap <= 1 };
 }
 
 /* 所有組都做完、都到次數上限、餘力都在 2 下以內 */
@@ -213,27 +252,49 @@ function planMinutes(key) {
   return Math.max(5, Math.round(sec / 300) * 5);
 }
 
-/* 本週七天：已經練的照紀錄顯示；今天以後的彈力帶日，從下一次該做的 A 或 B 開始交替 */
+/* 本週七天：已經練的照紀錄顯示；今天以後的彈力帶日，照推薦的搭配一天一天往下排 */
 function weekSchedule() {
   const all = sessionsAsc();
   const ws = weekStart(new Date());
   const today = ymd(new Date());
   const band = daysOf('bandDays'), tabata = daysOf('tabataDays');
-  let next = recommend().plan;
+  const last = lastDoneMap();
   const out = [];
   for (let i = 0; i < 7; i++) {
     const dt = new Date(ws); dt.setDate(dt.getDate() + i);
     const key = ymd(dt);
     const prev = new Date(dt); prev.setDate(prev.getDate() - 1);
-    const done = all.filter(s => s.date === key).map(s => s.plan === 'F' ? '自' : s.plan === 'M' ? '菜' : s.plan);
+    const done = all.filter(s => s.date === key).map(s => s.plan === 'free' ? '自' : s.plan === 'menu' ? '菜' : s.plan);
     const cell = { i, date: dt.getDate(), today: key === today, past: key < today, done, plan: null, missed: false, tabata: tabata.includes(i) };
     if (!done.length && band.includes(i)) {
       if (key < today) cell.missed = true;
-      else if (!all.some(s => s.date === ymd(prev))) { cell.plan = next; next = next === 'A' ? 'B' : 'A'; }
+      else if (!all.some(s => s.date === ymd(prev))) {
+        const pair = pickPair(last);
+        cell.plan = pair.join('');
+        pair.forEach(k => { last[k] = key; });
+      }
     }
     out.push(cell);
   }
   return out;
+}
+
+/* 合併幾套訓練日的動作；同一個動作出現兩次只留第一次 */
+function mergedItems(letters) {
+  const seen = new Set(), out = [];
+  letters.forEach(k => (state.plans[k] ? state.plans[k].items : []).forEach(it => {
+    if (exById(it.exId) && !seen.has(it.exId)) { seen.add(it.exId); out.push(it); }
+  }));
+  return out;
+}
+
+function lengthTip() {
+  const keys = planKeys().filter(k => state.plans[k].items.length);
+  if (!keys.length) return '';
+  const mins = keys.map(k => planMinutes(k));
+  const lo = Math.min(...mins), hi = Math.max(...mins);
+  const rec = recommend().letters;
+  return `單做一套約 ${lo === hi ? lo : lo + ' 到 ' + hi} 分鐘${rec.length > 1 ? `，今天建議的 ${pairLabel(rec)} 兩套一起約 ${planMinutes(mergedItems(rec))} 分鐘` : ''}（含組間休息）；`;
 }
 
 function scheduleHtml() {
@@ -253,12 +314,12 @@ function scheduleHtml() {
   return `<section class="card">
     <h2>本週日程</h2>
     <div class="week">${cells}</div>
-    <p class="sub">A、B＝彈力帶訓練日　T＝Tabata（選做）　休＝休息　✓＝已完成</p>
-    <p class="note">目前排的是：彈力帶在星期${dayList('bandDays') || '（還沒選）'}${daysOf('tabataDays').length ? `，Tabata 在星期${dayList('tabataDays')}` : ''}。A 和 B 會照你實際練到哪裡往下排。</p>
+    <p class="sub">字母＝彈力帶訓練日（兩個字母是同一天做兩套）　T＝Tabata（選做）　休＝休息　✓＝已完成</p>
+    <p class="note">目前排的是：彈力帶在星期${dayList('bandDays') || '（還沒選）'}${daysOf('tabataDays').length ? `，Tabata 在星期${dayList('tabataDays')}` : ''}。做哪幾套會照你實際練到哪裡往下排。</p>
     ${consecutive ? '<div class="hintbox">你排的彈力帶日有連續兩天。同樣的肌群最好中間隔一天，建議到設定頁調整。</div>' : ''}
     <h3>建議訓練時間</h3>
     <ul class="plain tips">
-      <li>每次長度：訓練日 A 約 ${planMinutes('A')} 分鐘、訓練日 B 約 ${planMinutes('B')} 分鐘（含組間休息）；Tabata 約 ${Math.ceil(tabataTotal() / 60)} 分鐘。</li>
+      <li>每次長度：${lengthTip()}Tabata 約 ${Math.ceil(tabataTotal() / 60)} 分鐘。</li>
       <li>${s.trainTime ? `你設定的固定時段是 ${esc(s.trainTime)}。` : ''}早上練或晚上練，效果差不多；重點是選一個每週都排得進去的固定時段。</li>
       <li>Tabata 這類高強度運動，盡量在睡前 2 小時以前做完，比較不會影響睡眠。</li>
       <li>剛吃飽不要馬上練，等肚子不脹了再開始。</li>
@@ -268,7 +329,9 @@ function scheduleHtml() {
 }
 
 /* ---------- 首頁 ---------- */
-let chosenPlan = null;
+let homeMode = 'plan';      // 首頁目前選的是：plan（訓練日）、menu（菜單）、free（自選）
+let pickLetters = null;     // 手動選的訓練日字母；null 代表照推薦
+const currentLetters = () => (pickLetters || recommend().letters).filter(k => state.plans[k]).sort();
 let chosenRoutine = null;   // 首頁「菜單」選中的那一份
 const routineById = id => state.routines.find(r => r.id === id);
 function currentRoutine() { return routineById(chosenRoutine) || state.routines[0] || null; }
@@ -276,7 +339,7 @@ function currentRoutine() { return routineById(chosenRoutine) || state.routines[
 function routineListHtml() {
   if (!state.routines.length) return '<p class="muted">還沒有菜單，請到設定頁新增。</p>';
   const cur = currentRoutine();
-  return '<p class="sub">A、B 以外的組合。做這些不會打亂 A、B 的交替順序。</p>' + state.routines.map(r => {
+  return '<p class="sub">訓練日以外的現成組合。做這些不會影響訓練日的推薦順序。</p>' + state.routines.map(r => {
     const on = r === cur;
     return `<div class="rt ${on ? 'on' : ''}">
       <button type="button" class="rt-main" data-act="pickRoutine" data-id="${esc(r.id)}" aria-pressed="${on}">
@@ -329,10 +392,25 @@ function planListHtml(key) {
   }).join('') + '</ol>';
 }
 
+function lettersHtml() {
+  const sel = currentLetters();
+  return `<div class="letters" role="group" aria-label="選擇訓練日，可以選一套或兩套">
+      ${planKeys().map(k => `<button type="button" data-act="pick" data-plan="${k}" aria-pressed="${sel.includes(k)}"><b>${k}</b><small>${esc(state.plans[k].title)}</small><small class="lt-min">約 ${planMinutes(k)} 分鐘</small></button>`).join('')}
+    </div>
+    <p class="sub">點字母可以加選或取消，一次最多兩套。${pickLetters ? '<button type="button" class="linkbtn" data-act="pickReset">回到建議的搭配</button>' : ''}</p>
+    ${sel.map(k => `<h3 class="pl-head">${k}｜${esc(state.plans[k].title)}・約 ${planMinutes(k)} 分鐘</h3>${planListHtml(k)}`).join('')}`;
+}
+
 VIEWS.home = () => {
   const rec = recommend();
-  const pick = chosenPlan || rec.plan;
   const a = state.active;
+  const sel = currentLetters();
+  let startBtn = '';
+  if (!a) {
+    if (homeMode === 'menu') startBtn = currentRoutine() ? `<button type="button" class="btn primary big" data-act="start">開始「${esc(currentRoutine().title)}」</button>` : '';
+    else if (homeMode === 'free') startBtn = `<button type="button" class="btn primary big" data-act="start" id="freeStart">開始自選訓練（${freePick.length} 個動作）</button>`;
+    else startBtn = `<button type="button" class="btn primary big" data-act="start">${sel.length ? `開始訓練日 ${pairLabel(sel)}（約 ${planMinutes(mergedItems(sel))} 分鐘）` : '先選一套訓練日'}</button>`;
+  }
   view.innerHTML = `
     <header class="top"><h1>彈力帶訓練</h1><a class="toplink" href="#/help">訓練原則</a></header>
     ${a ? `<section class="card notice">
@@ -343,22 +421,19 @@ VIEWS.home = () => {
     </section>` : ''}
     <section class="card">
       <p class="eyebrow">今天建議</p>
-      <h2 class="rec">訓練日 ${rec.plan}<span>${esc(state.plans[rec.plan].title)}</span></h2>
+      <h2 class="rec">訓練日 ${pairLabel(rec.letters)}<span>${esc(pairTitle(rec.letters))}</span></h2>
       <p class="note">${esc(rec.note)}</p>
-      <div class="seg four" role="group" aria-label="選擇訓練日">
-        ${['A', 'B'].map(k => `<button type="button" data-act="pick" data-plan="${k}" aria-pressed="${pick === k}"><b>${k}</b><small>${esc(state.plans[k].title)}</small></button>`).join('')}
-        <button type="button" data-act="pick" data-plan="M" aria-pressed="${pick === 'M'}"><b>菜單</b><small>其他組合</small></button>
-        <button type="button" data-act="pick" data-plan="F" aria-pressed="${pick === 'F'}"><b>自選</b><small>臨時挑</small></button>
+      ${rec.letters.length > 1 ? '<p class="sub">這兩套練的部位不重疊，可以同一天做；時間不夠就只做其中一套。</p>' : ''}
+      <div class="seg" role="group" aria-label="選擇訓練方式">
+        <button type="button" data-act="mode" data-mode="plan" aria-pressed="${homeMode === 'plan'}"><b>訓練日</b><small>A 到 ${planKeys().slice(-1)[0] || 'A'}</small></button>
+        <button type="button" data-act="mode" data-mode="menu" aria-pressed="${homeMode === 'menu'}"><b>菜單</b><small>其他組合</small></button>
+        <button type="button" data-act="mode" data-mode="free" aria-pressed="${homeMode === 'free'}"><b>自選</b><small>臨時挑</small></button>
       </div>
-      ${pick === 'F' ? freeListHtml() : pick === 'M' ? routineListHtml() : planListHtml(pick)}
-      ${a ? '' : pick === 'M'
-        ? (currentRoutine() ? `<button type="button" class="btn primary big" data-act="start">開始「${esc(currentRoutine().title)}」</button>` : '')
-        : pick === 'F'
-        ? `<button type="button" class="btn primary big" data-act="start" id="freeStart">開始自選訓練（${freePick.length} 個動作）</button>`
-        : `<button type="button" class="btn primary big" data-act="start">開始訓練日 ${pick}</button>`}
+      ${homeMode === 'free' ? freeListHtml() : homeMode === 'menu' ? routineListHtml() : lettersHtml()}
+      ${startBtn}
     </section>
     ${scheduleHtml()}
-    <p class="foot muted">本週已練 ${rec.weekCount} 次。目標每週 2 到 3 次，A 和 B 交替，中間至少隔一天。</p>`;
+    <p class="foot muted">本週已練 ${rec.weekCount} 次。目標每週 2 到 3 次，中間至少隔一天。</p>`;
 };
 
 function startChecklist(plan) {
@@ -380,9 +455,10 @@ function createActive(plan) {
     date: ymd(now),
     startedAt: now.getTime(),
     idx: 0,
-    ...(plan === 'M' ? { title: currentRoutine().title } : {}),
-    items: (plan === 'F' ? freePick.filter(id => exById(id)).map(id => exPreset(exById(id)))
-      : (plan === 'M' ? currentRoutine() : state.plans[plan]).items.filter(it => exById(it.exId))).map(it => ({
+    ...(plan === 'menu' ? { title: currentRoutine().title } : {}),
+    items: (plan === 'free' ? freePick.filter(id => exById(id)).map(id => exPreset(exById(id)))
+      : plan === 'menu' ? currentRoutine().items.filter(it => exById(it.exId))
+      : mergedItems(plan.split(''))).map(it => ({
       exId: it.exId,
       name: exById(it.exId).name,
       band: it.band,
@@ -392,7 +468,9 @@ function createActive(plan) {
       sets: Array.from({ length: it.sets }, () => ({ done: false, reps: null, rir: null }))
     }))
   };
-  if (plan === 'F') freePick = [];
+  if (plan === 'free') freePick = [];
+  pickLetters = null;
+  homeMode = 'plan';
   save();
 }
 
@@ -485,7 +563,7 @@ async function finishWorkout() {
   };
   state.sessions.push(session);
   state.active = null;
-  chosenPlan = null;
+  pickLetters = null;
   save();
   restStop();
   const reps = session.items.reduce((n, it) => n + itemReps(it), 0);
@@ -790,8 +868,16 @@ VIEWS.settings = () => {
       </div>`).join('')}
       <label class="field"><span>習慣的訓練時間（可以不填）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
     </section>
-    <section class="card"><h2>訓練日 A</h2>${planEditorHtml('plans.A')}</section>
-    <section class="card"><h2>訓練日 B</h2>${planEditorHtml('plans.B')}</section>
+    <section class="card">
+      <h2>訓練日</h2>
+      <p class="sub">首頁會從這些訓練日裡推薦搭配。可以改內容、新增或刪除。</p>
+      ${planKeys().map(k => `<details class="exedit rtedit" data-rt="plan-${k}" ${openRoutines.has('plan-' + k) ? 'open' : ''}>
+        <summary>${k}｜${esc(state.plans[k].title)}</summary>
+        ${planEditorHtml('plans.' + k)}
+        <button type="button" class="btn small danger-text" data-act="planDel" data-k="${k}">刪除訓練日 ${k}</button>
+      </details>`).join('')}
+      <button type="button" class="btn" data-act="planAdd">＋ 新增訓練日</button>
+    </section>
     <section class="card">
       <h2>其他菜單</h2>
       <p class="sub">首頁「菜單」裡的組合。可以改內容、新增或刪除。</p>
@@ -867,7 +953,7 @@ VIEWS.help = () => {
   view.innerHTML = `
     <header class="top"><h1>說明</h1><a class="toplink" href="#/">回首頁</a></header>
     <section class="card"><h2>訓練原則</h2><ul class="plain">${PRINCIPLES.map(p => `<li>${esc(p)}</li>`).join('')}</ul></section>
-    <section class="card"><h2>頻率</h2><p>每週 2 到 3 次，訓練日 A 和 B 交替，中間至少隔一天。首頁會依最近一次的紀錄建議今天做哪一天，也可以自己切換。</p></section>
+    <section class="card"><h2>頻率</h2><p>每週 2 到 3 次，中間至少隔一天。首頁會挑最久沒練的一套訓練日，再搭一套部位不重疊的（例如 A＋C），兩套可以同一天做；也可以自己切換。</p></section>
     <section class="card"><h2>組要怎麼做</h2>
       <p>照這個 app 的順序：同一個動作做完所有組（組間休息 60 到 90 秒），再換下一個動作。這樣每一組的品質最好，帶子也不用一直換位置。</p>
       <p>趕時間的話，可以把一個「推」和一個「拉」的動作配成一對輪流做（例如胸推和划船），兩個動作之間少休息一點。研究顯示這樣練的效果差不多，但會比較喘。</p>
@@ -887,18 +973,33 @@ const actions = {
   mOk: () => closeModal(true),
   mCancel: () => closeModal(false),
 
-  pick: el => { chosenPlan = el.dataset.plan; render(); },
+  mode: el => { homeMode = el.dataset.mode; render(); },
+  pick: el => {
+    const k = el.dataset.plan;
+    let sel = currentLetters();
+    if (sel.includes(k)) sel = sel.filter(x => x !== k);
+    else { if (sel.length >= 2) { toast('一次最多選兩套，先取消一套再選'); return; } sel = [...sel, k].sort(); }
+    pickLetters = sel;
+    const y = window.scrollY; render(); window.scrollTo(0, y);
+  },
+  pickReset: () => { pickLetters = null; render(); },
   pickRoutine: el => { chosenRoutine = el.dataset.id; const y = window.scrollY; render(); window.scrollTo(0, y); },
   start: () => {
-    const plan = chosenPlan || recommend().plan;
-    if (plan === 'F') {
+    if (homeMode === 'free') {
       if (!freePick.length) { toast('先勾選至少一個動作'); return; }
-      startChecklist(plan);
+      startChecklist('free');
       return;
     }
-    const src = plan === 'M' ? currentRoutine() : state.plans[plan];
-    if (!src || !src.items.some(it => exById(it.exId))) { toast('這份菜單沒有動作，請先到設定頁新增'); return; }
-    startChecklist(plan);
+    if (homeMode === 'menu') {
+      const r = currentRoutine();
+      if (!r || !r.items.some(it => exById(it.exId))) { toast('這份菜單沒有動作，請先到設定頁新增'); return; }
+      startChecklist('menu');
+      return;
+    }
+    const sel = currentLetters();
+    if (!sel.length) { toast('先選一套訓練日'); return; }
+    if (!mergedItems(sel).length) { toast('選的訓練日沒有動作，請先到設定頁新增'); return; }
+    startChecklist(sel.join(''));
   },
   go: el => { closeModal(); createActive(el.dataset.plan); location.hash = '#/workout'; },
   freeToggle: el => {
@@ -1032,6 +1133,23 @@ const actions = {
     getPath(el.dataset.base).items.push(exPreset(state.exercises[0]));
     save(); render();
   },
+  planAdd: () => {
+    const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').find(c => !state.plans[c]);
+    if (!k) { toast('訓練日已經用到 Z 了'); return; }
+    state.plans[k] = { title: '新訓練日', items: [exPreset(state.exercises[0])] };
+    openRoutines.add('plan-' + k);
+    save(); render();
+    const el = document.querySelector(`.rtedit[data-rt="plan-${k}"]`);
+    if (el) el.scrollIntoView({ block: 'start' });
+  },
+  planDel: async el => {
+    const k = el.dataset.k;
+    if (planKeys().length <= 1) { toast('至少要留一套訓練日'); return; }
+    if (!(await confirmBox({ title: `刪除訓練日 ${k}？`, body: '過去的訓練紀錄會保留。', ok: '刪除', danger: true }))) return;
+    delete state.plans[k];
+    pickLetters = null;
+    save(); render();
+  },
   rtAdd: () => {
     const r = { id: 'r' + Date.now(), title: '新菜單', note: '', items: [exPreset(state.exercises[0])] };
     state.routines.push(r);
@@ -1057,7 +1175,7 @@ const actions = {
   exDel: async el => {
     const i = +el.dataset.i, ex = state.exercises[i];
     if (state.exercises.length <= 1) { toast('至少要留一個動作'); return; }
-    if (['A', 'B'].some(k => state.plans[k].items.some(it => it.exId === ex.id)) || state.routines.some(r => r.items.some(it => it.exId === ex.id))) { toast('這個動作還在訓練日或菜單裡，請先從那裡移除'); return; }
+    if (planKeys().some(k => state.plans[k].items.some(it => it.exId === ex.id)) || state.routines.some(r => r.items.some(it => it.exId === ex.id))) { toast('這個動作還在訓練日或菜單裡，請先從那裡移除'); return; }
     if (!(await confirmBox({ title: `刪除「${ex.name}」？`, body: '過去的訓練紀錄會保留。', ok: '刪除', danger: true }))) return;
     state.exercises.splice(i, 1);
     save(); render();
@@ -1071,7 +1189,7 @@ const actions = {
     if (!(await confirmBox({ title: '真的要清除嗎？', body: '清除後無法復原。如果還沒匯出備份，請先按取消。', ok: '全部清除', danger: true }))) return;
     try { localStorage.removeItem(KEY); } catch (e) { /* 忽略 */ }
     state = freshState();
-    chosenPlan = null;
+    pickLetters = null;
     save(); applySettings(); restStop(); render(); toast('已清除所有資料');
   }
 };
@@ -1160,7 +1278,7 @@ document.addEventListener('change', e => {
   setPath(path, v);
 
   /* 最少下數不能大於最多下數 */
-  const m = path.match(/^(plans\.[AB]\.items\.\d+|routines\.\d+\.items\.\d+|exercises\.\d+)\.(min|max)$/);
+  const m = path.match(/^(plans\.[A-Z]\.items\.\d+|routines\.\d+\.items\.\d+|exercises\.\d+)\.(min|max)$/);
   if (m) {
     const it = getPath(m[1]);
     if (it.min > it.max) {
@@ -1170,6 +1288,8 @@ document.addEventListener('change', e => {
       if (sib) sib.value = v;
     }
   }
+  const pt = path.match(/^plans\.([A-Z])\.title$/);
+  if (pt) { const sum = el.closest('details'); if (sum) $('summary', sum).textContent = pt[1] + '｜' + state.plans[pt[1]].title; }
   const rt = path.match(/^routines\.(\d+)\.title$/);
   if (rt) { const sum = el.closest('details'); if (sum) $('summary', sum).textContent = state.routines[+rt[1]].title; }
   const n = path.match(/^exercises\.(\d+)\.name$/);
