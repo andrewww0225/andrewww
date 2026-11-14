@@ -193,6 +193,72 @@ function route() {
   window.scrollTo(0, 0);
 }
 
+/* ---------- 本週日程與建議時間 ---------- */
+const WEEK = '一二三四五六日';
+const daysOf = k => Array.isArray(state.settings[k]) ? state.settings[k] : [];
+
+/* 訓練日大約要多久：每組約 45 秒＋組間休息，每換一個動作多 45 秒，四捨五入到 5 分鐘 */
+function planMinutes(key) {
+  const its = state.plans[key].items;
+  const sets = its.reduce((n, it) => n + it.sets, 0);
+  const sec = sets * (45 + state.settings.restSec) + its.length * 45;
+  return Math.max(5, Math.round(sec / 300) * 5);
+}
+
+/* 本週七天：已經練的照紀錄顯示；今天以後的彈力帶日，從下一次該做的 A 或 B 開始交替 */
+function weekSchedule() {
+  const all = sessionsAsc();
+  const ws = weekStart(new Date());
+  const today = ymd(new Date());
+  const band = daysOf('bandDays'), tabata = daysOf('tabataDays');
+  let next = recommend().plan;
+  const out = [];
+  for (let i = 0; i < 7; i++) {
+    const dt = new Date(ws); dt.setDate(dt.getDate() + i);
+    const key = ymd(dt);
+    const prev = new Date(dt); prev.setDate(prev.getDate() - 1);
+    const done = all.filter(s => s.date === key).map(s => s.plan === 'F' ? '自' : s.plan);
+    const cell = { i, date: dt.getDate(), today: key === today, past: key < today, done, plan: null, missed: false, tabata: tabata.includes(i) };
+    if (!done.length && band.includes(i)) {
+      if (key < today) cell.missed = true;
+      else if (!all.some(s => s.date === ymd(prev))) { cell.plan = next; next = next === 'A' ? 'B' : 'A'; }
+    }
+    out.push(cell);
+  }
+  return out;
+}
+
+function scheduleHtml() {
+  const s = state.settings;
+  const band = daysOf('bandDays');
+  const consecutive = band.some(i => band.includes((i + 1) % 7));
+  const cells = weekSchedule().map(c => {
+    const tags = [];
+    c.done.forEach(p => tags.push(`<span class="wk-tag done">${esc(p)} ✓</span>`));
+    if (c.plan) tags.push(`<span class="wk-tag plan">${c.plan}</span>`);
+    if (c.missed) tags.push('<span class="wk-tag off">—</span>');
+    if (c.tabata && !c.past) tags.push('<span class="wk-tag tb">T</span>');
+    if (!tags.length) tags.push('<span class="wk-tag off">休</span>');
+    return `<div class="wk ${c.today ? 'today' : ''} ${c.past ? 'past' : ''}"><span class="wk-n">${WEEK[c.i]}</span><span class="wk-d">${c.date}</span>${tags.join('')}</div>`;
+  }).join('');
+  const dayList = k => daysOf(k).slice().sort().map(i => WEEK[i]).join('、');
+  return `<section class="card">
+    <h2>本週日程</h2>
+    <div class="week">${cells}</div>
+    <p class="sub">A、B＝彈力帶訓練日　T＝Tabata（選做）　休＝休息　✓＝已完成</p>
+    <p class="note">目前排的是：彈力帶在星期${dayList('bandDays') || '（還沒選）'}${daysOf('tabataDays').length ? `，Tabata 在星期${dayList('tabataDays')}` : ''}。A 和 B 會照你實際練到哪裡往下排。</p>
+    ${consecutive ? '<div class="hintbox">你排的彈力帶日有連續兩天。同樣的肌群最好中間隔一天，建議到設定頁調整。</div>' : ''}
+    <h3>建議訓練時間</h3>
+    <ul class="plain tips">
+      <li>每次長度：訓練日 A 約 ${planMinutes('A')} 分鐘、訓練日 B 約 ${planMinutes('B')} 分鐘（含組間休息）；Tabata 約 ${Math.ceil(tabataTotal() / 60)} 分鐘。</li>
+      <li>${s.trainTime ? `你設定的固定時段是 ${esc(s.trainTime)}。` : ''}早上練或晚上練，效果差不多；重點是選一個每週都排得進去的固定時段。</li>
+      <li>Tabata 這類高強度運動，盡量在睡前 2 小時以前做完，比較不會影響睡眠。</li>
+      <li>剛吃飽不要馬上練，等肚子不脹了再開始。</li>
+    </ul>
+    <a class="btn small" href="#/settings">改日程與時間</a>
+  </section>`;
+}
+
 /* ---------- 首頁 ---------- */
 let chosenPlan = null;
 let freePick = [];   // 自選訓練勾選的動作 id，依勾選順序
@@ -260,6 +326,7 @@ VIEWS.home = () => {
         ? `<button type="button" class="btn primary big" data-act="start" id="freeStart">開始自選訓練（${freePick.length} 個動作）</button>`
         : `<button type="button" class="btn primary big" data-act="start">開始訓練日 ${pick}</button>`}
     </section>
+    ${scheduleHtml()}
     <p class="foot muted">本週已練 ${rec.weekCount} 次。目標每週 2 到 3 次，A 和 B 交替，中間至少隔一天。</p>`;
 };
 
@@ -680,6 +747,17 @@ VIEWS.settings = () => {
           <option value="dark" ${s.theme === 'dark' ? 'selected' : ''}>深色</option>
         </select></label>
     </section>
+    <section class="card">
+      <h2>每週日程</h2>
+      <p class="sub">首頁的「本週日程」會照這裡排。彈力帶訓練日中間至少隔一天。</p>
+      ${[['bandDays', '彈力帶訓練日'], ['tabataDays', 'Tabata 日（選做）']].map(([k, label]) => `
+      <div class="field"><span>${label}</span>
+        <div class="daypick" role="group" aria-label="${label}">
+          ${[...WEEK].map((w, i) => `<label><input type="checkbox" data-days="${k}" data-d="${i}" ${daysOf(k).includes(i) ? 'checked' : ''}><span>${w}</span></label>`).join('')}
+        </div>
+      </div>`).join('')}
+      <label class="field"><span>習慣的訓練時間（可以不填）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
+    </section>
     ${planEditorHtml('A')}
     ${planEditorHtml('B')}
     <section class="card">
@@ -986,6 +1064,12 @@ function setPath(path, val) {
 document.addEventListener('change', e => {
   const el = e.target;
   if (el.id === 'importFile') { if (el.files[0]) importJson(el.files[0]); el.value = ''; return; }
+  if (el.dataset.days) {
+    const k = el.dataset.days;
+    state.settings[k] = [...document.querySelectorAll(`input[data-days="${k}"]`)].filter(c => c.checked).map(c => +c.dataset.d);
+    save();
+    return;
+  }
   const path = el.dataset.path;
   if (!path) return;
   const type = el.dataset.type;
