@@ -376,6 +376,7 @@ function freeListHtml() {
 function exInfoHtml(ex) {
   return `<h2>${esc(ex.name)}</h2>
     <div class="chips"><span class="chip strong">${esc(bandLabel(ex.band))}</span><span class="chip">${ex.sets} 組 × ${ex.min}–${ex.max} 下</span></div>
+    ${Figures.svg(ex.id, ex.name)}
     <h3>做法</h3><p class="how">${esc(ex.how)}</p>
     <h3>容易犯的錯</h3><p class="mistakes">${esc(ex.mistakes)}</p>
     ${ex.details.length ? `<div class="more nob"><dl>${ex.details.map(d => `<dt>${esc(d.label)}</dt><dd>${esc(d.text)}</dd>`).join('')}</dl></div>` : ''}`;
@@ -502,6 +503,7 @@ VIEWS.workout = () => {
       ${hint ? `<div class="hintbox"><strong>可以加難度</strong>
         <p>上次（${fmtDate(hint.session.date)}）每一組都做到 ${it.max} 下，餘力也不多。這次挑一種方式試試：</p>
         <ul>${PROGRESS_WAYS.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
+      ${Figures.svg(it.exId, it.name)}
       <h3>做法</h3><p class="how">${esc(ex.how)}</p>
       <h3>容易犯的錯</h3><p class="mistakes">${esc(ex.mistakes)}</p>
       ${ex.details.length ? `<details class="more" ${state.settings.showDetails ? 'open' : ''}>

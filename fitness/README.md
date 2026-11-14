@@ -26,6 +26,7 @@
 | `data.js` | 預設動作、訓練日、Tabata 預設值、說明文字 |
 | `device.js` | 螢幕恆亮、提示音、震動 |
 | `charts.js` | SVG 折線圖與長條圖 |
+| `figures.js` | 每個內建動作的示意圖（簡筆人形，開始與結束兩個姿勢，彈力帶另一個顏色），用 SVG 畫 |
 | `app.js` | 狀態、路由、各頁面、計時器、匯出匯入 |
 | `sw.js` | service worker（離線快取） |
 | `manifest.webmanifest`、`icons/` | 加到主畫面用的設定與圖示 |
