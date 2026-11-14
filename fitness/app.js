@@ -395,7 +395,7 @@ function planListHtml(key) {
 function lettersHtml() {
   const sel = currentLetters();
   return `<div class="letters" role="group" aria-label="選擇訓練日，可以選一套或兩套">
-      ${planKeys().map(k => `<button type="button" data-act="pick" data-plan="${k}" aria-pressed="${sel.includes(k)}"><b>${k}</b><small>${esc(state.plans[k].title)}</small></button>`).join('')}
+      ${planKeys().map(k => `<button type="button" data-act="pick" data-plan="${k}" aria-pressed="${sel.includes(k)}"><b>${k}</b><small>${esc(state.plans[k].title)}</small><small class="lt-min">約 ${planMinutes(k)} 分鐘</small></button>`).join('')}
     </div>
     <p class="sub">點字母可以加選或取消，一次最多兩套。${pickLetters ? '<button type="button" class="linkbtn" data-act="pickReset">回到建議的搭配</button>' : ''}</p>
     ${sel.map(k => `<h3 class="pl-head">${k}｜${esc(state.plans[k].title)}・約 ${planMinutes(k)} 分鐘</h3>${planListHtml(k)}`).join('')}`;
