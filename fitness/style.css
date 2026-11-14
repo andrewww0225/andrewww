@@ -259,6 +259,8 @@ body[data-route="workout"] #view { padding-bottom: calc(150px + env(safe-area-in
 .fg-body { fill: none; stroke: var(--text); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
 .fg-head { fill: var(--bg); stroke: var(--text); stroke-width: 4; }
 .fg-band { fill: none; stroke: var(--band); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.fg-band.flat { stroke-width: 8; }
+.fg-band-in { fill: none; stroke: var(--bg); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .fg-floor { stroke: var(--axis); stroke-width: 1.5; stroke-linecap: round; }
 .fg-arrow { fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .fg-label { fill: var(--muted); font-size: 12px; }

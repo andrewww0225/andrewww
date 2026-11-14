@@ -22,7 +22,11 @@ const Figures = (() => {
     head: [70, 62], neck: [70, 74], lSh: [56, 78], rSh: [84, 78], hip: [70, 104],
     lHip: [62, 106], rHip: [78, 106], lKn: [58, 132], rKn: [82, 132]
   }, o));
-  const STAND_ON = [['lHa', 'lFt', 'rFt', 'rHa']];   // 雙腳踩帶、雙手各抓一邊
+  /* 彈力帶是環狀的，有三種畫法：
+     { loop: [...] }  整圈攤開：例如雙腳踩住下緣、雙手抓住上緣，四個點連成一圈
+     { sag: [a, b] }  雙手只抓其中一層，另一層垂在下面
+     [a, b, ...]      兩層疊在一起（或從側面看過去）：畫成壓扁的環 */
+  const STAND_ON = [{ loop: ['lHa', 'lFt', 'rFt', 'rHa'] }];   // 雙腳踩住下緣、雙手抓住上緣
   const HOLD = { rEl: [86, 60], rHa: [78, 46] };      // 側面：手把帶子固定在肩膀前
 
   const FIGS = {
@@ -60,7 +64,7 @@ const Figures = (() => {
     extrot: {
       a: F({ lEl: [54, 74], lHa: [63, 80], rEl: [86, 74], rHa: [77, 80] }),
       b: F({ lEl: [54, 74], lHa: [32, 78], rEl: [86, 74], rHa: [108, 78] }),
-      band: [['lHa', 'rHa']]
+      band: [{ sag: ['lHa', 'rHa'] }]
     },
     bentrow: {
       a: B({ rEl: [90, 100], rHa: [88, 122] }), b: B({ rEl: [70, 64], rHa: [80, 90] }), band: [['rHa', [68, 160]]]
@@ -120,7 +124,7 @@ const Figures = (() => {
     lateralwalk: {
       a: F({ head: [70, 36], neck: [70, 48], lSh: [56, 54], rSh: [84, 54], hip: [70, 102], lHip: [62, 104], rHip: [78, 104], lKn: [56, 132], rKn: [84, 132], lFt: [56, 160], rFt: [84, 160], lEl: [50, 76], lHa: [64, 88], rEl: [90, 76], rHa: [76, 88] }),
       b: F({ head: [70, 36], neck: [70, 48], lSh: [56, 54], rSh: [84, 54], hip: [70, 102], lHip: [62, 104], rHip: [78, 104], lKn: [44, 132], rKn: [84, 132], lFt: [34, 160], rFt: [84, 160], lEl: [50, 76], lHa: [64, 88], rEl: [90, 76], rHa: [76, 88], arrows: [[30, 144, 10, 144]] }),
-      band: [['lFt', 'rHa'], ['rFt', 'lHa'], ['lFt', 'rFt']]
+      band: [{ loop: ['lFt', 'rHa', 'lHa', 'rFt'] }]   // 扭成 8 字形：下面的圈踩在腳下，上面的圈抓在手上
     },
     calf: {
       a: S(HOLD),
@@ -136,6 +140,17 @@ const Figures = (() => {
 
   const pt = (p, v) => typeof v === 'string' ? p[v] : v;
   const path = (p, pts) => pts.map(v => pt(p, v)).filter(Boolean).map(([x, y]) => `${x},${y}`).join(' ');
+
+  function bandSvg(p, b) {
+    if (b.loop) return `<polygon class="fg-band" points="${path(p, b.loop)}"/>`;
+    if (b.sag) {
+      const [x1, y1] = pt(p, b.sag[0]), [x2, y2] = pt(p, b.sag[1]);
+      const drop = 16 + Math.max(0, 60 - Math.abs(x2 - x1)) * 0.5;   // 手越靠近，垂下來的那一層越鬆
+      return `<path class="fg-band" d="M${x1} ${y1} L${x2} ${y2} Q${(x1 + x2) / 2} ${Math.max(y1, y2) + drop} ${x1} ${y1} Z"/>`;
+    }
+    const pts = path(p, b);
+    return `<polyline class="fg-band flat" points="${pts}"/><polyline class="fg-band-in" points="${pts}"/>`;
+  }
 
   function pose(p, band, dx, label) {
     const lines = [];
@@ -160,7 +175,7 @@ const Figures = (() => {
     }).join('');
     return `<g transform="translate(${dx} 14)">
       <line class="fg-floor" x1="4" x2="136" y1="161.5" y2="161.5"/>
-      ${(p.band || band || []).map(b => `<polyline class="fg-band" points="${path(p, b)}"/>`).join('')}
+      ${(p.band || band || []).map(b => bandSvg(p, b)).join('')}
       <line class="fg-body" x1="${hx}" y1="${hy}" x2="${p.neck[0]}" y2="${p.neck[1]}"/>
       ${lines.map(l => `<polyline class="fg-body" points="${l}"/>`).join('')}
       <circle class="fg-head" cx="${hx}" cy="${hy}" r="9"/>
