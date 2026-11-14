@@ -538,6 +538,94 @@ const DEFAULT_PLANS = {
   }
 };
 
+/* 其他菜單：A、B 以外的組合，可在設定頁編輯。不影響 A、B 的交替順序 */
+const DEFAULT_ROUTINES = [
+  {
+    id: 'full',
+    title: '全身',
+    note: '上半身、下半身和核心一次練完。',
+    items: [
+      { exId: 'squat', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'chestpress', band: 10, sets: 3, min: 8, max: 15 },
+      { exId: 'row', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'deadlift', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'press', band: 10, sets: 2, min: 8, max: 12 },
+      { exId: 'woodchop', band: 5, sets: 2, min: 10, max: 12 }
+    ]
+  },
+  {
+    id: 'quick',
+    title: '快速全身',
+    note: '時間不多的時候用，每個動作只做 2 組。',
+    items: [
+      { exId: 'squat', band: 10, sets: 2, min: 10, max: 15 },
+      { exId: 'pushup', band: 10, sets: 2, min: 6, max: 12 },
+      { exId: 'bentrow', band: 10, sets: 2, min: 10, max: 15 },
+      { exId: 'bridge', band: 10, sets: 2, min: 12, max: 20 }
+    ]
+  },
+  {
+    id: 'lower',
+    title: '下半身和臀',
+    note: '腿和屁股為主。腿的力氣比較大，覺得太輕可以兩條帶子一起用。',
+    items: [
+      { exId: 'squat', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'deadlift', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'splitsquat', band: 10, sets: 3, min: 8, max: 12 },
+      { exId: 'bridge', band: 10, sets: 3, min: 12, max: 20 },
+      { exId: 'lateralwalk', band: 10, sets: 2, min: 10, max: 15 },
+      { exId: 'calf', band: 10, sets: 2, min: 15, max: 20 }
+    ]
+  },
+  {
+    id: 'push',
+    title: '推：胸、肩、手臂後側',
+    note: '所有「往外推」的動作放在同一天。',
+    items: [
+      { exId: 'chestpress', band: 10, sets: 3, min: 8, max: 15 },
+      { exId: 'press', band: 10, sets: 3, min: 8, max: 12 },
+      { exId: 'chestfly', band: 5, sets: 3, min: 12, max: 15 },
+      { exId: 'lateral', band: 5, sets: 3, min: 12, max: 20 },
+      { exId: 'triext', band: 5, sets: 3, min: 10, max: 15 }
+    ]
+  },
+  {
+    id: 'pull',
+    title: '拉：背、手臂前側',
+    note: '所有「往回拉」的動作放在同一天，可以和「推」隔天交替。',
+    items: [
+      { exId: 'row', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'pulldown', band: 5, sets: 3, min: 10, max: 15 },
+      { exId: 'pullapart', band: 5, sets: 3, min: 15, max: 20 },
+      { exId: 'reversefly', band: 5, sets: 2, min: 12, max: 15 },
+      { exId: 'curl', band: 10, sets: 3, min: 10, max: 15 }
+    ]
+  },
+  {
+    id: 'arms',
+    title: '手臂和肩膀',
+    note: '想多練手臂線條的時候用。',
+    items: [
+      { exId: 'curl', band: 10, sets: 3, min: 10, max: 15 },
+      { exId: 'triext', band: 5, sets: 3, min: 10, max: 15 },
+      { exId: 'trikick', band: 5, sets: 2, min: 12, max: 15 },
+      { exId: 'lateral', band: 5, sets: 3, min: 12, max: 20 },
+      { exId: 'frontraise', band: 5, sets: 2, min: 10, max: 15 }
+    ]
+  },
+  {
+    id: 'posture',
+    title: '肩頸保養',
+    note: '強度低、時間短，適合久坐之後或休息日。',
+    items: [
+      { exId: 'pullapart', band: 5, sets: 2, min: 15, max: 20 },
+      { exId: 'extrot', band: 5, sets: 2, min: 12, max: 15 },
+      { exId: 'reversefly', band: 5, sets: 2, min: 12, max: 15 },
+      { exId: 'pulldown', band: 5, sets: 2, min: 10, max: 15 }
+    ]
+  }
+];
+
 /* bandDays／tabataDays：一週裡哪幾天（0＝星期一 … 6＝星期日）；trainTime：習慣的訓練時間，例如 '20:00'，空字串代表沒設定 */
 const DEFAULT_SETTINGS = {
   restSec: 75, sound: true, vibrate: true, theme: 'auto', showDetails: true,

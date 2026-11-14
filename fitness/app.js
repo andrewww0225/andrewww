@@ -22,7 +22,13 @@ const mmss = sec => `${Math.floor(sec / 60)}:${pad(sec % 60)}`;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const weekStart = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
 const bandLabel = kg => (BANDS.find(b => b.kg === kg) || { label: kg + ' kg 帶子' }).label;
-const planLabel = p => p === 'F' ? '自選訓練' : '訓練日 ' + p;
+/* 可以傳 'A' 這種代號，或整筆訓練紀錄（菜單要顯示名稱） */
+const planLabel = s => {
+  const p = typeof s === 'string' ? s : s.plan;
+  if (p === 'F') return '自選訓練';
+  if (p === 'M') return '菜單「' + ((s && s.title) || '未命名') + '」';
+  return '訓練日 ' + p;
+};
 const exPreset = ex => ({ exId: ex.id, band: ex.band, sets: ex.sets, min: ex.min, max: ex.max });
 const exMeta = ex => `${ex.band} kg · ${ex.sets} 組 × ${ex.min}–${ex.max} 下`;
 const rirLabel = r => r === 3 ? '3 以上' : String(r);
@@ -35,6 +41,7 @@ function freshState() {
     tabata: clone(DEFAULT_TABATA),
     exercises: clone(DEFAULT_EXERCISES),
     plans: clone(DEFAULT_PLANS),
+    routines: clone(DEFAULT_ROUTINES),
     sessions: [],
     active: null
   };
@@ -70,6 +77,7 @@ function normalize(d) {
     if (typeof e.group !== 'string') e.group = def ? def.group : '其他';
     Object.keys(GENERIC).forEach(k => { if (typeof e[k] !== 'number') e[k] = def ? def[k] : GENERIC[k]; });
   });
+  if (Array.isArray(d.routines)) s.routines = d.routines.filter(r => r && Array.isArray(r.items));
   if (d.plans && d.plans.A && d.plans.B && Array.isArray(d.plans.A.items) && Array.isArray(d.plans.B.items)) s.plans = d.plans;
   if (Array.isArray(d.sessions)) s.sessions = d.sessions.filter(x => x && Array.isArray(x.items) && typeof x.date === 'string');
   if (d.active && Array.isArray(d.active.items) && d.active.items.length) s.active = d.active;
@@ -111,7 +119,7 @@ function recommend() {
   const lastAB = all.filter(s => s.plan === 'A' || s.plan === 'B').pop();
   const plan = lastAB && lastAB.plan === 'A' ? 'B' : 'A';
   const gap = dayDiff(last.date, today);
-  const lp = planLabel(last.plan);
+  const lp = planLabel(last);
   let note;
   if (gap <= 0) note = `今天已經練過${lp}了。下一次是訓練日 ${plan}，中間至少隔一天。`;
   else if (gap === 1) note = `昨天剛練過${lp}，今天建議休息；明天再練訓練日 ${plan}。`;
@@ -199,7 +207,7 @@ const daysOf = k => Array.isArray(state.settings[k]) ? state.settings[k] : [];
 
 /* 訓練日大約要多久：每組約 45 秒＋組間休息，每換一個動作多 45 秒，四捨五入到 5 分鐘 */
 function planMinutes(key) {
-  const its = state.plans[key].items;
+  const its = Array.isArray(key) ? key : state.plans[key].items;
   const sets = its.reduce((n, it) => n + it.sets, 0);
   const sec = sets * (45 + state.settings.restSec) + its.length * 45;
   return Math.max(5, Math.round(sec / 300) * 5);
@@ -217,7 +225,7 @@ function weekSchedule() {
     const dt = new Date(ws); dt.setDate(dt.getDate() + i);
     const key = ymd(dt);
     const prev = new Date(dt); prev.setDate(prev.getDate() - 1);
-    const done = all.filter(s => s.date === key).map(s => s.plan === 'F' ? '自' : s.plan);
+    const done = all.filter(s => s.date === key).map(s => s.plan === 'F' ? '自' : s.plan === 'M' ? '菜' : s.plan);
     const cell = { i, date: dt.getDate(), today: key === today, past: key < today, done, plan: null, missed: false, tabata: tabata.includes(i) };
     if (!done.length && band.includes(i)) {
       if (key < today) cell.missed = true;
@@ -261,6 +269,26 @@ function scheduleHtml() {
 
 /* ---------- 首頁 ---------- */
 let chosenPlan = null;
+let chosenRoutine = null;   // 首頁「菜單」選中的那一份
+const routineById = id => state.routines.find(r => r.id === id);
+function currentRoutine() { return routineById(chosenRoutine) || state.routines[0] || null; }
+
+function routineListHtml() {
+  if (!state.routines.length) return '<p class="muted">還沒有菜單，請到設定頁新增。</p>';
+  const cur = currentRoutine();
+  return '<p class="sub">A、B 以外的組合。做這些不會打亂 A、B 的交替順序。</p>' + state.routines.map(r => {
+    const on = r === cur;
+    return `<div class="rt ${on ? 'on' : ''}">
+      <button type="button" class="rt-main" data-act="pickRoutine" data-id="${esc(r.id)}" aria-pressed="${on}">
+        <span class="pl-name">${esc(r.title)}</span>
+        <span class="pl-meta">${r.items.length} 個動作 · 約 ${planMinutes(r.items)} 分鐘</span>
+        ${r.note ? `<span class="rt-note">${esc(r.note)}</span>` : ''}
+      </button>
+      ${on ? planListHtml(r.items) : ''}
+    </div>`;
+  }).join('');
+}
+
 let freePick = [];   // 自選訓練勾選的動作 id，依勾選順序
 
 function freeListHtml() {
@@ -290,7 +318,7 @@ function exInfoHtml(ex) {
     ${ex.details.length ? `<div class="more nob"><dl>${ex.details.map(d => `<dt>${esc(d.label)}</dt><dd>${esc(d.text)}</dd>`).join('')}</dl></div>` : ''}`;
 }
 function planListHtml(key) {
-  const items = state.plans[key].items;
+  const items = Array.isArray(key) ? key : state.plans[key].items;
   if (!items.length) return '<p class="muted">這個訓練日還沒有動作，請到設定頁新增。</p>';
   return '<ol class="plan-list">' + items.map(it => {
     const ex = exById(it.exId);
@@ -309,7 +337,7 @@ VIEWS.home = () => {
     <header class="top"><h1>彈力帶訓練</h1><a class="toplink" href="#/help">訓練原則</a></header>
     ${a ? `<section class="card notice">
       <h2>有一次還沒結束的訓練</h2>
-      <p>${esc(planLabel(a.plan))}，${fmtDate(a.date)} 開始，已完成 ${a.items.reduce((n, it) => n + itemDone(it), 0)} 組。</p>
+      <p>${esc(planLabel(a))}，${fmtDate(a.date)} 開始，已完成 ${a.items.reduce((n, it) => n + itemDone(it), 0)} 組。</p>
       <div class="btn-row"><button type="button" class="btn primary" data-act="resume">繼續訓練</button>
       <button type="button" class="btn" data-act="discard">放棄</button></div>
     </section>` : ''}
@@ -317,12 +345,15 @@ VIEWS.home = () => {
       <p class="eyebrow">今天建議</p>
       <h2 class="rec">訓練日 ${rec.plan}<span>${esc(state.plans[rec.plan].title)}</span></h2>
       <p class="note">${esc(rec.note)}</p>
-      <div class="seg" role="group" aria-label="選擇訓練日">
+      <div class="seg four" role="group" aria-label="選擇訓練日">
         ${['A', 'B'].map(k => `<button type="button" data-act="pick" data-plan="${k}" aria-pressed="${pick === k}"><b>${k}</b><small>${esc(state.plans[k].title)}</small></button>`).join('')}
-        <button type="button" data-act="pick" data-plan="F" aria-pressed="${pick === 'F'}"><b>自選</b><small>臨時挑動作</small></button>
+        <button type="button" data-act="pick" data-plan="M" aria-pressed="${pick === 'M'}"><b>菜單</b><small>其他組合</small></button>
+        <button type="button" data-act="pick" data-plan="F" aria-pressed="${pick === 'F'}"><b>自選</b><small>臨時挑</small></button>
       </div>
-      ${pick === 'F' ? freeListHtml() : planListHtml(pick)}
-      ${a ? '' : pick === 'F'
+      ${pick === 'F' ? freeListHtml() : pick === 'M' ? routineListHtml() : planListHtml(pick)}
+      ${a ? '' : pick === 'M'
+        ? (currentRoutine() ? `<button type="button" class="btn primary big" data-act="start">開始「${esc(currentRoutine().title)}」</button>` : '')
+        : pick === 'F'
         ? `<button type="button" class="btn primary big" data-act="start" id="freeStart">開始自選訓練（${freePick.length} 個動作）</button>`
         : `<button type="button" class="btn primary big" data-act="start">開始訓練日 ${pick}</button>`}
     </section>
@@ -349,7 +380,9 @@ function createActive(plan) {
     date: ymd(now),
     startedAt: now.getTime(),
     idx: 0,
-    items: (plan === 'F' ? freePick.filter(id => exById(id)).map(id => exPreset(exById(id))) : state.plans[plan].items.filter(it => exById(it.exId))).map(it => ({
+    ...(plan === 'M' ? { title: currentRoutine().title } : {}),
+    items: (plan === 'F' ? freePick.filter(id => exById(id)).map(id => exPreset(exById(id)))
+      : (plan === 'M' ? currentRoutine() : state.plans[plan]).items.filter(it => exById(it.exId))).map(it => ({
       exId: it.exId,
       name: exById(it.exId).name,
       band: it.band,
@@ -382,7 +415,7 @@ VIEWS.workout = () => {
   view.innerHTML = `
     <header class="wtop">
       <button type="button" class="btn small" data-act="quit">結束</button>
-      <span class="wpos">${esc(planLabel(a.plan))}・動作 ${i + 1}／${a.items.length}</span>
+      <span class="wpos">${esc(planLabel(a))}・動作 ${i + 1}／${a.items.length}</span>
     </header>
     <div class="dots" aria-hidden="true">${a.items.map((x, k) => `<i class="${k === i ? 'on' : ''} ${itemDone(x) >= x.sets.length ? 'full' : ''}"></i>`).join('')}</div>
     <section class="card">
@@ -447,7 +480,7 @@ async function finishWorkout() {
   }
   if (done < total && !(await confirmBox({ title: `還有 ${total - done} 組沒有打勾`, body: '確定要結束並儲存嗎？沒打勾的組不會算進次數。', ok: '儲存並結束', cancel: '繼續訓練' }))) return;
   const session = {
-    id: a.id, date: a.date, startedAt: a.startedAt, endedAt: Date.now(), plan: a.plan,
+    id: a.id, date: a.date, startedAt: a.startedAt, endedAt: Date.now(), plan: a.plan, ...(a.title ? { title: a.title } : {}),
     items: a.items.map(it => ({ exId: it.exId, name: it.name, band: it.band, min: it.min, max: it.max, targetSets: it.targetSets, sets: it.sets }))
   };
   state.sessions.push(session);
@@ -459,7 +492,7 @@ async function finishWorkout() {
   const mins = Math.max(1, Math.round((session.endedAt - session.startedAt) / 60000));
   const up = session.items.filter(canProgress);
   openModal(`<h2>訓練完成</h2>
-    <p>${esc(planLabel(session.plan))}：完成 ${done} 組、共 ${reps} 下，花了 ${mins} 分鐘。</p>
+    <p>${esc(planLabel(session))}：完成 ${done} 組、共 ${reps} 下，花了 ${mins} 分鐘。</p>
     ${up.length ? `<div class="hintbox"><strong>下次可以加難度</strong><p>${up.map(it => esc(it.name)).join('、')}：每一組都做到次數上限，餘力也不多。</p></div>` : ''}
     <div class="sheet-btns"><button type="button" class="btn primary" data-act="mOk">好</button></div>`);
   location.hash = '#/';
@@ -640,7 +673,7 @@ VIEWS.history = () => {
     const reps = s.items.reduce((n, it) => n + itemReps(it), 0);
     const mins = s.endedAt ? Math.max(1, Math.round((s.endedAt - s.startedAt) / 60000)) : null;
     return `<details class="card sess">
-      <summary><span class="s-title">${fmtDate(s.date)}　${esc(planLabel(s.plan))}</span>
+      <summary><span class="s-title">${fmtDate(s.date)}　${esc(planLabel(s))}</span>
         <span class="s-meta">${sets} 組・共 ${reps} 下${mins ? '・' + mins + ' 分鐘' : ''}</span></summary>
       ${s.items.map(it => `<div class="h-item">
         <div class="h-name">${esc(it.name)} <span class="muted">${it.band} kg・目標 ${it.min}–${it.max} 下</span></div>
@@ -705,31 +738,30 @@ VIEWS.progress = () => {
 };
 
 /* ---------- 設定 ---------- */
-function planEditorHtml(key) {
-  const p = state.plans[key];
-  return `<section class="card">
-    <h2>訓練日 ${key}</h2>
-    <label class="field"><span>名稱</span><input type="text" data-path="plans.${key}.title" data-keep="1" value="${esc(p.title)}"></label>
+/* base 是資料路徑：'plans.A' 或 'routines.2' */
+function planEditorHtml(base) {
+  const p = getPath(base);
+  return `<label class="field"><span>名稱</span><input type="text" data-path="${base}.title" data-keep="1" value="${esc(p.title)}"></label>
     ${p.items.map((it, i) => `<div class="pitem">
       <label class="field"><span>動作 ${i + 1}</span>
-        <select data-path="plans.${key}.items.${i}.exId">${state.exercises.map(e => `<option value="${esc(e.id)}" ${e.id === it.exId ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
+        <select data-path="${base}.items.${i}.exId">${state.exercises.map(e => `<option value="${esc(e.id)}" ${e.id === it.exId ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
       <label class="field"><span>帶子</span>
-        <select data-path="plans.${key}.items.${i}.band" data-type="int">${BANDS.map(b => `<option value="${b.kg}" ${b.kg === it.band ? 'selected' : ''}>${esc(b.label)}</option>`).join('')}</select></label>
+        <select data-path="${base}.items.${i}.band" data-type="int">${BANDS.map(b => `<option value="${b.kg}" ${b.kg === it.band ? 'selected' : ''}>${esc(b.label)}</option>`).join('')}</select></label>
       <div class="grid3">
-        ${numField('組數', `plans.${key}.items.${i}.sets`, 1, 10, it.sets)}
-        ${numField('最少下數', `plans.${key}.items.${i}.min`, 1, 100, it.min)}
-        ${numField('最多下數', `plans.${key}.items.${i}.max`, 1, 100, it.max)}
+        ${numField('組數', `${base}.items.${i}.sets`, 1, 10, it.sets)}
+        ${numField('最少下數', `${base}.items.${i}.min`, 1, 100, it.min)}
+        ${numField('最多下數', `${base}.items.${i}.max`, 1, 100, it.max)}
       </div>
       <div class="btn-row">
-        <button type="button" class="btn small" data-act="pMove" data-plan="${key}" data-i="${i}" data-d="-1" ${i === 0 ? 'disabled' : ''}>上移</button>
-        <button type="button" class="btn small" data-act="pMove" data-plan="${key}" data-i="${i}" data-d="1" ${i === p.items.length - 1 ? 'disabled' : ''}>下移</button>
-        <button type="button" class="btn small danger-text" data-act="pDel" data-plan="${key}" data-i="${i}">移除</button>
+        <button type="button" class="btn small" data-act="pMove" data-base="${base}" data-i="${i}" data-d="-1" ${i === 0 ? 'disabled' : ''}>上移</button>
+        <button type="button" class="btn small" data-act="pMove" data-base="${base}" data-i="${i}" data-d="1" ${i === p.items.length - 1 ? 'disabled' : ''}>下移</button>
+        <button type="button" class="btn small danger-text" data-act="pDel" data-base="${base}" data-i="${i}">移除</button>
       </div>
     </div>`).join('')}
-    <button type="button" class="btn" data-act="pAdd" data-plan="${key}">＋ 新增動作到訓練日 ${key}</button>
-  </section>`;
+    <button type="button" class="btn" data-act="pAdd" data-base="${base}">＋ 新增動作</button>`;
 }
 
+const openRoutines = new Set();   // 設定頁展開中的菜單，重畫後維持展開
 VIEWS.settings = () => {
   const s = state.settings;
   view.innerHTML = `
@@ -758,8 +790,19 @@ VIEWS.settings = () => {
       </div>`).join('')}
       <label class="field"><span>習慣的訓練時間（可以不填）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
     </section>
-    ${planEditorHtml('A')}
-    ${planEditorHtml('B')}
+    <section class="card"><h2>訓練日 A</h2>${planEditorHtml('plans.A')}</section>
+    <section class="card"><h2>訓練日 B</h2>${planEditorHtml('plans.B')}</section>
+    <section class="card">
+      <h2>其他菜單</h2>
+      <p class="sub">首頁「菜單」裡的組合。可以改內容、新增或刪除。</p>
+      ${state.routines.map((r, i) => `<details class="exedit rtedit" data-rt="${esc(r.id)}" ${openRoutines.has(r.id) ? 'open' : ''}>
+        <summary>${esc(r.title)}</summary>
+        ${planEditorHtml('routines.' + i)}
+        <label class="field"><span>說明（可以不填）</span><textarea rows="2" data-path="routines.${i}.note">${esc(r.note || '')}</textarea></label>
+        <button type="button" class="btn small danger-text" data-act="rtDel" data-i="${i}">刪除這份菜單</button>
+      </details>`).join('')}
+      <button type="button" class="btn" data-act="rtAdd">＋ 新增菜單</button>
+    </section>
     <section class="card">
       <h2>動作說明</h2>
       ${state.exercises.map((e, i) => `<details class="exedit">
@@ -825,6 +868,10 @@ VIEWS.help = () => {
     <header class="top"><h1>說明</h1><a class="toplink" href="#/">回首頁</a></header>
     <section class="card"><h2>訓練原則</h2><ul class="plain">${PRINCIPLES.map(p => `<li>${esc(p)}</li>`).join('')}</ul></section>
     <section class="card"><h2>頻率</h2><p>每週 2 到 3 次，訓練日 A 和 B 交替，中間至少隔一天。首頁會依最近一次的紀錄建議今天做哪一天，也可以自己切換。</p></section>
+    <section class="card"><h2>組要怎麼做</h2>
+      <p>照這個 app 的順序：同一個動作做完所有組（組間休息 60 到 90 秒），再換下一個動作。這樣每一組的品質最好，帶子也不用一直換位置。</p>
+      <p>趕時間的話，可以把一個「推」和一個「拉」的動作配成一對輪流做（例如胸推和划船），兩個動作之間少休息一點。研究顯示這樣練的效果差不多，但會比較喘。</p>
+      <p>全部動作各做一組、輪完再重來的「循環式」比較像在練體力，每個動作的力氣會打折，想練肌肉時不建議當主要做法。</p></section>
     <section class="card"><h2>什麼時候加難度</h2>
       <p>某個動作的每一組都做到次數範圍的上限，而且每組填的餘力都在 2 下以內，下次訓練時就會出現「可以加難度」。方式有：</p>
       <ul class="plain">${PROGRESS_WAYS.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
@@ -841,6 +888,7 @@ const actions = {
   mCancel: () => closeModal(false),
 
   pick: el => { chosenPlan = el.dataset.plan; render(); },
+  pickRoutine: el => { chosenRoutine = el.dataset.id; const y = window.scrollY; render(); window.scrollTo(0, y); },
   start: () => {
     const plan = chosenPlan || recommend().plan;
     if (plan === 'F') {
@@ -848,7 +896,8 @@ const actions = {
       startChecklist(plan);
       return;
     }
-    if (!state.plans[plan].items.some(it => exById(it.exId))) { toast('這個訓練日沒有動作，請先到設定頁新增'); return; }
+    const src = plan === 'M' ? currentRoutine() : state.plans[plan];
+    if (!src || !src.items.some(it => exById(it.exId))) { toast('這份菜單沒有動作，請先到設定頁新增'); return; }
     startChecklist(plan);
   },
   go: el => { closeModal(); createActive(el.dataset.plan); location.hash = '#/workout'; },
@@ -965,7 +1014,7 @@ const actions = {
   delSession: async el => {
     const s = state.sessions.find(x => x.id === el.dataset.id);
     if (!s) return;
-    if (!(await confirmBox({ title: '刪除這筆紀錄？', body: `${fmtDate(s.date)}的${planLabel(s.plan)}，刪除後無法復原。`, ok: '刪除', danger: true }))) return;
+    if (!(await confirmBox({ title: '刪除這筆紀錄？', body: `${fmtDate(s.date)}的${planLabel(s)}，刪除後無法復原。`, ok: '刪除', danger: true }))) return;
     state.sessions = state.sessions.filter(x => x.id !== s.id);
     save(); render(); toast('已刪除');
   },
@@ -973,14 +1022,28 @@ const actions = {
   pickEx: el => { progressEx = el.dataset.id; render(); },
 
   pMove: el => {
-    const items = state.plans[el.dataset.plan].items, i = +el.dataset.i, k = i + (+el.dataset.d);
+    const items = getPath(el.dataset.base).items, i = +el.dataset.i, k = i + (+el.dataset.d);
     if (k < 0 || k >= items.length) return;
     [items[i], items[k]] = [items[k], items[i]];
     save(); render();
   },
-  pDel: el => { state.plans[el.dataset.plan].items.splice(+el.dataset.i, 1); save(); render(); },
+  pDel: el => { getPath(el.dataset.base).items.splice(+el.dataset.i, 1); save(); render(); },
   pAdd: el => {
-    state.plans[el.dataset.plan].items.push(exPreset(state.exercises[0]));
+    getPath(el.dataset.base).items.push(exPreset(state.exercises[0]));
+    save(); render();
+  },
+  rtAdd: () => {
+    const r = { id: 'r' + Date.now(), title: '新菜單', note: '', items: [exPreset(state.exercises[0])] };
+    state.routines.push(r);
+    openRoutines.add(r.id);
+    save(); render();
+    const el = document.querySelector(`.rtedit[data-rt="${r.id}"]`);
+    if (el) el.scrollIntoView({ block: 'start' });
+  },
+  rtDel: async el => {
+    const i = +el.dataset.i, r = state.routines[i];
+    if (!(await confirmBox({ title: `刪除菜單「${r.title}」？`, body: '過去用這份菜單做的訓練紀錄會保留。', ok: '刪除', danger: true }))) return;
+    state.routines.splice(i, 1);
     save(); render();
   },
   exAdd: () => {
@@ -994,7 +1057,7 @@ const actions = {
   exDel: async el => {
     const i = +el.dataset.i, ex = state.exercises[i];
     if (state.exercises.length <= 1) { toast('至少要留一個動作'); return; }
-    if (['A', 'B'].some(k => state.plans[k].items.some(it => it.exId === ex.id))) { toast('這個動作還在訓練日裡，請先從訓練日移除'); return; }
+    if (['A', 'B'].some(k => state.plans[k].items.some(it => it.exId === ex.id)) || state.routines.some(r => r.items.some(it => it.exId === ex.id))) { toast('這個動作還在訓練日或菜單裡，請先從那裡移除'); return; }
     if (!(await confirmBox({ title: `刪除「${ex.name}」？`, body: '過去的訓練紀錄會保留。', ok: '刪除', danger: true }))) return;
     state.exercises.splice(i, 1);
     save(); render();
@@ -1034,6 +1097,9 @@ document.addEventListener('pointerover', e => { if (e.pointerType === 'mouse' &&
 
 /* 記住「詳細姿勢」要展開還是收起來（toggle 事件不會往上傳，所以用捕獲階段） */
 document.addEventListener('toggle', e => {
+  if (e.target.matches && e.target.matches('details.rtedit')) {
+    if (e.target.open) openRoutines.add(e.target.dataset.rt); else openRoutines.delete(e.target.dataset.rt);
+  }
   if (e.target.matches && e.target.matches('details.more') && state.settings.showDetails !== e.target.open) {
     state.settings.showDetails = e.target.open;
     save();
@@ -1094,7 +1160,7 @@ document.addEventListener('change', e => {
   setPath(path, v);
 
   /* 最少下數不能大於最多下數 */
-  const m = path.match(/^(plans\.[AB]\.items\.\d+|exercises\.\d+)\.(min|max)$/);
+  const m = path.match(/^(plans\.[AB]\.items\.\d+|routines\.\d+\.items\.\d+|exercises\.\d+)\.(min|max)$/);
   if (m) {
     const it = getPath(m[1]);
     if (it.min > it.max) {
@@ -1104,6 +1170,8 @@ document.addEventListener('change', e => {
       if (sib) sib.value = v;
     }
   }
+  const rt = path.match(/^routines\.(\d+)\.title$/);
+  if (rt) { const sum = el.closest('details'); if (sum) $('summary', sum).textContent = state.routines[+rt[1]].title; }
   const n = path.match(/^exercises\.(\d+)\.name$/);
   if (n) {
     const ex = state.exercises[+n[1]];
