@@ -967,6 +967,19 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
     <figure style="flex:1 1 280px;margin:0"><svg viewBox="0 0 330 262" role="img" aria-label="HOI 對 TII 的簡單斜率圖" style="width:100%;max-width:420px;height:auto;font-size:11px"><line x1="48" x2="292" y1="168.0" y2="168.0" stroke="var(--rule-soft)" stroke-width="0.5"/><text x="42" y="172.0" text-anchor="end" fill="var(--muted)">-0.8</text><line x1="48" x2="292" y1="128.0" y2="128.0" stroke="var(--rule-soft)" stroke-width="0.5"/><text x="42" y="132.0" text-anchor="end" fill="var(--muted)">-0.4</text><line x1="48" x2="292" y1="88.0" y2="88.0" stroke="var(--rule-soft)" stroke-width="1"/><text x="42" y="92.0" text-anchor="end" fill="var(--muted)">+0.0</text><line x1="48" x2="292" y1="48.0" y2="48.0" stroke="var(--rule-soft)" stroke-width="0.5"/><text x="42" y="52.0" text-anchor="end" fill="var(--muted)">+0.4</text><line x1="48.0" y1="148.7" x2="292.0" y2="55.3" stroke="var(--accent)" stroke-width="2.5"/><line x1="48.0" y1="113.9" x2="292.0" y2="62.1" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="5 4"/><line x1="48.0" y1="79.1" x2="292.0" y2="68.9" stroke="var(--direct)" stroke-width="2.5"/><text x="48.0" y="196" text-anchor="middle" fill="var(--muted)">HOI 低（−1 SD）</text><text x="292.0" y="196" text-anchor="middle" fill="var(--muted)">HOI 高（+1 SD）</text><text x="12" y="98" transform="rotate(-90 12 98)" text-anchor="middle" fill="var(--muted)">TII（標準化）</text><line x1="48" x2="70" y1="218" y2="218" stroke="var(--accent)" stroke-width="2.5"/><text x="76" y="222" fill="var(--ink)">HRS 低（−1 SD）：斜率 .47</text><line x1="48" x2="70" y1="235" y2="235" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="5 4"/><text x="76" y="239" fill="var(--ink)">HRS 平均：斜率 .26</text><line x1="48" x2="70" y1="252" y2="252" stroke="var(--direct)" stroke-width="2.5"/><text x="76" y="256" fill="var(--ink)">HRS 高（+1 SD）：斜率 .05</text></svg><figcaption style="font-size:.88rem;color:var(--ink-2)">HOI → TII</figcaption></figure>
   </div>
   <p style="font-size:.88rem;color:var(--ink-2)">SmartPLS 的 Conditional direct effects 與 Simple slope analysis。HRS 愈低，HOI 對個人努力投入與團隊互動的影響愈強；HRS 高時，HOI 對團隊互動沒有影響。HOI → TII 的三條線在 HOI 約 +0.68 SD 處交叉：HOI 很高時，HRS 低的人團隊互動反而較多。</p>
+  <div class="prov" id="res-plain">
+    <span class="prov__lab">白話說明</span>
+    <p>這兩張圖在回答一個問題：「愈願意查證 AI 的人，是不是愈投入、愈常和組員討論？這件事對每個人都一樣嗎？」</p>
+    <ul>
+      <li><b>怎麼看圖：</b>把同學依「覺得自己在 AI 面前有多重要」（HRS）分成低、中、高三群，每群一條線。線愈斜，表示愈願意查證的人，投入或互動高出愈多；線是平的，表示查不查證都差不多。</li>
+      <li><b>個人努力（IEC）：</b>三條線都往上，所以不管哪一群，愈願意查證的人都愈投入。差別在斜度：覺得自己較不重要的人最斜（.52），覺得自己很重要的人較平（.26）。</li>
+      <li><b>團隊互動（TII）：</b>覺得自己較不重要的人，線明顯往上（.47）；覺得自己很重要的人，線幾乎是平的（.05），他們查不查證，和組員討論的多寡都差不多。</li>
+      <li><b>為什麼會這樣：</b>覺得自己很重要的人本來就投入，查證只是其中一件事，多查少查差別不大；他們也比較相信自己的判斷，查證時不一定會找組員。覺得自己較不重要的人，查證 AI 是一件非自己不可的事，所以愈願意查證就愈投入，也愈需要找組員確認。</li>
+      <li><b>打個比方：</b>像補習對成績的幫助，對本來就很會讀書的人幫助小，對還沒跟上的人幫助大。這裡的「補習」是查證 AI，「本來就很會讀書」是覺得自己很重要。</li>
+    </ul>
+    <p><b>容易講錯的三件事：</b>①「負向調節」不是說覺得自己重要的人比較不努力，他們的投入平均反而較高，只是查證帶來的差別比較小。②「低」是相對的：HRS 低的那一群平均約 4.68 分（滿分 7），仍在中間以上，不是覺得自己會被取代。③問卷是同一時間填的，只能說兩者有關聯，不能說查證造成投入。另外，團隊互動這張圖的差異在保留 13 份極端值時不顯著（見第七點），講的時候語氣要保守。</p>
+  </div>
+
   <p style="font-size:.88rem;color:var(--ink-2)"><b>可能的解釋：</b>Kerr 與 Bruun（1983）指出，個體愈認為自己的努力對團體成功並非必要，動機便愈低（p. 79）。認為自己在 AI 面前可被取代的成員（HRS 低）正處於這種處境，監督 AI 的意圖讓他們有不可省略的工作，因此 HOI 與投入、互動的關聯最強；認為自己不可取代的成員（HRS 高），投入不必靠監督 AI 來維持。研究限制：HRS 高的人 HOI 多集中在高分（平均 6.68，SD .59），斜率可能因此偏小。</p>
 
   <p class="subhead">七、補充：穩健性檢查</p>
