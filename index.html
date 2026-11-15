@@ -795,6 +795,29 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 .vs__b.is-on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
 .vs__b--none{text-decoration:line-through;color:var(--muted)}
 .vs__b:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+/* 各章狀態、兩層導覽、fsQCA 版與已刪除文獻的開關 */
+.status{margin:0 0 1.3rem}
+.status .qi th,.status .qi td{white-space:nowrap}
+.status .qi td:first-child{font-weight:600}
+.status .qi td:first-child a{color:var(--ink);text-decoration:none}
+.status .qi td:first-child a:hover{color:var(--accent);text-decoration:underline}
+.status__num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.status__sub{color:var(--muted);font-size:.8rem}
+.status__todo a{color:var(--indirect);font-weight:600;text-decoration:none}
+.viewbar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .7rem;margin:.7rem 0 0}
+.toc{display:block}
+.toc__row{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem .8rem}
+.toc__row+.toc__row{margin-top:.6rem}
+.toc a.toc__ch,.toc__btn{font-weight:600;font-size:.88rem;padding:.28rem .7rem}
+.toc__btn{font-family:inherit;color:var(--accent);background:none;border:1px solid var(--rule);border-radius:2px;cursor:pointer;line-height:inherit}
+.toc__btn:hover{background:var(--accent-soft)}
+.toc__btn[aria-expanded="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.toc__btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.toc__sub{display:flex;flex-wrap:wrap;gap:.45rem .8rem;margin-top:.6rem;padding:.65rem .75rem;border:1px solid var(--rule-soft);border-radius:3px;background:var(--surface)}
+.toc__sub[hidden]{display:none}
+body:not(.show-fsq) #frag-s3f,body:not(.show-fsq) #frag-s4f{display:none}
+body:not(.show-gone) .is-gone{display:none}
+
 .vs__p{margin:.1rem 0 .7rem;padding:.5rem .7rem;border-left:2px solid var(--accent);background:var(--sunken);font-size:.92rem;line-height:1.75;color:var(--ink-2);overflow-wrap:anywhere}
 .vs__h{display:block;font-family:var(--f-mono);font-size:.7rem;color:var(--muted);margin-bottom:.2rem}
 .vs__p del{background:var(--none-bg);color:var(--none);text-decoration:line-through}
@@ -817,35 +840,60 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 </section>
 
 <header class="masthead" id="top">
-  <p class="masthead__eyebrow">畢業專題 · 第一章 · 第二章 · 第三章（草稿）· 第四章 · 口試備查</p>
+  <p class="masthead__eyebrow">畢業專題 · 第一章至第五章 · 口試備查</p>
   <h1>原文證據對照表</h1>
   <p>將論文中具有論證功能的敘述，逐條對回學術原文的可定位位置。教授問「這段引用在原文哪裡」時，照節次順序翻到該條即可。此表不重做文獻回顧，只做可追溯性查證。</p>
 </header>
 
-<nav class="toc">
-  <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
-  <a href="#results" style="border-color:var(--direct);color:var(--direct);font-weight:700">◆ 正式分析結果</a>
-  <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（3 條）</a>
-  <a href="#askprof" class="toc-ask">◆ 問老師清單（1 項）</a>
-  <a href="#s11">1.1–1.2 研究背景與動機</a>
-  <a href="#s221-lit-latan">2.1.1 社會懈怠的起源</a>
-  <a href="#s221-lit-mulvey">2.1.2 社會懈怠的後續發展</a>
-  <a href="#s223-lit-cymek">2.1.3 人與AI的社會懈怠</a>
-  <a href="#s221-van">2.1.4 個人努力投入</a>
-  <a href="#s222">2.1.5 團隊互動強度</a>
-  <a href="#s2cap" style="border-color:var(--accent);color:var(--accent)">2.2.1 生成式AI的能力與幻覺</a>
-  <a href="#s211">2.2.2 AI任務可委派性</a>
-  <a href="#s212">2.2.3 當責</a>
-  <a href="#s213">2.2.4 人類監督意圖</a>
-  <a href="#s214">2.2.5 AD、當責 → HOI</a>
-  <a href="#s224">2.2.6 HOI → IEC、TII</a>
-  <a href="#s231">2.3.1 人類角色重要性</a>
-  <a href="#s232">2.3.2 調節作用</a>
-  <a href="#s3" style="border-color:var(--indirect);color:var(--indirect)">第三章 研究方法（v1.4）</a>
-  <a href="#s3f">第三章 有fsQCA 版多出的條目</a>
-  <a href="#s4" style="border-color:var(--direct);color:var(--direct)">第四章 研究結果（v1.1）</a>
-  <a href="#s4f">第四章 有fsQCA 版多出的條目</a>
-  <a href="#s5" style="border-color:var(--accent);color:var(--accent)">第五章 結論與建議（v1.0）</a>
+<section class="status" id="status" aria-label="各章狀態">
+  <div class="qi-wrap">
+    <table class="qi">
+      <thead><tr><th>章</th><th>版本</th><th>文獻</th><th>證據</th><th>組員待查證</th><th>Notion</th></tr></thead>
+      <tbody>
+      <tr data-pre="s1" data-frags="s1" data-fsq=""><td><a href="#s11">第一章 緒論</a></td><td class="status__num">v1.5</td><td class="status__num" data-k="src">–</td><td class="status__num" data-k="ent">–</td><td class="status__num status__todo" data-k="todo">–</td><td><a href="https://app.notion.com/p/3f095422bcd180a2aad0d50e483a2927" target="_blank" rel="noopener noreferrer">開啟 ↗</a></td></tr>
+      <tr data-pre="s2" data-frags="s22 s21 s23" data-fsq=""><td><a href="#s221">第二章 文獻探討</a></td><td class="status__num">v1.6</td><td class="status__num" data-k="src">–</td><td class="status__num" data-k="ent">–</td><td class="status__num status__todo" data-k="todo">–</td><td><a href="https://app.notion.com/p/40195422bcd18153887eeb30f5106295" target="_blank" rel="noopener noreferrer">開啟 ↗</a></td></tr>
+      <tr data-pre="s3" data-frags="s3" data-fsq="s3f"><td><a href="#s3">第三章 研究方法</a></td><td class="status__num">v1.4</td><td class="status__num" data-k="src">–</td><td class="status__num" data-k="ent">–</td><td class="status__num status__todo" data-k="todo">–</td><td><a href="https://app.notion.com/p/41495422bcd1802c8c38e9fac1195b7c" target="_blank" rel="noopener noreferrer">不含 ↗</a> · <a href="https://app.notion.com/p/3e295422bcd1809fa9ecdbe6ee602f03" target="_blank" rel="noopener noreferrer">有 fsQCA ↗</a></td></tr>
+      <tr data-pre="s4" data-frags="s4" data-fsq="s4f"><td><a href="#s4">第四章 研究結果</a></td><td class="status__num">v1.1</td><td class="status__num" data-k="src">–</td><td class="status__num" data-k="ent">–</td><td class="status__num status__todo" data-k="todo">–</td><td><a href="https://app.notion.com/p/41395422bcd1813196c6ff9c8d0127e3" target="_blank" rel="noopener noreferrer">不含 ↗</a> · <a href="https://app.notion.com/p/40795422bcd180269a89c838168a5ab8" target="_blank" rel="noopener noreferrer">有 fsQCA ↗</a></td></tr>
+      <tr data-pre="s5" data-frags="s5" data-fsq=""><td><a href="#s5">第五章 結論與建議</a></td><td class="status__num">v1.0</td><td class="status__num" data-k="src">–</td><td class="status__num" data-k="ent">–</td><td class="status__num status__todo" data-k="todo">–</td><td><a href="https://app.notion.com/p/41995422bcd18091b991e11133f8bd3a" target="_blank" rel="noopener noreferrer">不含 ↗</a> · <a href="https://app.notion.com/p/41995422bcd180dbbacbd41b911dd04c" target="_blank" rel="noopener noreferrer">有 fsQCA ↗</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="viewbar">
+    <button type="button" class="revbar__hide" id="tg-fsq" aria-pressed="false">顯示 fsQCA 版多出的條目</button>
+    <button type="button" class="revbar__hide" id="tg-gone" aria-pressed="false">顯示已刪除的文獻</button>
+    <span class="status__sub" id="viewbar-note"></span>
+  </div>
+</section>
+
+<nav class="toc" aria-label="章節導覽">
+  <div class="toc__row">
+    <a href="#s11" class="toc__ch">第一章</a>
+    <button type="button" class="toc__btn" aria-expanded="false" aria-controls="toc-ch2">第二章 ▾</button>
+    <a href="#s3" class="toc__ch">第三章</a>
+    <a href="#s4" class="toc__ch">第四章</a>
+    <a href="#s5" class="toc__ch">第五章</a>
+  </div>
+  <div class="toc__sub" id="toc-ch2" hidden>
+    <a href="#s221-lit-latan">2.1.1 社會懈怠的起源</a>
+    <a href="#s221-lit-mulvey">2.1.2 社會懈怠的後續發展</a>
+    <a href="#s223-lit-cymek">2.1.3 人與AI的社會懈怠</a>
+    <a href="#s221-van">2.1.4 個人努力投入</a>
+    <a href="#s222">2.1.5 團隊互動強度</a>
+    <a href="#s2cap">2.2.1 生成式AI的能力與幻覺</a>
+    <a href="#s211">2.2.2 AI任務可委派性</a>
+    <a href="#s212">2.2.3 當責</a>
+    <a href="#s213">2.2.4 人類監督意圖</a>
+    <a href="#s214">2.2.5 AD、當責 → HOI</a>
+    <a href="#s224">2.2.6 HOI → IEC、TII</a>
+    <a href="#s231">2.3.1 人類角色重要性</a>
+    <a href="#s232">2.3.2 調節作用</a>
+  </div>
+  <div class="toc__row">
+    <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（<span data-n="newev">13</span> 條）</a>
+    <a href="#askprof" class="toc-ask">◆ 問老師清單（<span data-n="askprof">10</span> 項）</a>
+    <a href="#results" style="border-color:var(--direct);color:var(--direct);font-weight:700">◆ 正式分析結果</a>
+    <a href="#revlist" style="border-color:var(--none);color:var(--none);font-weight:700">◆ 第五章素材與長期備忘</a>
+  </div>
 </nav>
 
 <div class="finder" role="search"><input class="finder__in" type="search" placeholder="搜尋作者、關鍵字或條目代號（例：Stout、幻覺、s232-K）" aria-label="搜尋條目"><span class="finder__n" role="status"></span><button type="button" class="finder__x" hidden>清除</button></div>
@@ -894,8 +942,8 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
         <tr data-vid="s4-V"><td class="loc"><a href="#s4-V">s4-V</a></td><td>4.2</td><td>一般自我效能會減弱認知需求對認知努力之正向效果</td><td>Pillai 等人 (2011)</td><td class="loc">印刷 p.127（PDF p.1）摘要；印刷 p.133（PDF p.7）Discussion 第一段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-V 已查證"></td></tr>
         <tr data-vid="s4-W"><td class="loc"><a href="#s4-W">s4-W</a></td><td>4.3</td><td>為檢視負向調節是否源自量尺上限或HOI之曲線關係，加入HOI之二次項</td><td>Ganzach (1997)</td><td class="loc">印刷 p.235（PDF p.1）摘要 (a)、(c)</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-W 已查證"></td></tr>
         <tr data-vid="s4-X"><td class="loc"><a href="#s4-X">s4-X</a></td><td>4.2</td><td>生成式AI能重現團隊合作之部分好處，部分原本須向組員請教之事可能改由生成式AI處理</td><td>Dell'Acqua 等人 (2026)</td><td class="loc">見 2.2.1 I 條、J2 條（印刷 p.1217、pp.1224–1225）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-X 已查證"></td></tr>
-        <tr data-vid="s5-A"><td class="loc"><a href="#s5-A">s5-A</a></td><td>5.2.1</td><td>受試者面對錯誤的AI解釋時傾向過度相信</td><td>Si 等人 (2024)</td><td class="loc">ACL Anthology 全文搜尋 “over-trust”；頁碼待補</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-A 已查證"></td></tr>
-        <tr data-vid="s5-B"><td class="loc"><a href="#s5-B">s5-B</a></td><td>5.2.1</td><td>模型出錯時過度依賴其內容，多數（60%）只查詢一次便做出決定</td><td>Spatharioti 等人 (2025)</td><td class="loc">ACM 網頁全文搜尋 “60%”；PDF 頁碼待補</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-B 已查證"></td></tr>
+        <tr data-vid="s5-A"><td class="loc"><a href="#s5-A">s5-A</a></td><td>5.2.1</td><td>受試者面對錯誤的AI解釋時傾向過度相信</td><td>Si 等人 (2024)</td><td class="loc">印刷 p.1464（PDF p.6）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-A 已查證"></td></tr>
+        <tr data-vid="s5-B"><td class="loc"><a href="#s5-B">s5-B</a></td><td>5.2.1</td><td>模型出錯時過度依賴其內容，多數（60%）只查詢一次便做出決定</td><td>Spatharioti 等人 (2025)</td><td class="loc">PDF p.10；另見 p.7、p.1 摘要</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-B 已查證"></td></tr>
         <tr data-vid="s5-C"><td class="loc"><a href="#s5-C">s5-C</a></td><td>5.2.1</td><td>演算法懈怠之實驗比較並未達統計顯著</td><td>Inuwa-Dutse 等人 (2023)</td><td class="loc">PDF p.8（Fig. 7 附近）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-C 已查證"></td></tr>
         <tr data-vid="s5-D"><td class="loc"><a href="#s5-D">s5-D</a></td><td>5.2.2、5.5</td><td>過程當責也未必總是優於結果當責</td><td>Hall 等人 (2017)</td><td class="loc">印刷 p.210（PDF p.7）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-D 已查證"></td></tr>
         <tr data-vid="s5-E"><td class="loc"><a href="#s5-E">s5-E</a></td><td>5.2.3</td><td>概念性論文，討論高風險AI系統中指定監督者之情境</td><td>Sterz 等人 (2024)</td><td class="loc">印刷 p.2495、p.2497、pp.2502–2503（PDF p.1、p.3、pp.8–9）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-E 已查證"></td></tr>
@@ -1514,6 +1562,69 @@ function initRevbar(){
 }
 </script>
 <script>
+function initView(){
+  var body=document.body, bF=document.getElementById('tg-fsq'), bG=document.getElementById('tg-gone'), note=document.getElementById('viewbar-note');
+  function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+  function qn(sel){return document.querySelectorAll(sel).length;}
+  // 已刪除的文獻：標頭之後到下一個標頭之前都算
+  [].forEach.call(document.querySelectorAll('[id^="frag-"] .section'),function(sec){
+    var on=false;
+    [].forEach.call(sec.children,function(ch){
+      if(ch.classList.contains('srchead')) on=ch.classList.contains('srchead--gone');
+      else if(ch.classList.contains('subhead')) on=false;
+      if(on||ch.classList.contains('entry--gone')||ch.classList.contains('note--gone')) ch.classList.add('is-gone');
+    });
+  });
+  var nGone=qn('.srchead--gone')+qn('article.entry--gone'), nFsq=qn('#frag-s3f article.entry, #frag-s4f article.entry');
+  bG.textContent='顯示已刪除的文獻與條目（'+nGone+'）';
+  bF.textContent='顯示 fsQCA 版多出的條目（'+nFsq+'）';
+  function count(){
+    var fsq=body.classList.contains('show-fsq');
+    [].forEach.call(document.querySelectorAll('#status tbody tr'),function(tr){
+      var ids=tr.getAttribute('data-frags').split(' ');
+      if(fsq&&tr.getAttribute('data-fsq')) ids.push(tr.getAttribute('data-fsq'));
+      var src=0, ent=0;
+      ids.forEach(function(id){src+=qn('#frag-'+id+' .srchead:not(.srchead--gone)'); ent+=qn('#frag-'+id+' article.entry:not(.entry--gone)');});
+      var pre=tr.getAttribute('data-pre'), todo=0;
+      [].forEach.call(document.querySelectorAll('#newev tbody tr[data-vid]'),function(r){
+        if(r.getAttribute('data-vid').indexOf(pre)!==0) return;
+        var c=r.querySelector('.vchk__box'); if(!c||!c.checked) todo++;
+      });
+      tr.querySelector('[data-k="src"]').textContent=src;
+      tr.querySelector('[data-k="ent"]').textContent=ent;
+      tr.querySelector('[data-k="todo"]').innerHTML=todo?('<a href="#newev">'+todo+' 條</a>'):'—';
+    });
+    var a=document.querySelector('[data-n="newev"]'); if(a) a.textContent=qn('#newev tbody tr[data-vid]');
+    var b=document.querySelector('[data-n="askprof"]'); if(b) b.textContent=qn('#askprof ol.issues > li');
+    note.textContent=fsq?'第三、四章的數字已含 fsQCA 版多出的條目':'';
+  }
+  function set(which,on){
+    var cls=which==='fsq'?'show-fsq':'show-gone', btn=which==='fsq'?bF:bG;
+    body.classList.toggle(cls,on); btn.setAttribute('aria-pressed',on?'true':'false'); lsSet('ev-'+cls,on?'1':'0'); count();
+  }
+  bF.addEventListener('click',function(){set('fsq',!body.classList.contains('show-fsq'));});
+  bG.addEventListener('click',function(){set('gone',!body.classList.contains('show-gone'));});
+  set('fsq',lsGet('ev-show-fsq')==='1'); set('gone',lsGet('ev-show-gone')==='1');
+  // 連到被收起來的條目時，自動打開對應的開關
+  function reveal(id){
+    var t=null; try{t=document.getElementById(id);}catch(e){} if(!t) return;
+    if(t.closest('#frag-s3f, #frag-s4f')&&!body.classList.contains('show-fsq')) set('fsq',true);
+    if((t.classList.contains('is-gone')||t.closest('.is-gone'))&&!body.classList.contains('show-gone')) set('gone',true);
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href^="#"]'); if(a) reveal(a.getAttribute('href').slice(1));
+  },true);
+  if(location.hash) reveal(location.hash.slice(1));
+  // 第二章小節選單
+  var tb=document.querySelector('.toc__btn'), sub=document.getElementById('toc-ch2');
+  if(tb&&sub) tb.addEventListener('click',function(){var open=sub.hidden; sub.hidden=!open; tb.setAttribute('aria-expanded',open?'true':'false');});
+  // 查證勾選改變時重算
+  var nv=document.getElementById('newev'); if(nv) nv.addEventListener('change',count);
+  setTimeout(count,1500); setTimeout(count,5000);
+}
+</script>
+<script>
 (function(){
   var frags=[
     {id:'frag-s1',url:'frag/s1.html'},
@@ -1545,6 +1656,7 @@ function initRevbar(){
   Promise.all(tasks).then(function(){
     if(typeof initRevbar==='function') initRevbar();
     if(typeof initFinder==='function') initFinder();
+    if(typeof initView==='function') initView();
     if(location.hash){
       var t=null;
       try{ t=document.getElementById(location.hash.slice(1)); }catch(e){}
