@@ -803,6 +803,12 @@ body:has(#askprof li) .toc a.toc-ask{border-color:var(--none);color:var(--none);
 .status .qi td:first-child a:hover{color:var(--accent);text-decoration:underline}
 .status__num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .status__sub{color:var(--muted);font-size:.8rem}
+.report{margin:0 0 1.6rem;padding:1rem 1.1rem;border:1px solid var(--accent);border-radius:3px;background:var(--surface)}
+.report__title{margin:0 0 .2rem;font-size:1.15rem;font-weight:700;color:var(--ink)}
+.report__note{margin:0 0 .7rem;font-size:.86rem;color:var(--ink-2)}
+.report .qi td:first-child{font-weight:600}
+.report .subhead{margin-top:1rem}
+.report ul{margin:.3rem 0 0;padding-left:1.2rem;font-size:.92rem;line-height:1.75}
 .status__todo a{color:var(--indirect);font-weight:600;text-decoration:none}
 .viewbar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .7rem;margin:.7rem 0 0}
 .toc{display:block}
@@ -844,6 +850,30 @@ body:not(.show-gone) .is-gone{display:none}
   <h1>原文證據對照表</h1>
   <p>將論文中具有論證功能的敘述，逐條對回學術原文的可定位位置。教授問「這段引用在原文哪裡」時，照節次順序翻到該條即可。此表不重做文獻回顧，只做可追溯性查證。</p>
 </header>
+
+<section class="report" id="report" aria-label="本次開會報告">
+  <h2 class="report__title">本次開會報告</h2>
+  <p class="report__note">依 Notion 會議記錄，上次開會留下的八項待辦與目前的狀況。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>上次的待辦</th><th>現況</th><th>報告時看哪裡</th></tr></thead>
+    <tbody>
+      <tr><td>找幾個範本看第四章 PLS 怎麼寫</td><td>範本已選定：老師提供的論文，加上兩篇 PLS-SEM 論文。第三章已照範本的寫法改寫；第四章 v1.1 請老師看寫法是否符合。</td><td><a href="#status">各章狀態表</a>的 Notion 連結</td></tr>
+      <tr><td>一版有 fsQCA、一版沒有</td><td>第三章、第四章、第五章各有兩版。本頁預設顯示沒有 fsQCA 的版本，fsQCA 版多出的條目用開關顯示。</td><td><a href="#status">各章狀態表</a>下方的開關</td></tr>
+      <tr><td>H4a、H4b 的負向解釋</td><td>4.2 的寫法：HOI 與 HRS 可能有替代關係，並以行為可塑性（Pierce 等人，1993）說明。HRS 高的人本來就投入（HRS → IEC 為 .305），HOI 能再增加的投入有限。</td><td><a href="#res-plain">簡單斜率的白話說明</a></td></tr>
+      <tr><td>為什麼 HRS 的調節是負的，正的話會怎樣</td><td>若為正：愈覺得自己重要的人，查證與投入、互動的關聯愈強，兩者互相加強。結果為負：愈覺得自己重要的人，這個關聯愈弱，兩者互相替代。負的結果在加入 HOI 二次項與加入當責直接路徑後都還在，保留 13 份極端值後變弱。</td><td><a href="#res-robust-plain">穩健性檢查的白話說明</a></td></tr>
+      <tr><td>簡單斜率的解釋</td><td>HOI → IEC 的斜率在 HRS 低、平均、高時為 .515、.386、.256，三者都顯著。HOI → TII 為 .467、.259、.052，HRS 高時不顯著。</td><td><a href="#results">正式分析結果</a>第六點的表與圖</td></tr>
+      <tr><td>找專題的排版</td><td>排版範本已選定。四章合併的 Word 還沒有照範本排版。</td><td>－</td></tr>
+      <tr><td>第三章：題項、資料來源</td><td>表3-2 列各構面的定義與題項來源，題項文字不放在第三章。</td><td rowspan="2">這兩項與上次的指示不完全相同，請老師確認是否可以</td></tr>
+      <tr><td>第四章：只有數字</td><td>表4-2 列信度、收斂效度，並保留題項文字與代號。</td></tr>
+    </tbody>
+  </table></div>
+  <p class="subhead">上次開會之後新增的</p>
+  <ul>
+    <li>第五章草稿 v1.0，有、沒有 fsQCA 各一版，依老師的討論底稿撰寫，組內還沒有逐段看過。</li>
+    <li>三項穩健性檢查寫進 4.3：H2、H3a 穩定；H3b 在加入當責直接路徑後不顯著；H4a、H4b 在保留 13 份極端值後變弱（<a href="#res-robust-plain">白話說明</a>）。</li>
+    <li>要請老師決定的事列在<a href="#askprof">問老師清單</a>，時間不夠就先問這四項：第五章的骨架、要不要呼應穩健性檢查、H1 的寫法、因果語氣。</li>
+  </ul>
+</section>
 
 <section class="status" id="status" aria-label="各章狀態">
   <div class="qi-wrap">
@@ -889,6 +919,7 @@ body:not(.show-gone) .is-gone{display:none}
     <a href="#s232">2.3.2 調節作用</a>
   </div>
   <div class="toc__row">
+    <a href="#report" style="border-color:var(--accent);color:var(--accent);font-weight:700">◆ 本次開會報告</a>
     <a href="#newev" style="border-color:var(--indirect);color:var(--indirect);font-weight:700">◆ 組員待查證（<span data-n="newev">13</span> 條）</a>
     <a href="#askprof" class="toc-ask">◆ 問老師清單（<span data-n="askprof">10</span> 項）</a>
     <a href="#results" style="border-color:var(--direct);color:var(--direct);font-weight:700">◆ 正式分析結果</a>
