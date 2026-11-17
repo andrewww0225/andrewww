@@ -2,7 +2,7 @@
   <div class="section__head">
     <span class="section__num">2.2</span>
     <h2 class="section__title">生成式AI的能力與幻覺</h2>
-    <span class="section__meta">5 篇文獻 · 7 條</span>
+    <span class="section__meta">5 篇文獻 · 6 條</span>
   </div>
 
   <div class="prov">
@@ -33,8 +33,8 @@
     </div>
   </article>
 
-  <article class="entry" id="s2cap-B">
-    <div class="entry__rail"><span class="entry__key">B</span><span class="chip chip--direct">直接支持</span></div>
+  <article class="entry entry--gone" id="s2cap-B">
+    <div class="entry__rail"><span class="entry__key">B</span><span class="chip chip--gone">已於 v1.7 刪除</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">「且年資最淺的人員進步最多」</p>
       <p class="role"><b>作用</b>2.2：說明生成式AI確實能提升表現，且年資最淺的人員進步最多，是AD的背景</p>
@@ -485,8 +485,8 @@
   <article class="entry" id="s211-H">
     <div class="entry__rail"><span class="entry__key">H</span><span class="chip chip--none">證據不足</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「AI任務可委派性（AI delegability, AD）」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>三者的對象各不相同：AI任務可委派性（AI delegability, AD）針對任務與AI的適配程度，當責（accountability<del>, AC</del>）針對自己完成任務的過程是否須向他人交代，人類監督<del>傾向</del><ins>意圖</ins>（human oversight intention, HOI）則針對個體如何處理AI的產出內容。</div>
+      <p class="claim">「AI任務可委派性（AI Delegability, AD）」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><ins>三者的對象各不相同：</ins>AI任務可委派性（AI <del>D</del><ins>d</ins>elegability, AD）<ins>針對任務與AI的適配程度，當責（accountability）針對自己完成任務的過程是否須向他人交代，人類監督意圖（human oversight intention, HOI）則針對個體如何處理AI的產出內容。</ins><span class="vs__low">配對信心較低，請自行核對</span></div>
       <p class="role"><b>作用</b>構念命名</p>
       <div class="src">
         <div class="src__none">原文中<strong>不存在</strong> “Perceived AI Delegability”／“PAD” 這組舊稱（全文搜尋：<code>perceived AI delegability</code> 0 次、<code>PAD</code> 0 次）。「AI Delegability」與「AD」是否同樣 0 命中，尚未對原始 PDF 做窮盡搜尋；依本節 A–G 條已逐句引用之原文判斷，原文僅使用 <em class="q">delegability</em>、<em class="q">task delegability</em>、<em class="q">degree of delegation</em>，未見「AI Delegability」或「AD」，</div>
@@ -509,8 +509,8 @@
   <article class="entry" id="s211-I">
     <div class="entry__rail"><span class="entry__key">I</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「Cvetkovic與Bittner（2022）在知識工作情境中實證檢驗此框架，發現四項因素中以信任對委派偏好的預測力最強，且約四分之三的選擇落在兩種人機協作的安排」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>Cvetkovic與Bittner（2022）在知識工作情境中<ins>以93名研究生與研究助理</ins>實證檢驗此框架，發現四項因素中以信任對委派偏好的預測力最強，且約四分之三的選擇落在兩種人機協作的安排</div>
+      <p class="claim">「Cvetkovic與Bittner（2022）在知識工作情境中實證檢驗此框架，發現四項因素中以信任對委派偏好的預測力最強」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>Cvetkovic與Bittner（2022）在知識工作情境中<ins>以93名研究生與研究助理</ins>實證檢驗此框架，發現四項因素中以信任對委派偏好的預測力最強<ins>，且約四分之三的選擇落在兩種人機協作的安排</ins></div>
       <p class="role"><b>作用</b>為 Lubars &amp; Tan（2019）框架提供獨立實證檢驗，補強 AD 概念的文獻基礎</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span>
@@ -521,9 +521,9 @@
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「總計分析了 93 名受試者的資料……目標群體為具研究所學歷之學生……選取研究生與研究助理為目標群體……」「信任是最能預測委派決策的因素（β = 0.652, t = 8.137, p &lt; .001）。」「在所有任務與受試者中，37.15% 選擇機器在迴圈內方式，37.34% 選擇人類在迴圈內方式。」</p></div>
       </div>
       <ul class="locus"><li><b>樣本描述</b>PDF p.3（3.1／3.2 節）</li><li><b>信任係數</b>PDF p.5（4.2 節、Table 3）</li><li><b>比例</b>PDF p.6（5.3 節）</li></ul>
-      <p class="support"><b>如何支持論述：</b>93 名（postgraduate students and research associates）、β = 0.652、37.15%／37.34% 皆與 PDF 文字層逐字相符（93 名為樣本數，論文已不寫出）。</p>
+      <p class="support"><b>如何支持論述：</b>93 名（postgraduate students and research associates）、β = 0.652 皆與 PDF 文字層逐字相符（93 名為樣本數，論文已不寫出）。</p>
       <div class="note note--warn"><span class="note__lab">措辭限度</span>Table 3 另有一處迴歸係數 β = 0.654（機器能力子構面對信任的路徑，PDF p.5），與此處 β = 0.652（信任對委派決策的整體路徑）為不同係數，請勿混用。</div>
-      <div class="note"><span class="note__lab">v1.4 改寫</span>「約四分之三」為兩種人機協作安排的比例相加（37.15% + 37.34% = 74.49%），原文未直接寫「四分之三」。</div>
+      <div class="note note--gone"><span class="note__lab">已於 v1.7 刪除</span>「約四分之三」為兩種人機協作安排的比例相加（37.15% + 37.34% = 74.49%），原文未直接寫「四分之三」。</div>
     </div>
   </article>
 
@@ -658,11 +658,11 @@
   <div class="section__head">
     <span class="section__num">2.2.2</span>
     <h2 class="section__title">當責</h2>
-    <span class="section__meta">Tetlock 1985 兩篇 · Lerner &amp; Tetlock (1999) · Hall, Frink &amp; Buckley (2017) · 7 條</span>
+    <span class="section__meta">Tetlock 1985 兩篇 · Lerner &amp; Tetlock (1999) · Hall, Frink &amp; Buckley (2017) · 6 條</span>
   </div>
 
   <div class="tally">
-    <span class="tally__item"><b class="tally__n" style="color:var(--direct)">6</b> 直接支持</span>
+    <span class="tally__item"><b class="tally__n" style="color:var(--direct)">5</b> 直接支持</span>
     <span class="tally__item"><b class="tally__n" style="color:var(--indirect)">1</b> 間接支持</span>
     <span class="tally__item"><b class="tally__n" style="color:var(--none)">0</b> 證據不足</span>
     <span class="tally__note">A–B 依 Tetlock (1985a)／Lerner &amp; Tetlock (1999)，C–D 為 Hall 2017，E 為 ROB 專章。</span>
@@ -674,7 +674,7 @@
       <thead><tr><th>教授可能問的</th><th>翻到哪裡</th><th>一句話回答</th></tr></thead>
       <tbody>
         <tr><td>當責定義原文在哪？</td><td class="loc">L&amp;T 1999<br>PDF p.1 ／ 印刷 p.255</td><td>定義句在這裡</td></tr>
-        <tr><td>負面後果那句？</td><td class="loc">L&amp;T 1999<br>PDF p.1 ／ 印刷 p.255</td><td>緊接定義句的下一句，同段落</td></tr>
+        <tr><td>負面後果那句？<span class="chip chip--gone">已於 v1.7 刪除</span></td><td class="loc">L&amp;T 1999<br>PDF p.1 ／ 印刷 p.255</td><td>緊接定義句的下一句，同段落</td></tr>
         <tr><td>Tetlock 1985a 怎麼講當責？</td><td class="loc">PDF p.2 ／ 印刷 p.227</td><td>摘要第 2 句：“pressures to justify one's causal interpretations of behavior to others”</td></tr>
         <tr><td>實驗的操作型定義？</td><td class="loc">PDF p.5 ／ 印刷 p.230</td><td>Method · Accountability Manipulation：事前 vs 事後告知</td></tr>
         <tr><td>「更分析、更複雜」在哪？</td><td class="loc">PDF p.8 ／ 印刷 p.233</td><td>Discussion 結論 (a)</td></tr>
@@ -746,8 +746,8 @@
     </div>
   </article>
 
-  <article class="entry" id="s212-B">
-    <div class="entry__rail"><span class="entry__key">B</span><span class="chip chip--direct">直接支持</span></div>
+  <article class="entry entry--gone" id="s212-B">
+    <div class="entry__rail"><span class="entry__key">B</span><span class="chip chip--gone">已於 v1.7 刪除</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">「Lerner與Tetlock（1999）進一步指出，當責通常還隱含無法提出滿意交代者將承擔負面後果的含意。」</p>
       <p class="role"><b>作用</b>概念補充說明</p>
@@ -799,9 +799,9 @@
   <article class="entry" id="s212-C">
     <div class="entry__rail"><span class="entry__key">C</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「Hall等人（2017）指出此即Tetlock所提出的知覺取向，在此取向下當責被視為「一種心理狀態，而非一種事務狀態」，後續研究循此取向，以個體主觀感受到的當責（felt accountability）為研究對象」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><ins>Tetlock（1985b）指出，在上述情境中個體對自身所採立場「感到個人性的當責」，</ins>Hall等人（2017）指出此即Tetlock所提出的知覺取向，在此取向下當責被視為「一種心理狀態，而非一種事務狀態」，後續研究循此取向，以個體主觀感受到的當責（felt accountability）為研究對象<ins>。</ins></div>
-      <p class="role"><b>作用</b>溯源／銜接：Tetlock (1985b) 的知覺取向 → Frink &amp; Klimoski (1998) 的概念化 → felt accountability。</p>
+      <p class="claim">「該文並指出，在知覺取向下，當責被視為「一種心理狀態，而非一種事務狀態」，即個體主觀感受到的當責（felt accountability）」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>該文並</del><ins>Tetlock（1985b）</ins>指出，在<ins>上述情境中個體對自身所採立場「感到個人性的當責」，Hall等人（2017）指出此即Tetlock所提出的</ins>知覺取向<del>下，</del><ins>，在此取向下</ins>當責被視為「一種心理狀態，而非一種事務狀態」，<del>即</del><ins>後續研究循此取向，以</ins>個體主觀感受到的當責（felt accountability）<ins>為研究對象</ins>。</div>
+      <p class="role"><b>作用</b>說明本研究採知覺取向，即個體主觀感受到的當責（felt accountability）；句中「該文」指 Hall 等人（2017）。</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · Hall 2017（依文中順序）</span>
           <p><strong>p. 205：</strong>“<strong>Felt accountability</strong>, which is often called simply accountability, <strong>refers to an individual's perceptions of his or her own accountability</strong> (Frink &amp; Klimoski, 1998).”</p>
@@ -820,7 +820,7 @@
         <li><b>PDF</b>p. 2（印刷 p. 205）· p. 3（印刷 p. 206）· p. 4（印刷 p. 207）· p. 5（印刷 p. 208）</li>
         <li><b>定位</b>Introduction；“Conceptual models of accountability” 小節；同節角色理論段；“Current state and future directions” 開頭模型整合三點之第二點</li>
       </ul>
-      <p class="support"><b>如何支持論述：</b>「此即 Tetlock 所提出的知覺取向」與「一種心理狀態，而非一種事務狀態」對應 p.206 <em class="q">Tetlock (1985, 1992) proposed the phenomenological view of accountability … a state of mind, rather than a state of affairs</em>；「後續研究循此取向」＝ p.207 <em class="q">Adopting the phenomenological view advocated by Tetlock (1985, 1992), Frink and Klimoski (1998) proposed a conceptualization of accountability</em>；「主觀感受到的當責（felt accountability）」對應 p.205 <em class="q">an individual's perceptions of his or her own accountability</em>。<br><span style="color:var(--muted)">原文用 <em>phenomenological</em>（現象學），論文寫「知覺取向」是意譯；口試若被問，可指 p.208 <em class="q">accountability operates in the perceptual domain … it functions in terms of a state of mind</em>。</span></p>
+      <p class="support"><b>如何支持論述：</b>「在知覺取向下，當責被視為『一種心理狀態，而非一種事務狀態』」對應 p.206 <em class="q">Tetlock (1985, 1992) proposed the phenomenological view of accountability … a state of mind, rather than a state of affairs</em>（Hall 等人在此轉述 Tetlock 的取向；論文寫「該文並指出」，沒有說是 Hall 等人提出）；「主觀感受到的當責（felt accountability）」對應 p.205 <em class="q">an individual's perceptions of his or her own accountability</em>。<br><span style="color:var(--muted)">原文用 <em>phenomenological</em>（現象學），論文寫「知覺取向」是意譯；口試若被問，可指 p.208 <em class="q">accountability operates in the perceptual domain … it functions in terms of a state of mind</em>。</span></p>
     </div>
   </article>
 
@@ -898,9 +898,9 @@
   <article class="entry" id="s212-E">
     <div class="entry__rail"><span class="entry__key">E</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「當責的概念以 Tetlock（1985b）提出的研究綱領為主要理論基礎，該文主張人們通常是在受規則支配的社會與組織情境中形成判斷，因此應將資訊處理者放回社會脈絡中理解。」「Tetlock（1985b）指出，在上述情境中個體對自身所採立場「感到個人性的當責」。」</p>
+      <p class="claim">「當責的概念以 Tetlock（1985b）提出的研究綱領為主要理論基礎，該文主張人們通常是在受規則支配的社會與組織情境中形成判斷，因此應將資訊處理者放回社會脈絡中理解。」</p>
       <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>當責的概念以Tetlock（1985b）提出的研究綱領為主要理論基礎，該文主張人們通常是在受規則支配的社會與組織情境中形成判斷，因此應將資訊處理者放回社會脈絡中理解。<ins>同年的實驗研究顯示，當個體預期須向他人說明自己的判斷時，會以較具分析性且較複雜的方式處理資訊，並因而抑制判斷偏誤（Tetlock, 1985a）。Lerner與Tetlock（1999）進一步指出，當責通常還隱含無法提出滿意交代者將承擔負面後果的含意。</ins></div>
-      <p class="role"><b>作用</b>2.2.2 第 2、3 段：研究綱領與知覺取向的原始出處。</p>
+      <p class="role"><b>作用</b>2.2.2 第 2 段：當責研究綱領的原始出處。</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.299（本章定調段）</span>
           <p>“The ‘isolated information processor’ image of human nature underlying the cognitive research program is too restrictive as a basis for a comprehensive theory of judgment and decision-making. <strong>People typically make up their minds in rule-governed social and organizational settings in which they feel personally accountable or responsible for the stands they take.</strong> We need an alternative research program that builds upon the cognitive tradition by placing the information processor in social context. <strong>The guiding metaphor I suggest for this alternative research program is that of the politician whose primary goal is to maintain the positive regard of important constituencies to whom he or she feels accountable.</strong>”</p>
@@ -913,8 +913,8 @@
         <li><b>PDF</b>p. 3（印刷 p. 299）</li>
         <li><b>定位</b>引言末段，全章結構預告之後、第一節開始之前</li>
       </ul>
-      <p class="support"><b>如何支持論述：</b>「在受規則支配的社會與組織情境中形成判斷」＝ <em class="q">make up their minds in rule-governed social and organizational settings</em>；「將資訊處理者放回社會脈絡」＝ <em class="q">placing the information processor in social context</em>；「研究綱領」＝ <em class="q">alternative research program</em>；「感到個人性的當責」＝ <em class="q">feel personally accountable or responsible for the stands they take</em>。</p>
-      <div class="note note--warn"><span class="note__lab">用途限度</span>這兩句是在鋪陳研究綱領的<strong>隱喻與問題意識</strong>，不是在定義構念，也沒有「程度」的量化語彙。用它支撐「知覺取向」成立；用它支撐「定義」不成立。</div>
+      <p class="support"><b>如何支持論述：</b>「在受規則支配的社會與組織情境中形成判斷」＝ <em class="q">make up their minds in rule-governed social and organizational settings</em>；「將資訊處理者放回社會脈絡」＝ <em class="q">placing the information processor in social context</em>；「研究綱領」＝ <em class="q">alternative research program</em>。</p>
+      <div class="note note--warn"><span class="note__lab">用途限度</span>這一句是在鋪陳研究綱領的<strong>隱喻與問題意識</strong>，不是在定義構念，也沒有「程度」的量化語彙。用它支撐「當責研究的理論基礎」成立；用它支撐「定義」不成立。</div><div class="note note--gone"><span class="note__lab">已於 v1.7 刪除</span>「Tetlock（1985b）指出，在上述情境中個體對自身所採立場『感到個人性的當責』」一句已刪除；知覺取向改由 Hall 等人（2017）交代，見 <a class="xref" href="#s212-C">C 條</a>。</div>
     </div>
   </article>
 
@@ -1089,7 +1089,7 @@
     <div class="entry__rail"><span class="entry__key">C2</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
       <p class="claim">「此一概念其後寫入具法律約束力的歐盟《人工智慧法》（Artificial Intelligence Act），該法第14條要求，高風險AI系統在使用期間必須能由人有效監督，負責監督的人應具備察覺自己自動或過度依賴系統輸出的傾向，以及在特定情境下決定不使用系統，或忽略、推翻、撤回其輸出等能力（European Parliament &amp; Council of the European Union, 2024）」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>此一概念其後寫入具法律約束力的歐盟《人工智慧法》（Artificial Intelligence Act）<del>，</del><ins>。</ins>該法第14條要求，高風險AI系統在使用期間必須能由人有效監督<del>，負責監督的人應具備察覺自己自動或過度依賴系統輸出的傾向，以及在特定情境下決定不使用系統，或忽略、推翻、撤回其輸出等能力</del>（European Parliament &amp; Council of the European Union, 2024）<ins>。具體而言，負責監督的人應能：理解系統的能力與限制；察覺自己自動或過度依賴系統輸出的傾向；正確解讀系統輸出；以及在特定情境下決定不使用系統，或忽略、推翻、撤回其輸出</ins></div>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>此一概念其後寫入具法律約束力的歐盟《人工智慧法》（Artificial Intelligence Act）<del>，</del><ins>。</ins>該法第14條要求，高風險AI系統在使用期間必須能由人有效監督<del>，負責監督的人應具備察覺自己自動或過度依賴系統輸出的傾向，以及在特定情境下決定不使用系統，或忽略、推翻、撤回其輸出等能力</del>（European Parliament &amp; Council of the European Union, 2024）。<ins>具體而言，負責監督的人應能：理解系統的能力與限制；察覺自己自動或過度依賴系統輸出的傾向；正確解讀系統輸出；以及在特定情境下決定不使用系統，或忽略、推翻、撤回其輸出</ins></div>
       <p class="role"><b>作用</b>概念來源：人類監督由治理原則寫入法規</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">法規原文 · AI Act Art. 14</span><p>“1. High-risk AI systems shall be designed and developed in such a way, including with appropriate human-machine interface tools, that they can be <strong>effectively overseen by natural persons</strong> during the period in which they are in use.”</p><p>“4. […] natural persons to whom human oversight is assigned are enabled, as appropriate and proportionate: (a) to <strong>properly understand the relevant capacities and limitations</strong> of the high-risk AI system and be able to duly monitor its operation […]; (b) to <strong>remain aware of the possible tendency of automatically relying or over-relying</strong> on the output produced by a high-risk AI system (<strong>automation bias</strong>) […]; (c) to <strong>correctly interpret</strong> the high-risk AI system's output […]; (d) to <strong>decide, in any particular situation, not to use</strong> the high-risk AI system or to otherwise <strong>disregard, override or reverse</strong> the output of the high-risk AI system;”</p></div>
@@ -1244,15 +1244,15 @@
   <article class="entry" id="s213-H">
     <div class="entry__rail"><span class="entry__key">H</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「在個體使用層次，Dhanorkar等人（2026）指出研究者對監督的具體內涵仍有爭論，但普遍同意發現並修正錯誤是監督的關鍵」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「在個體使用層次，Dhanorkar等人（2026）指出發現並修正錯誤是監督的關鍵」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>在個體使用層次，Dhanorkar等人（2026）指出<ins>研究者對監督的具體內涵仍有爭論，但普遍同意</ins>發現並修正錯誤是監督的關鍵</div>
       <p class="role"><b>作用</b>文獻回顧綜述句，將治理層次的人類監督概念與個體使用層次的查證、修正行為相連結</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.6440</span><p>“The first insight is that reviewing AI outputs is considered key to overseeing any AI system. <strong>Researchers debate the specifics of what constitutes—or should constitute—oversight, but agree that spotting and correcting mistakes is a crucial part of it</strong> [13, 70, 91, 94, 114].”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「第一個洞見是，檢視AI輸出被視為監督任何AI系統的關鍵。<strong>研究者對於監督的具體構成內涵仍有爭論，但普遍同意發現並修正錯誤是其中至關重要的一部分</strong>［13, 70, 91, 94, 114］。」</p></div>
       </div>
       <ul class="locus"><li><b>PDF</b>p. 3 ／ <b>印刷</b>p. 6440</li><li><b>定位</b>§2.1 Related Work（背景鋪陳段第2段）</li></ul>
-      <p class="support"><b>如何支持論述：</b>「監督的具體內涵仍有爭論、但發現並修正錯誤是關鍵」逐字對應。此句是本文作者回顧既有文獻後的綜述句，非本文自己的訪談發現，引用時應標示為文獻回顧陳述。</p>
+      <p class="support"><b>如何支持論述：</b>「發現並修正錯誤是監督的關鍵」逐字對應 <em class="q">spotting and correcting mistakes is a crucial part of it</em>。此句是本文作者回顧既有文獻後的綜述句，非本文自己的訪談發現，引用時應標示為文獻回顧陳述。</p>
       <div class="note note--warn"><span class="note__lab">性質提醒</span>本句所引用的［13, 70, 91, 94, 114］皆為本文之外的既有文獻，Dhanorkar等人（2026）在此僅為轉述學界共識，非提出新主張；本文自己的實證發現見 <a class="xref" href="#s213-I">I 條</a>。</div>
     </div>
   </article>
@@ -1321,11 +1321,11 @@
   <div class="section__head">
     <span class="section__num">2.2.4</span>
     <h2 class="section__title">AD、當責與HOI之關係</h2>
-    <span class="section__meta">10 篇文獻 · 21 條</span>
+    <span class="section__meta">10 篇文獻 · 20 條</span>
   </div>
 
   <div class="tally">
-    <span class="tally__item"><b class="tally__n" style="color:var(--direct)">21</b> 直接支持</span>
+    <span class="tally__item"><b class="tally__n" style="color:var(--direct)">20</b> 直接支持</span>
     <span class="tally__item"><b class="tally__n" style="color:var(--indirect)">0</b> 間接支持</span>
     <span class="tally__item"><b class="tally__n" style="color:var(--none)">0</b> 證據不足</span>
     <span class="tally__note">本節內容涵蓋AI任務可委派性→HOI（H1）與當責→HOI（H2）兩條假說</span>
@@ -1367,7 +1367,7 @@
         <tr><td class="hot">「保有責任與當責」是論文自己的推論嗎？</td><td class="loc">Lee<br><strong>PDF p.15</strong> · §6.2</td><td><strong>不是，原文幾乎逐字就這樣寫</strong></td></tr>
         <tr><td>三種轉移</td><td class="loc">Lee<br>PDF p.12 · §5.2（p.15 重述）</td><td>三組對應完全正確</td></tr>
         <tr><td>Tetlock 的時序條件</td><td class="loc">Tetlock<br>PDF p.8 ／ 印刷 <strong>p.233</strong></td><td>事後才知道要負責者「與完全不當責者一樣有偏誤」</td></tr>
-        <tr><td>94 名商學研究生</td><td class="loc">Stout<br>PDF p.6 ／ 印刷 <strong>p.5</strong></td><td>“Graduate business students (N = 94)”</td></tr>
+        <tr><td>94 名商學研究生<span class="chip chip--gone">已於 v1.7 刪除</span></td><td class="loc">Stout<br>PDF p.6 ／ 印刷 <strong>p.5</strong></td><td>“Graduate business students (N = 94)”</td></tr>
         <tr><td>Stout 的 H2 預測方向</td><td class="loc">Stout<br>PDF p.5 ／ 印刷 <strong>p.4</strong></td><td>當責↑ → 委派意願<strong>↓</strong>（與實際結果相反）</td></tr>
         <tr><td class="hot">方向相反的統計數字</td><td class="loc">Stout<br>PDF p.7 ／ 印刷 <strong>p.6</strong></td><td>F(1,88) = 9.565, p = .003，“H2 was not supported”</td></tr>
         <tr><td>控制權那一條</td><td class="loc">Stout<br>PDF p.7 ／ 印刷 p.6</td><td>F(1,88) = 12.383, p = .001，H1 獲支持</td></tr>
@@ -1579,8 +1579,8 @@
     <dt>易混淆提醒</dt><dd style="color:var(--indirect)">本篇第一作者為 <strong>Hao-Ping (Hank) Lee（CMU）</strong>，與 2.3.1 的 <strong>Lee, E. H. et al. (2026), <em>Scientific Reports</em></strong> 是<strong>不同研究</strong>，不要混淆。</dd>
   </dl>
 
-  <article class="entry" id="s214-I">
-    <div class="entry__rail"><span class="entry__key">I</span><span class="chip chip--direct">直接支持</span></div>
+  <article class="entry entry--gone" id="s214-I">
+    <div class="entry__rail"><span class="entry__key">I</span><span class="chip chip--gone">已於 v1.7 刪除</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">「以問卷調查319名每週至少使用一次生成式AI的知識工作者，蒐集936則真實工作事例」</p>
       <p class="role"><b>作用</b>交代樣本規模</p>
@@ -1667,8 +1667,8 @@
   <article class="entry" id="s214-N">
     <div class="entry__rail"><span class="entry__key">N</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「預期須向他人說明會使個體更審慎地處理資訊，且這個效果只出現在個體事先知道須負責的情況下（Tetlock, 1985a）」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><ins>當個體</ins>預期須向他人說明<del>會使個體</del><ins>自己的判斷時，會投入更多認知努力並</ins>更審慎地<del>處理</del><ins>權衡</ins>資訊，且這個效果只出現在個體事先知道須負責的情況下（Tetlock, 1985a）</div>
+      <p class="claim">「如2.2.2所述，事先知道須負責會使個體更審慎地處理資訊（Tetlock, 1985a）」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>如2.2.2所述，</del><ins>當個體預期須向他人說明自己的判斷時，會投入更多認知努力並更審慎地權衡資訊，且這個效果只出現在個體</ins>事先知道須負責<del>會使個體更審慎地處理資訊</del><ins>的情況下</ins>（Tetlock, 1985a）<span class="vs__low">配對信心較低，請自行核對</span></div>
       <p class="role"><b>作用</b>H2 的正向推導基礎</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.233</span><p>“Second, and most important, accountability per se was <strong>not sufficient</strong> to eliminate the overattribution effect. Subjects who realized that they had to justify their views <strong>only after</strong> exposure to the behavioral evidence were <strong>as susceptible to the overattribution effect as subjects who felt completely unaccountable</strong>. Only <strong>pre-exposure-accountability</strong> subjects were resistant to the effect.”</p></div>
@@ -1677,7 +1677,7 @@
       <ul class="locus">
         <li><b>PDF</b>p. 8 ／ <b>印刷</b>p. 233（另見 p. 5 ／ 230 的時序假說）</li>
       </ul>
-      <p class="support"><b>如何支持論述：</b>時序條件逐字對應。</p>
+      <p class="support"><b>如何支持論述：</b>「事先知道須負責」對應 pre-exposure accountability：只有事前當責組能抵抗過度歸因效應，時序條件逐字對應。</p>
     </div>
   </article>
 
@@ -1693,8 +1693,8 @@
   <article class="entry" id="s214-O">
     <div class="entry__rail"><span class="entry__key">O</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「以94名商學研究生檢驗當責認知與控制程度對將任務委派給軟體代理人之意願的影響」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「Stout等人（2014）檢驗個體將任務委派給軟體代理人的意願」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>Stout等人（2014）</del><ins>以94名商學研究生</ins>檢驗<del>個體</del><ins>當責認知與控制程度對</ins>將任務委派給軟體代理人<del>的</del><ins>之</ins>意願<ins>的影響</ins><span class="vs__low">配對信心較低，請自行核對</span></div>
       <p class="role"><b>作用</b>交代該研究的設計</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p><strong>樣本（印刷 p.5）：</strong>“<strong>Graduate business students (N = 94)</strong> at a large public university participated in the research study and were randomly assigned to treatments.”<br><br><strong>標題：</strong>“The Buck Stops There: The Impact of <strong>Perceived Accountability</strong> and <strong>Control</strong> on the <strong>Intention to Delegate</strong> to Software Agents”</p></div>
@@ -1704,15 +1704,15 @@
         <li><b>PDF</b>p. 2 ／ 印刷 p. 1（標題）· p. 6 ／ 印刷 p. 5（樣本）· p. 6–7 ／ 印刷 p. 5–6（變項小節）</li>
         <li><b>定位</b>Method · Participants；Measures · Extent of Control／Perceived Accountability／Dependent Variable</li>
       </ul>
-      <p class="support"><b>如何支持論述：</b>樣本數、樣本性質、兩個自變項與依變項名稱逐字吻合。</p>
+      <p class="support"><b>如何支持論述：</b>依變項「將任務委派給軟體代理人的意願」與標題 <em class="q">Intention to Delegate to Software Agents</em> 逐字吻合；論文已不寫樣本數與樣本性質。</p>
     </div>
   </article>
 
   <article class="entry" id="s214-P">
     <div class="entry__rail"><span class="entry__key">P</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「結果顯示，提供較高控制權的代理人提升了委派意願」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「發現提供較高控制權的代理人提升了委派意願」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>發現</del><ins>結果顯示，</ins>提供較高控制權的代理人提升了委派意願</div>
       <p class="role"><b>作用</b>交代該研究成立的那一條假設</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.6</span><p>“Hypothesis 1 proposed that individuals would be more likely to delegate to a SA when they had greater control. <strong>As anticipated</strong>, the results showed that exposure to the SA providing greater control (i.e., the recommendation agent) was associated with <strong>greater intention to delegate; F(1,88) = 12.383, p = .001</strong> (see Table 1). <strong>H1 was supported.</strong>”</p></div>
@@ -1728,8 +1728,8 @@
   <article class="entry" id="s214-Q">
     <div class="entry__rail"><span class="entry__key">Q</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「當責的效果則與其假設相反，作者原預期當責認知愈高愈不願委派，結果卻是愈高愈願意委派」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「當責的效果則與其假設相反，當責認知愈高反而愈願意委派」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>當責的效果則與其假設相反，<ins>作者原預期</ins>當責認知愈高<del>反而</del><ins>愈不願委派，結果卻是愈高</ins>愈願意委派</div>
       <p class="role"><b>作用</b><strong>本節的核心 —— 論文主動引用的反面證據</strong></p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span>
@@ -1746,7 +1746,7 @@
       <ul class="locus">
         <li><b>PDF</b>p. 5 ／ 印刷 p. 4（H2）· p. 7 ／ <b>印刷 p. 6</b>（結果與 “not supported”）· Table 1（Beta = .319, F = 9.57, p = .003, η² = .076）</li>
       </ul>
-      <p class="support"><b>如何支持論述：</b>原假設方向、實際結果方向、統計數值、“H2 was not supported” 字樣<strong>全部與原文一致</strong>。</p>
+      <p class="support"><b>如何支持論述：</b>「與其假設相反」、實際結果方向、統計數值、“H2 was not supported” 字樣<strong>全部與原文一致</strong>。</p>
       <div class="note"><span class="note__lab">口試補充</span>作者在 Discussion 開頭稱此反向結果為 <em class="q">The primary finding of interest</em> —— 也就是<strong>作者自己也把這個結果當成本文的核心發現</strong>，不是邊緣附帶發現。</div>
     </div>
   </article>
@@ -1754,8 +1754,8 @@
   <article class="entry" id="s214-R">
     <div class="entry__rail"><span class="entry__key">R</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「並<strong>推測</strong>受試者是藉由委派將責任轉嫁出去」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「作者<strong>推測</strong>受試者是藉由委派將責任轉嫁出去」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>作者</del><ins>並</ins>推測受試者是藉由委派將責任轉嫁出去</div>
       <p class="role"><b>作用</b>轉述作者對反常結果的解釋</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 三處，全為試探語氣</span>
@@ -2029,8 +2029,8 @@
   <article class="entry" id="s214-AB">
     <div class="entry__rail"><span class="entry__key">AB</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「自動化情境亦有直接證據，Skitka等人（2000）以模擬飛行監控作業發現，須為整體表現或決策正確性負責的受試者，更可能查證自動化輔助系統給出的指示，且錯誤較少」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「自動化情境亦有直接證據，Skitka等人（2000）發現，須為整體表現或決策正確性負責的受試者，更可能查證自動化輔助系統給出的指示，且錯誤較少」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>自動化情境亦有直接證據，Skitka等人（2000）<ins>以模擬飛行監控作業</ins>發現，須為整體表現或決策正確性負責的受試者，更可能查證自動化輔助系統給出的指示，且錯誤較少</div>
       <p class="role"><b>作用</b>H2（當責→HOI）於自動化情境之直接實證證據</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.701（摘要）</span><p>“Results indicated that <strong>making participants accountable for either their overall performance or their decision accuracy led to lower rates of “automation bias”</strong>. Errors of omission proved to be the result of cognitive vigilance decrements, whereas errors of commission proved to be the result of a combination of a failure to take into account information and a belief in the superior judgement of automated aids.”</p></div>
@@ -2065,7 +2065,7 @@
   <article class="entry" id="s214-AC">
     <div class="entry__rail"><span class="entry__key">AC</span><span class="chip chip--direct">直接支持</span><span class="conflict">反面證據 · H2</span></div>
     <div class="entry__body">
-      <p class="claim">「Kupfer等人（2023）在AI輔助人員甄選的實驗中亦發現，告知受試者須為決策負責並於事後說明理由，並未提高其查證行為，反而是提醒系統可能出錯才部分提高了查證強度；該研究樣本多為學生，作者並推測控制組本身可能已感受到被評估的壓力。」</p>
+      <p class="claim">「Kupfer等人（2023）亦發現，告知受試者須為決策負責並於事後說明理由，並未提高其查證行為，反而是提醒系統可能出錯才部分提高了查證強度；該研究樣本多為學生，作者並推測控制組本身可能已感受到被評估的壓力。」</p>
       <p class="role"><b>作用</b>H2（當責→HOI）於AI輔助決策情境之反面證據；與既有Stout（2014）、Romeo &amp; Conti（2026）反面證據方向一致</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 期刊 p.10</span><p>“To sum up, decision makers of the <strong>error-awareness group</strong> tended to score higher on verification intensity indicators which means they expressed less automation bias. […] However, <strong>the responsibility group did not significantly differ from the control group in their verification behavior</strong>. Thus, hypothesis 4 had to be rejected.”</p></div>
