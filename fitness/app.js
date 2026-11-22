@@ -404,9 +404,9 @@ function lettersHtml() {
     ${sel.map(k => `<h3 class="pl-head">${k}｜${esc(state.plans[k].title)}・約 ${planMinutes(k)} 分鐘</h3>${planListHtml(k)}`).join('')}`;
 }
 
-/* ---------- 開合跳（英雄聯盟輸一局 = 10 下） ----------
+/* ---------- 輸局懲罰（英雄聯盟輸一局 = 10 下） ----------
    jj.json 由電腦上的 jj.ps1 同步客戶端戰績後產生，只有累計數字：{ perLoss, losses, owed, updated }。
-   做了幾下存在本機 state.jj.done。 */
+   手動記的下數存在本機 state.jj.done。 */
 let jjRemote = null;   // null＝還沒抓到；false＝抓不到
 function jjFetch() {
   const before = JSON.stringify(jjRemote);
@@ -418,28 +418,35 @@ function jjFetch() {
       if (current === 'home' && JSON.stringify(jjRemote) !== before) { const y = window.scrollY; render(); window.scrollTo(0, y); }
     });
 }
-const jjDid = () => state.jj.done.reduce((n, x) => n + x.reps, 0);
+/* 抵欠款的有兩種：完成的彈力帶訓練裡打勾的實際次數（從約定開始那天起，1 下抵 1 下，自動算），
+   和手動按的「另外做了」（開合跳等）。多做的存成額度，抵之後的輸場。 */
+const JJ_START = new Date(2026, 10, 22).getTime();   // 2026-11-22 00:00，和 jj.ps1 起算同一天
+const jjBand = () => state.sessions.filter(s => (s.startedAt || 0) >= JJ_START)
+  .reduce((n, s) => n + s.items.reduce((m, it) => m + itemReps(it), 0), 0);
+const jjExtra = () => state.jj.done.reduce((n, x) => n + x.reps, 0);
 function jjHtml() {
-  const did = jjDid();
+  const band = jjBand(), extra = jjExtra(), did = band + extra;
   if (!jjRemote && !did) return '';
   let main, info;
+  const parts = `彈力帶 ${band} 下${extra ? `、另外 ${extra} 下` : ''}`;
   if (jjRemote) {
     const left = jjRemote.owed - did;
-    main = left > 0 ? `還欠 <b>${left}</b> 下` : left === 0 ? '開合跳都做完了' : `多做了 <b>${-left}</b> 下，先存著`;
+    main = left > 0 ? `還欠 <b>${left}</b> 下` : left === 0 ? '都抵完了' : `都抵完了，額度還有 <b>${-left}</b> 下`;
     const up = jjRemote.updated ? new Date(jjRemote.updated) : null;
-    info = `累計輸 ${jjRemote.losses} 場，應做 ${jjRemote.owed} 下，已做 ${did} 下${up && !isNaN(up) ? `・戰績更新於 ${up.getMonth() + 1}/${up.getDate()} ${pad(up.getHours())}:${pad(up.getMinutes())}` : ''}`;
+    info = `累計輸 ${jjRemote.losses} 場，應做 ${jjRemote.owed} 下；已抵 ${did} 下（${parts}）${up && !isNaN(up) ? `・戰績更新於 ${up.getMonth() + 1}/${up.getDate()} ${pad(up.getHours())}:${pad(up.getMinutes())}` : ''}`;
   } else {
-    main = `已做 <b>${did}</b> 下`;
-    info = '還沒抓到戰績（可能離線），欠款等連上網路再算。';
+    main = `已抵 <b>${did}</b> 下`;
+    info = `${parts}。還沒抓到戰績（可能離線），欠款等連上網路再算。`;
   }
   const left = jjRemote ? jjRemote.owed - did : 0;
   return `<section class="card jj">
-    <p class="eyebrow">開合跳・英雄聯盟輸一局 ${jjRemote && jjRemote.perLoss || 10} 下</p>
+    <p class="eyebrow">英雄聯盟輸一局 ${jjRemote && jjRemote.perLoss || 10} 下・彈力帶或開合跳 1 下抵 1 下</p>
     <h2 class="jj-main">${main}</h2>
     <p class="sub">${esc(info)}</p>
+    <p class="sub">練完的彈力帶訓練會自動算進去；開合跳之類的另外按下面的按鈕。</p>
     <div class="btn-row">
-      <button type="button" class="btn" data-act="jjDo" data-n="10">做完 10 下</button>
-      ${left > 10 ? `<button type="button" class="btn primary" data-act="jjDo" data-n="${left}">全做完 ${left} 下</button>` : ''}
+      <button type="button" class="btn" data-act="jjDo" data-n="10">另外做了 10 下</button>
+      ${left > 10 ? `<button type="button" class="btn primary" data-act="jjDo" data-n="${left}">另外做完 ${left} 下</button>` : ''}
     </div>
     ${state.jj.done.length ? '<button type="button" class="linkbtn" data-act="jjUndo">撤銷上一筆</button>' : ''}
   </section>`;
@@ -1033,7 +1040,7 @@ const actions = {
     const n = parseInt(el.dataset.n, 10);
     if (!(n > 0)) return;
     state.jj.done.push({ t: Date.now(), reps: n }); save();
-    const y = window.scrollY; render(); window.scrollTo(0, y); toast(`記下做了 ${n} 下開合跳`);
+    const y = window.scrollY; render(); window.scrollTo(0, y); toast(`記下另外做了 ${n} 下`);
   },
   jjUndo: () => {
     const x = state.jj.done.pop(); if (!x) return; save();
