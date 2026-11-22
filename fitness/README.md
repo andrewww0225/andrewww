@@ -16,6 +16,7 @@
 - 歷史紀錄、每個動作的總次數折線圖、每週訓練次數長條圖。
 - 設定頁可以編輯動作、組數、休息秒數，匯出與匯入 JSON，清除資料。
 - 可以加到手機主畫面，離線也能用。
+- 首頁最下面有「開合跳」卡片（英雄聯盟輸一局 10 下）：讀同資料夾的 `jj.json` 顯示還欠幾下，可以按「做完 10 下」「全做完」「撤銷上一筆」。`jj.json` 由電腦上的 `C:\Claude Code\lol-jumping\jj.ps1` 從英雄聯盟客戶端算好推上來，只有累計數字；做了幾下存在這臺裝置。
 
 ## 檔案
 
@@ -28,7 +29,8 @@
 | `charts.js` | SVG 折線圖與長條圖 |
 | `figures.js` | 每個內建動作的示意圖（簡筆人形，開始與結束兩個姿勢，彈力帶另一個顏色），用 SVG 畫 |
 | `app.js` | 狀態、路由、各頁面、計時器、匯出匯入 |
-| `sw.js` | service worker（離線快取） |
+| `sw.js` | service worker（離線快取；`jj.json` 先抓網路，抓不到才用快取） |
+| `jj.json` | 開合跳欠款：`{ perLoss, losses, owed, updated }`，由 `jj.ps1` 產生，不要手動改 |
 | `manifest.webmanifest`、`icons/` | 加到主畫面用的設定與圖示 |
 
 ## 在本機打開
@@ -109,7 +111,8 @@ while ($l.IsListening) {
     items: [ { exId: "lateral", name: "側平舉", band: 5, min: 12, max: 20, targetSets: 3,
                sets: [ { done: true, reps: 15, rir: 2 } ] } ]   // rir 是餘力：0、1、2、3（3 代表 3 以上）
   } ],
-  active: null   // 進行中的訓練；重新整理或關掉再開都可以接著做
+  active: null,   // 進行中的訓練；重新整理或關掉再開都可以接著做
+  jj: { done: [ { t: 1795350000000, reps: 10 } ] }   // 開合跳：每次按「做完」一筆；還欠＝jj.json 的 owed 減掉 reps 總和
 }
 ```
 
