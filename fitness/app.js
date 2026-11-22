@@ -412,7 +412,7 @@ function jjFetch() {
   const before = JSON.stringify(jjRemote);
   fetch('jj.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : Promise.reject())
-    .then(j => { jjRemote = (j && typeof j.owed === 'number') ? j : false; })
+    .then(j => { jjRemote = (j && [j.owed, j.losses, j.perLoss].every(v => typeof v === 'number' && isFinite(v))) ? j : false; })
     .catch(() => { if (!jjRemote) jjRemote = false; })   // 抓不到時保留上次的數字
     .then(() => {
       if (current === 'home' && JSON.stringify(jjRemote) !== before) { const y = window.scrollY; render(); window.scrollTo(0, y); }
@@ -440,7 +440,7 @@ function jjHtml() {
   }
   const left = jjRemote ? jjRemote.owed - did : 0;
   return `<section class="card jj">
-    <p class="eyebrow">英雄聯盟輸一局 ${jjRemote && jjRemote.perLoss || 10} 下・彈力帶或開合跳 1 下抵 1 下</p>
+    <p class="eyebrow">英雄聯盟輸一局 ${esc(Number(jjRemote && jjRemote.perLoss) || 10)} 下・彈力帶或開合跳 1 下抵 1 下</p>
     <h2 class="jj-main">${main}</h2>
     <p class="sub">${esc(info)}</p>
     <p class="sub">練完的彈力帶訓練會自動算進去；開合跳之類的另外按下面的按鈕。</p>
