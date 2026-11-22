@@ -1,5 +1,5 @@
 /* 離線快取：安裝時把所有檔案存起來；之後先回快取，同時在背景抓新版，下次開啟就會更新。 */
-const CACHE = 'bandfit-v9';
+const CACHE = 'bandfit-v10';
 const ASSETS = [
   './',
   'index.html',
@@ -32,6 +32,16 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  /* 開合跳欠款（jj.json）要最新的：先抓網路，抓不到才用快取 */
+  const u = new URL(req.url);
+  if (u.pathname.endsWith('/jj.json')) {
+    const key = u.origin + u.pathname;   // 去掉 ?t=…，快取裡只留一份
+    e.respondWith(caches.open(CACHE).then(cache => fetch(req).then(res => {
+      if (res && res.ok) cache.put(key, res.clone());
+      return res;
+    }).catch(() => cache.match(key).then(r => r || new Response('', { status: 504, statusText: 'offline' })))));
+    return;
+  }
   e.respondWith(
     caches.open(CACHE).then(async cache => {
       const cached = await cache.match(req, { ignoreSearch: true });

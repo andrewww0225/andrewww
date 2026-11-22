@@ -46,7 +46,8 @@ function freshState() {
     plans: clone(DEFAULT_PLANS),
     routines: clone(DEFAULT_ROUTINES),
     sessions: [],
-    active: null
+    active: null,
+    jj: { done: [] }   // 開合跳：每次做完一筆 { t: 時間戳記, reps: 下數 }
   };
 }
 
@@ -88,6 +89,7 @@ function normalize(d) {
   }
   if (Array.isArray(d.sessions)) s.sessions = d.sessions.filter(x => x && Array.isArray(x.items) && typeof x.date === 'string');
   if (d.active && Array.isArray(d.active.items) && d.active.items.length) s.active = d.active;
+  if (d.jj && Array.isArray(d.jj.done)) s.jj.done = d.jj.done.filter(x => x && typeof x.reps === 'number' && x.reps > 0);
   /* 第 4 版把自選和菜單的代號從 F、M 改成 free、menu，讓字母留給訓練日 */
   if ((d.version || 1) < 4) [...s.sessions, s.active].forEach(x => {
     if (x && x.plan === 'F') x.plan = 'free';
@@ -402,6 +404,47 @@ function lettersHtml() {
     ${sel.map(k => `<h3 class="pl-head">${k}｜${esc(state.plans[k].title)}・約 ${planMinutes(k)} 分鐘</h3>${planListHtml(k)}`).join('')}`;
 }
 
+/* ---------- 開合跳（英雄聯盟輸一局 = 10 下） ----------
+   jj.json 由電腦上的 jj.ps1 同步客戶端戰績後產生，只有累計數字：{ perLoss, losses, owed, updated }。
+   做了幾下存在本機 state.jj.done。 */
+let jjRemote = null;   // null＝還沒抓到；false＝抓不到
+function jjFetch() {
+  const before = JSON.stringify(jjRemote);
+  fetch('jj.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(j => { jjRemote = (j && typeof j.owed === 'number') ? j : false; })
+    .catch(() => { if (!jjRemote) jjRemote = false; })   // 抓不到時保留上次的數字
+    .then(() => {
+      if (current === 'home' && JSON.stringify(jjRemote) !== before) { const y = window.scrollY; render(); window.scrollTo(0, y); }
+    });
+}
+const jjDid = () => state.jj.done.reduce((n, x) => n + x.reps, 0);
+function jjHtml() {
+  const did = jjDid();
+  if (!jjRemote && !did) return '';
+  let main, info;
+  if (jjRemote) {
+    const left = jjRemote.owed - did;
+    main = left > 0 ? `還欠 <b>${left}</b> 下` : left === 0 ? '開合跳都做完了' : `多做了 <b>${-left}</b> 下，先存著`;
+    const up = jjRemote.updated ? new Date(jjRemote.updated) : null;
+    info = `累計輸 ${jjRemote.losses} 場，應做 ${jjRemote.owed} 下，已做 ${did} 下${up && !isNaN(up) ? `・戰績更新於 ${up.getMonth() + 1}/${up.getDate()} ${pad(up.getHours())}:${pad(up.getMinutes())}` : ''}`;
+  } else {
+    main = `已做 <b>${did}</b> 下`;
+    info = '還沒抓到戰績（可能離線），欠款等連上網路再算。';
+  }
+  const left = jjRemote ? jjRemote.owed - did : 0;
+  return `<section class="card jj">
+    <p class="eyebrow">開合跳・英雄聯盟輸一局 ${jjRemote && jjRemote.perLoss || 10} 下</p>
+    <h2 class="jj-main">${main}</h2>
+    <p class="sub">${esc(info)}</p>
+    <div class="btn-row">
+      <button type="button" class="btn" data-act="jjDo" data-n="10">做完 10 下</button>
+      ${left > 10 ? `<button type="button" class="btn primary" data-act="jjDo" data-n="${left}">全做完 ${left} 下</button>` : ''}
+    </div>
+    ${state.jj.done.length ? '<button type="button" class="linkbtn" data-act="jjUndo">撤銷上一筆</button>' : ''}
+  </section>`;
+}
+
 VIEWS.home = () => {
   const rec = recommend();
   const a = state.active;
@@ -434,6 +477,7 @@ VIEWS.home = () => {
       ${startBtn}
     </section>
     ${scheduleHtml()}
+    ${jjHtml()}
     <p class="foot muted">本週已練 ${rec.weekCount} 次。目標每週 2 到 3 次，中間至少隔一天。</p>`;
 };
 
@@ -985,6 +1029,16 @@ const actions = {
     const y = window.scrollY; render(); window.scrollTo(0, y);
   },
   pickReset: () => { pickLetters = null; render(); },
+  jjDo: el => {
+    const n = parseInt(el.dataset.n, 10);
+    if (!(n > 0)) return;
+    state.jj.done.push({ t: Date.now(), reps: n }); save();
+    const y = window.scrollY; render(); window.scrollTo(0, y); toast(`記下做了 ${n} 下開合跳`);
+  },
+  jjUndo: () => {
+    const x = state.jj.done.pop(); if (!x) return; save();
+    const y = window.scrollY; render(); window.scrollTo(0, y); toast(`已撤銷 ${x.reps} 下`);
+  },
   pickRoutine: el => { chosenRoutine = el.dataset.id; const y = window.scrollY; render(); window.scrollTo(0, y); },
   start: () => {
     if (homeMode === 'free') {
@@ -1310,6 +1364,8 @@ document.addEventListener('change', e => {
 applySettings();
 window.addEventListener('hashchange', route);
 route();
+jjFetch();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') jjFetch(); });
 
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
