@@ -663,8 +663,7 @@ const DEFAULT_ROUTINES = [
 /* bandDays／tabataDays：一週裡哪幾天（0＝星期一 … 6＝星期日）；trainTime：習慣的訓練時間，例如 '20:00'，空字串代表沒設定 */
 const DEFAULT_SETTINGS = {
   restSec: 75, sound: true, vibrate: true, theme: 'auto', showDetails: true,
-  bandDays: [0, 2, 4], tabataDays: [1, 5], trainTime: '',
-  calRemind: 10   // 加到行事曆時提前幾分鐘提醒，-1＝不提醒
+  bandDays: [0, 2, 4], tabataDays: [1, 5], trainTime: ''
 };
 
 const DEFAULT_TABATA = {

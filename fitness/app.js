@@ -919,15 +919,11 @@ VIEWS.settings = () => {
           ${[...WEEK].map((w, i) => `<label><input type="checkbox" data-days="${k}" data-d="${i}" ${daysOf(k).includes(i) ? 'checked' : ''}><span>${w}</span></label>`).join('')}
         </div>
       </div>`).join('')}
-      <label class="field"><span>習慣的訓練時間（可以不填；加到行事曆時沒填就用晚上 8 點）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
+      <label class="field"><span>習慣的訓練時間（可以不填）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
       <h3>加到行事曆</h3>
-      <p class="sub">網頁 app 沒辦法自己定時跳通知，所以改由手機行事曆提醒：依上面的日子和時間建立每週重複的行程。行程裡不會寫是哪套訓練日，點開 app 就會看到今天的搭配。</p>
-      <label class="field"><span>提前多久提醒</span>
-        <select data-path="settings.calRemind" data-type="int">
-          ${[[-1, '不提醒'], [0, '準時'], [10, '10 分鐘前'], [30, '30 分鐘前'], [60, '1 小時前']].map(([v, t]) => `<option value="${v}" ${+s.calRemind === v ? 'selected' : ''}>${t}</option>`).join('')}
-        </select></label>
+      <p class="sub">網頁 app 沒辦法自己定時跳通知，所以改由手機行事曆提醒：上面選的日子，每天早上 8 點會跳「今天有彈力帶訓練」或「今天有 Tabata」。</p>
       <button type="button" class="btn" data-act="exportIcs">加到行事曆（下載 .ics 檔）</button>
-      <p class="sub">改了日子或時間要重新加一次，並把舊的行程刪掉，不然會重複。iPhone 在主畫面的 app 裡按了沒反應的話，用 Safari 打開這個網站再按一次。</p>
+      <p class="sub">改了日子要重新加一次，並把舊的行程刪掉，不然會重複。iPhone 在主畫面的 app 裡按了沒反應的話，用 Safari 打開這個網站再按一次。</p>
     </section>
     <section class="card">
       <h2>訓練日</h2>
@@ -1014,51 +1010,41 @@ function firstDay(days) {
   return d;
 }
 
-function icsEvent({ uid, days, hh, mm, minutes, summary, desc, remind }) {
-  const lines = [
+/* 一個每週重複的早上提醒：早上 8 點開始、10 分鐘，開始時就跳通知 */
+function icsEvent({ uid, days, summary }) {
+  return [
     'BEGIN:VEVENT',
     `UID:${uid}`,
     `DTSTAMP:${icsUtc(new Date())}`,
-    `DTSTART:${icsLocal(firstDay(days), hh, mm)}`,
-    `DURATION:PT${Math.max(5, minutes)}M`,
+    `DTSTART:${icsLocal(firstDay(days), 8, 0)}`,
+    'DURATION:PT10M',
     `RRULE:FREQ=WEEKLY;BYDAY=${days.slice().sort().map(i => ICS_DAYS[i]).join(',')}`,
     `SUMMARY:${icsText(summary)}`,
-    `DESCRIPTION:${icsText(desc)}`,
-    `URL:${appUrl()}`
+    `DESCRIPTION:${icsText(appUrl())}`,
+    `URL:${appUrl()}`,
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    `DESCRIPTION:${icsText(summary)}`,
+    'TRIGGER:PT0M',
+    'END:VALARM',
+    'END:VEVENT'
   ];
-  if (remind >= 0) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText(summary)}`, `TRIGGER:-PT${remind}M`, 'END:VALARM');
-  lines.push('END:VEVENT');
-  return lines;
 }
 
 const appUrl = () => location.origin + location.pathname;
 
-/* 回傳 .ics 內容；沒有可以排的日子就回傳 null */
+/* 回傳 .ics 內容；沒有可以排的日子就回傳 null。
+   同一天兩種都有的話合成一則「今天有彈力帶訓練和 Tabata」，不會同時跳兩個通知 */
 function buildIcs() {
-  const s = state.settings;
-  const [hh, mm] = (s.trainTime || '20:00').split(':').map(Number);
-  const remind = Number.isFinite(+s.calRemind) ? +s.calRemind : 10;
   const host = location.hostname || 'localhost';
-  const events = [];
   const band = daysOf('bandDays'), tabata = daysOf('tabataDays');
-  if (band.length) {
-    /* 長度用今天推薦的搭配（通常是兩套）估算 */
-    const items = mergedItems(recommend().letters);
-    const mins = items.length ? planMinutes(items) : 30;
-    events.push(...icsEvent({
-      uid: `bandfit-band@${host}`, days: band, hh, mm, minutes: mins, remind,
-      summary: '彈力帶訓練',
-      desc: `打開 app 看今天推薦的訓練日搭配：${appUrl()}\n開始前記得檢查帶子有沒有裂縫。`
-    }));
-  }
-  if (tabata.length) {
-    events.push(...icsEvent({
-      uid: `bandfit-tabata@${host}`, days: tabata, hh, mm, minutes: Math.ceil(tabataTotal() / 60), remind,
-      summary: 'Tabata（選做）',
-      desc: `打開 app 的 Tabata 頁開始計時：${appUrl()}#/tabata\n睡前 2 小時以前做完比較不影響睡眠。`
-    }));
-  }
-  if (!events.length) return null;
+  const groups = [
+    ['both', band.filter(i => tabata.includes(i)), '今天有彈力帶訓練和 Tabata'],
+    ['band', band.filter(i => !tabata.includes(i)), '今天有彈力帶訓練'],
+    ['tabata', tabata.filter(i => !band.includes(i)), '今天有 Tabata']
+  ].filter(g => g[1].length);
+  if (!groups.length) return null;
+  const events = groups.flatMap(([id, days, summary]) => icsEvent({ uid: `bandfit-${id}@${host}`, days, summary }));
   return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//bandfit//彈力帶訓練//ZH-TW', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', ...events, 'END:VCALENDAR']
     .map(icsFold).join('\r\n') + '\r\n';
 }

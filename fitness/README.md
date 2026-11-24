@@ -8,7 +8,7 @@
 - 內建 24 個彈力帶動作（肩膀、背、胸、手臂、腿和臀、核心）。首頁選「自選」可以臨時勾幾個動作來做；訓練中也能臨時加動作。
 - 訓練畫面一次顯示一個動作：用哪條帶子、目標組數與次數、做法、容易犯的錯。每組可以打勾、填實際次數、選「還剩幾下餘力」。
 - 首頁有「本週日程」（哪天練 A、B、Tabata、休息，照實際紀錄往下排）和建議訓練時間；日程可在設定頁改。
-- 設定頁可以「加到行事曆」：依每週日程和訓練時間產生 .ics 檔（每週重複的行程加提醒），由手機行事曆負責跳通知。網頁 app 不能自己定時通知（Chrome 的 Notification Triggers 已停止開發，推播又需要伺服器）。
+- 設定頁可以「加到行事曆」：產生 .ics 檔，在每週日程選的日子早上 8 點跳「今天有彈力帶訓練」或「今天有 Tabata」（同一天兩種都有就合成一則）。網頁 app 不能自己定時通知（Chrome 的 Notification Triggers 已停止開發，推播又需要伺服器），所以交給手機行事曆。
 - 首頁「菜單」有 A、B 以外的組合（全身、快速全身、下半身和臀、推、拉、手臂和肩膀、肩頸保養），可在設定頁編輯、新增、刪除。
 - 每次開始前會先跳出檢查清單。
 - 打勾後自動開始組間休息倒數，結束時有提示音和震動。
@@ -96,7 +96,7 @@ while ($l.IsListening) {
 {
   version: 4,
   settings: { restSec: 75, sound: true, vibrate: true, theme: "auto", showDetails: true,
-              bandDays: [0, 2, 4], tabataDays: [1, 5], trainTime: "", calRemind: 10 },   // 每週日程：0＝星期一 … 6＝星期日
+              bandDays: [0, 2, 4], tabataDays: [1, 5], trainTime: "" },   // 每週日程：0＝星期一 … 6＝星期日
   tabata: { work: 20, rest: 10, cycles: 8, rounds: 4, roundRest: 30, moves: ["深蹲 Squat", "…"] },
   exercises: [ { id: "lateral", group: "肩膀", band: 5, sets: 3, min: 12, max: 20,   // 部位與建議值（自選訓練用）
                 name: "側平舉", how: "…", mistakes: "…",
