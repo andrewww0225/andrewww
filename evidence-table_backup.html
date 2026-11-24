@@ -879,7 +879,7 @@ body:not(.show-gone) .is-gone{display:none}
     <a href="#s223">2.1 社會懈怠：人與AI</a>
     <a href="#s221-van">2.1.1 個人努力投入（IEC）</a>
     <a href="#s222">2.1.2 團隊互動強度（TII）</a>
-    <a href="#s2cap">2.2 生成式AI的能力與幻覺</a>
+    <a href="#s2cap">2.2 GAI的能力與幻覺</a>
     <a href="#s211">2.2.1 AI任務可委派性（AD）</a>
     <a href="#s212">2.2.2 當責</a>
     <a href="#s213">2.2.3 人類監督傾向（HOI）</a>
@@ -941,7 +941,7 @@ body:not(.show-gone) .is-gone{display:none}
         <tr data-vid="s4-U"><td class="loc"><a href="#s4-U">s4-U</a></td><td>4.2</td><td>自我評價較高者，其行為較不受工作角色條件影響</td><td>Pierce 等人 (1993)</td><td class="loc">印刷 p.271（PDF p.2）摘要；印刷 p.283（PDF p.14）討論第一段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-U 已查證"></td></tr>
         <tr data-vid="s4-V"><td class="loc"><a href="#s4-V">s4-V</a></td><td>4.2</td><td>一般自我效能會減弱認知需求對認知努力之正向效果</td><td>Pillai 等人 (2011)</td><td class="loc">印刷 p.127（PDF p.1）摘要；印刷 p.133（PDF p.7）Discussion 第一段</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-V 已查證"></td></tr>
         <tr data-vid="s4-W"><td class="loc"><a href="#s4-W">s4-W</a></td><td>4.3</td><td>為檢視負向調節是否源自量尺上限或HOI之曲線關係，加入HOI之二次項</td><td>Ganzach (1997)</td><td class="loc">印刷 p.235（PDF p.1）摘要 (a)、(c)</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-W 已查證"></td></tr>
-        <tr data-vid="s4-X"><td class="loc"><a href="#s4-X">s4-X</a></td><td>4.2</td><td>生成式AI能重現團隊合作之部分好處，部分原本須向組員請教之事可能改由生成式AI處理</td><td>Dell'Acqua 等人 (2026)</td><td class="loc">見 2.2 I 條、J2 條（印刷 p.1217、pp.1224–1225）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-X 已查證"></td></tr>
+        <tr data-vid="s4-X"><td class="loc"><a href="#s4-X">s4-X</a></td><td>4.2</td><td>GAI能重現團隊合作之部分好處，部分原本須向組員請教之事可能改由GAI處理</td><td>Dell'Acqua 等人 (2026)</td><td class="loc">見 2.2 I 條、J2 條（印刷 p.1217、pp.1224–1225）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s4-X 已查證"></td></tr>
         <tr data-vid="s5-A"><td class="loc"><a href="#s5-A">s5-A</a></td><td>5.2.1</td><td>受試者面對錯誤的AI解釋時傾向過度相信</td><td>Si 等人 (2024)</td><td class="loc">印刷 p.1464（PDF p.6）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-A 已查證"></td></tr>
         <tr data-vid="s5-B"><td class="loc"><a href="#s5-B">s5-B</a></td><td>5.2.1</td><td>模型出錯時過度依賴其內容，多數（60%）只查詢一次便做出決定</td><td>Spatharioti 等人 (2025)</td><td class="loc">PDF p.10；另見 p.7、p.1 摘要</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-B 已查證"></td></tr>
         <tr data-vid="s5-C"><td class="loc"><a href="#s5-C">s5-C</a></td><td>5.2.1</td><td>演算法懈怠之實驗比較並未達統計顯著</td><td>Inuwa-Dutse 等人 (2023)</td><td class="loc">PDF p.8（Fig. 7 附近）</td><td class="vchk"><input type="checkbox" class="vchk__box" aria-label="s5-C 已查證"></td></tr>
@@ -1087,15 +1087,22 @@ body:not(.show-gone) .is-gone{display:none}
 
   <p class="subhead">八、fsQCA</p>
   <p style="font-size:.88rem;color:var(--ink-2)">6／4／2 直接法校準；頻次門檻 3（保留下來的組合最少 4 人，共 182 人）；原始一致性 ≥ .80、PRI ≥ .90。四種組合的原始一致性都在 .94 以上，只有「AD 高、當責高、HOI 低、HRS 高」（n = 4）的 PRI 偏低（IEC .867、TII .804），判為 0。中間解設當責、HOI、HRS 為 present，AD 不設方向。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>表4-8　IEC 的組態</b></p>
   <div class="qi-wrap"><table class="qi">
-    <thead><tr><th>結果</th><th>組態</th><th>AD</th><th>當責</th><th>HOI</th><th>HRS</th><th>原始覆蓋率</th><th>唯一覆蓋率</th><th>一致性</th></tr></thead>
+    <thead><tr><th>組態</th><th>AD</th><th>當責</th><th>HOI</th><th>HRS</th><th>原始覆蓋率</th><th>唯一覆蓋率</th><th>一致性</th></tr></thead>
     <tbody>
-      <tr><td>IEC</td><td>C1</td><td>•</td><td>•</td><td>●</td><td></td><td>.697</td><td>.026</td><td>.966</td></tr>
-      <tr><td>IEC</td><td>C2</td><td></td><td>•</td><td>●</td><td>•</td><td>.895</td><td>.225</td><td>.956</td></tr>
-      <tr><td><b>IEC</b></td><td><b>整體解</b></td><td></td><td></td><td></td><td></td><td><b>.921</b></td><td></td><td><b>.949</b></td></tr>
-      <tr><td>TII</td><td>C1</td><td>•</td><td>•</td><td>●</td><td></td><td>.717</td><td>.028</td><td>.951</td></tr>
-      <tr><td>TII</td><td>C2</td><td></td><td>•</td><td>●</td><td>•</td><td>.899</td><td>.210</td><td>.919</td></tr>
-      <tr><td><b>TII</b></td><td><b>整體解</b></td><td></td><td></td><td></td><td></td><td><b>.927</b></td><td></td><td><b>.913</b></td></tr>
+      <tr><td>C1</td><td>•</td><td>•</td><td>●</td><td></td><td>.697</td><td>.026</td><td>.966</td></tr>
+      <tr><td>C2</td><td></td><td>•</td><td>●</td><td>•</td><td>.895</td><td>.225</td><td>.956</td></tr>
+      <tr><td><b>整體解</b></td><td></td><td></td><td></td><td></td><td><b>.921</b></td><td></td><td><b>.949</b></td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>表4-9　TII 的組態</b></p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>組態</th><th>AD</th><th>當責</th><th>HOI</th><th>HRS</th><th>原始覆蓋率</th><th>唯一覆蓋率</th><th>一致性</th></tr></thead>
+    <tbody>
+      <tr><td>C1</td><td>•</td><td>•</td><td>●</td><td></td><td>.717</td><td>.028</td><td>.951</td></tr>
+      <tr><td>C2</td><td></td><td>•</td><td>●</td><td>•</td><td>.899</td><td>.210</td><td>.919</td></tr>
+      <tr><td><b>整體解</b></td><td></td><td></td><td></td><td></td><td><b>.927</b></td><td></td><td><b>.913</b></td></tr>
     </tbody>
   </table></div>
   <p style="font-size:.88rem;color:var(--ink-2)">● 核心條件（簡約解只剩 HOI），• 邊緣條件，空白為不影響；整體解列的覆蓋率與一致性填在「原始覆蓋率」與「一致性」欄。必要條件：當責、HOI、HRS 的一致性對 IEC 為 .959、.970、.945，對 TII 為 .965、.967、.941，都高於 .90；AD 為 .724、.742。</p>
@@ -1201,12 +1208,12 @@ body:not(.show-gone) .is-gone{display:none}
     <summary class="subhead fold__sum"><span class="fold__t">第二章 2.2（H1–H3）—— 第五章研究限制素材</span><span class="fold__btn" aria-hidden="true"></span></summary>
   <p>以下文獻不加入論文正文，留作第五章研究限制與討論的素材。標「摘要」者引用前須取得全文。</p>
   <ol class="issues">
-    <li><div><h4>① H1：沒有研究直接檢驗「認為任務適合交給 AI → 查證意願降低」</h4><p>現有最接近的是兩篇以生成式 AI 為對象的行為實驗，結果都是「依賴 AI → 較少查證」，但兩篇測的都是依賴，不是任務可委派性，受試者也不是學生：<br>· <strong>Si等人（2024）</strong>，NAACL，pp. 1459–1474，https://doi.org/10.18653/v1/2024.naacl-long.81。80 名受試者以 ChatGPT 解釋查核事實；解釋錯誤時 <em class="q">users tend to over-trust the explanations and only achieve an accuracy of (0.35±0.22)</em>，低於無 AI 的 0.49，且 <em class="q">users spend similar time on claims with correct and wrong explanations</em>（arXiv 版全文已核對）。<br>· <strong>Spatharioti等人（2025）</strong>，CHI，https://doi.org/10.1145/3706598.3714082。使用 LLM 搜尋者 <em class="q">the majority of people (60%) making just a single query before reaching a decision</em>（CHI 正式版已核對，見 <a href="#s5-B">s5-B</a>）。<br>Vasconcelos等人（2023）仍是機制的主要依據。若引用上面兩篇，寫成「依賴生成式AI者較少查證其產出」，不要寫成直接支持 H1。<br><strong>已評估不採用：</strong>Vu等人（2026）、Ashraf等人（2026）、Giger等人（2024）。</p></div></li>
+    <li><div><h4>① H1：沒有研究直接檢驗「認為任務適合交給 AI → 查證意願降低」</h4><p>現有最接近的是兩篇以生成式 AI 為對象的行為實驗，結果都是「依賴 AI → 較少查證」，但兩篇測的都是依賴，不是任務可委派性，受試者也不是學生：<br>· <strong>Si等人（2024）</strong>，NAACL，pp. 1459–1474，https://doi.org/10.18653/v1/2024.naacl-long.81。80 名受試者以 ChatGPT 解釋查核事實；解釋錯誤時 <em class="q">users tend to over-trust the explanations and only achieve an accuracy of (0.35±0.22)</em>，低於無 AI 的 0.49，且 <em class="q">users spend similar time on claims with correct and wrong explanations</em>（arXiv 版全文已核對）。<br>· <strong>Spatharioti等人（2025）</strong>，CHI，https://doi.org/10.1145/3706598.3714082。使用 LLM 搜尋者 <em class="q">the majority of people (60%) making just a single query before reaching a decision</em>（CHI 正式版已核對，見 <a href="#s5-B">s5-B</a>）。<br>Vasconcelos等人（2023）仍是機制的主要依據。若引用上面兩篇，寫成「依賴GAI者較少查證其產出」，不要寫成直接支持 H1。<br><strong>已評估不採用：</strong>Vu等人（2026）、Ashraf等人（2026）、Giger等人（2024）。</p></div></li>
     <li><div><h4>② H2：AI／自動化情境正反證據</h4><p>正面：Skitka 等人（2000）當責條件下更可能查證、遺漏與誤用錯誤較少（見 <a class="xref" href="#s214-AB">2.2.4 · AB 條</a>）。反面：Kupfer 等人（2023）當責操弄未顯著提升查證行為（見 <a class="xref" href="#s214-AC">2.2.4 · AC 條</a>），與 <a class="xref" href="#s214-D">Romeo &amp; Conti</a>、<a class="xref" href="#s214-Q">Stout</a> 之反面證據方向一致。<strong>反面證據若與本研究實際結果之方向有出入，須在第五章討論中處理。</strong></p></div></li>
     <li><div><h4>③ HOI 定義：有一篇直接相符的預印本</h4><p>· <strong>Du（2026）</strong>，arXiv:2605.16642（預印本）。432 名用過生成式 AI 學習的大學生；定義 verification intention 為 <em class="q">an individual's willingness or planned tendency to check the accuracy, credibility, and reliability of information before accepting or using it</em>（p. 2，轉引 Qu &amp; Lu, 2025）；三題量表 <em class="q">I intend to verify the accuracy of AIGC before using it for learning tasks</em>／<em class="q">I am willing to check whether AIGC is reliable before accepting its content</em>／<em class="q">I plan to compare AIGC with other reliable sources before using it</em>（p. 6），α = .84（p. 8）。與本研究 HOI 最接近，但是預印本，正式引用前宜確認是否已出版。<br>· <strong>Liao &amp; Sundar（2026）</strong>，JCMC，開放取用：把查證定義為行為（受試者以其他來源佐證），意圖題目只在補充資料，未取得。<br>· Ni &amp; Huang（2025）題名即為「查證 AI 資訊的意圖」，全文付費，未讀。</p></div></li>
     <li><div><h4>④ 2.2.2：過程當責未必總是優於結果當責（Hall 等人，2017）</h4><p>論文 2.2.2 未採用此句。原文（PDF p.7 ／ 印刷 p.210，承接 p.209 的 Accountability focus 段）：<em class="q">However, at least two studies have called into question the notion that process accountability is always preferable to outcome accountability. In a study involving a two-stage complex decision-making task, Davis, Mero, and Goodman (2007) found …</em><br>中譯：「然而，至少有兩項研究質疑『過程當責總是優於結果當責』這個看法。」第五章討論 H2 或當責界定於過程的限制時可引用。</p></div></li>
     <li><div><h4>⑤ 2.2.4：演算法懈怠為概念性主張（Inuwa-Dutse 等人，2023）</h4><p>可寫進第五章的限制：演算法懈怠仍屬概念性主張，該文的實驗比較未達顯著。原文（PDF p.8，Fig. 7 附近）：<em class="q">Although we did not observe any statistical significance, closer observation reveals participants under the loafing variant perform poorly compared to the non-loafing counterpart.</em><br>中譯：「雖然未觀察到統計顯著性，但進一步觀察可見懈怠組的表現較非懈怠組差。」第五章討論 H1 的理論依據時可引用；原文條目見 <a class="xref" href="#s2cap-P">2.2 · P 條</a>。</p></div></li>
-    <li><div><h4>⑥ 2.2.5：H3b 為探索性假說的依據（反方向理由與 Sterz 等人，2024 的兩項限制）</h4><p>論文 2.2.5 寫「由於監督傾向與團隊互動強度之間的關係尚無直接的實證研究，故H3b屬探索性假說」。<br><strong>反方向理由（本研究的推論，非文獻）：</strong>監督傾向較高的個體，可能因需要確認彼此產出的一致性而增加與成員的互動，也可能直接向生成式AI或其他資料來源查證，而不需經由成員；與 2.3.1 H4b「獨自完成查證而減少求助」為同一邏輯。<br><strong>限制一：Sterz 等人（2024）為跨領域的概念性論文。</strong>原文（PDF p.1 ／ ACM 2495）：<em class="q">This paper investigates effective human oversight by synthesizing insights from psychological, legal, philosophical, and technical domains.</em>（PDF p.3 ／ ACM 2497）：<em class="q">the original result of collective insights of an interdisciplinary team of researchers from psychology, law, philosophy, and computer science</em>。全文沒有 Method、Participants、Results 章節；<code>Participants</code>、<code>we conducted</code>、<code>sample</code>、<code>empirical study</code> 全文皆 0 次。<br><strong>限制二：其監督情境為高風險 AI 系統的指定監督者。</strong>原文（PDF p.3 ／ ACM 2497）：<em class="q">We understand human oversight to be the supervision of a system by at least one natural person, typically with the authority to influence its operations or effects.</em>（PDF p.8–9 ／ ACM 2502–2503，§5）：<em class="q">Article 14(1) of the proposal, what the AI Act defines as high-risk AI systems shall be designed and developed in such a way that they can be effectively overseen during their use</em>；<code>high-risk</code> 全文 17 次。<br>中譯：「我們將人類監督理解為至少一位自然人對系統的監督，通常具有影響其運作或效果的權限。」第五章討論 H3b 結果時可引用；Drive 原文見 <a class="xref xref--lit" href="#s224-lit-sterz">2.2.5 · Sterz</a>。</p></div></li>
+    <li><div><h4>⑥ 2.2.5：H3b 為探索性假說的依據（反方向理由與 Sterz 等人，2024 的兩項限制）</h4><p>論文 2.2.5 寫「由於監督傾向與團隊互動強度之間的關係尚無直接的實證研究，故H3b屬探索性假說」。<br><strong>反方向理由（本研究的推論，非文獻）：</strong>監督傾向較高的個體，可能因需要確認彼此產出的一致性而增加與成員的互動，也可能直接向GAI或其他資料來源查證，而不需經由成員；與 2.3.1 H4b「獨自完成查證而減少求助」為同一邏輯。<br><strong>限制一：Sterz 等人（2024）為跨領域的概念性論文。</strong>原文（PDF p.1 ／ ACM 2495）：<em class="q">This paper investigates effective human oversight by synthesizing insights from psychological, legal, philosophical, and technical domains.</em>（PDF p.3 ／ ACM 2497）：<em class="q">the original result of collective insights of an interdisciplinary team of researchers from psychology, law, philosophy, and computer science</em>。全文沒有 Method、Participants、Results 章節；<code>Participants</code>、<code>we conducted</code>、<code>sample</code>、<code>empirical study</code> 全文皆 0 次。<br><strong>限制二：其監督情境為高風險 AI 系統的指定監督者。</strong>原文（PDF p.3 ／ ACM 2497）：<em class="q">We understand human oversight to be the supervision of a system by at least one natural person, typically with the authority to influence its operations or effects.</em>（PDF p.8–9 ／ ACM 2502–2503，§5）：<em class="q">Article 14(1) of the proposal, what the AI Act defines as high-risk AI systems shall be designed and developed in such a way that they can be effectively overseen during their use</em>；<code>high-risk</code> 全文 17 次。<br>中譯：「我們將人類監督理解為至少一位自然人對系統的監督，通常具有影響其運作或效果的權限。」第五章討論 H3b 結果時可引用；Drive 原文見 <a class="xref xref--lit" href="#s224-lit-sterz">2.2.5 · Sterz</a>。</p></div></li>
     <li><div><h4>⑦ 2.2.4：H2 的實務旁證 —— 須向他人說明時，開發者逐行檢視（Dhanorkar 等人，2026）</h4><p>論文 v1.3 曾在 2.2.4 引用同一段的「原型 → 降低檢視」（v1.4 已刪除）；本句為其對照面，論文未引用，留作第五章或口試素材。原文（PDF p.10 ／ 印刷 p.6447，§4.1.4 Post hoc review）：需整合新功能進既有程式碼時，事後審查 <em class="q">even more crucial, at times "more stringently than if it was a person [who wrote the code]" (P02)</em>；P17：<em class="q">I read every single line. I approve every single line. [...] For serious software engineering, especially where you're part of a broader system, it's extremely problematic if you have code where you're not exactly sure what every single line does. You show up in a meeting, there are people who need to make integration decisions that rely on you knowing exactly how this code works.</em><br>中譯：「我每一行都讀、每一行都核准。……尤其當你是更大系統的一部分時，如果你不確定每一行程式在做什麼，問題就很大。你去開會時，有人要依賴你清楚知道這段程式怎麼運作來做整合決策。」<br>用法：預期須向他人說明（開會時要能解釋）→ 更嚴格檢視 AI 產出，方向與 H2 一致。限制：受訪者為職場開發者、屬質性訪談，<strong>該段落沒有使用 accountability 一詞</strong>，連到當責是本研究的解讀。原文條目見 <a class="xref" href="#s214-AA">2.2.4 · AA 條</a>。</p></div></li>
   </ol>
   </details>
@@ -1221,8 +1228,8 @@ body:not(.show-gone) .is-gone{display:none}
         <li>上述文獻均未直接檢驗對自身角色重要性的信念如何調節意圖轉化為後續行為的歷程，本研究提出此一調節關係係整合上述文獻所作的理論推導，而非既有實證發現的複製。</li>
         <li>同類構念作為調節變項有負面先例，Mirbabaie等人（2022）檢驗AI認同對各項威脅來源與AI認同威脅之間關係的調節作用，六條路徑均未達顯著，該文因而主張AI認同應視為獨立的預測變項，該研究之AI認同與HRS並非同一構念，此一結果不構成直接反證，但仍應於第五章討論。</li>
         <li>鄰近構念的區辨仍待檢驗，Elshan等人（2025）發現知識自我效能感在AI在場與社會懈怠之間具有中介作用，該構念與HRS在概念上相近而不相同，前者評估的是能力，後者評估的是自身角色的價值；本研究未納入知識自我效能感之測量，兩者之實證區辨留待後續研究，並於第五章研究限制中說明。</li>
-        <li>2.3.2中社會懈怠文獻參照對象為團隊中的其他成員而非生成式AI，此轉換為本研究理論推導，且Latané等人（1979）的第三項解釋為該文於討論中提出的理論說明，Mulvey與Klein（1998）所引述者為搭便車的定義而非該文所檢驗的變項，Karau與Williams（1993）的後設分析所比較者為任務是否具獨特性，三者均非針對自身貢獻價值認知的直接實證檢驗。</li>
-        <li>本研究將HRS界定為相對穩定的個體特質，但E. H. Lee等人（2026）顯示自我效能與工作意義感等自我相關認知可能隨AI使用方式而改變，且其下降在回歸手動作業後仍可能持續。因本研究採橫斷面設計，無法排除使用生成式AI的經驗反過來影響HRS的可能，應於第五章討論。</li>
+        <li>2.3.2中社會懈怠文獻參照對象為團隊中的其他成員而非GAI，此轉換為本研究理論推導，且Latané等人（1979）的第三項解釋為該文於討論中提出的理論說明，Mulvey與Klein（1998）所引述者為搭便車的定義而非該文所檢驗的變項，Karau與Williams（1993）的後設分析所比較者為任務是否具獨特性，三者均非針對自身貢獻價值認知的直接實證檢驗。</li>
+        <li>本研究將HRS界定為相對穩定的個體特質，但E. H. Lee等人（2026）顯示自我效能與工作意義感等自我相關認知可能隨AI使用方式而改變，且其下降在回歸手動作業後仍可能持續。因本研究採橫斷面設計，無法排除使用GAI的經驗反過來影響HRS的可能，應於第五章討論。</li>
       </ol>
       <p><strong>寫進第五章時要調整：</strong></p>
       <p>· 第一項「理論推導，而非既有實證發現的複製」已併入第二章 2.3.2 的研究缺口，第五章可以不再重複，或改寫成限制的語氣。<br>· 第四項提到「Latané等人（1979）的第三項解釋」，但第二章 2.3.1 改寫後已不引用 Latané，這部分要刪，只留 Mulvey 與 Klein、Karau 與 Williams。<br>· 第五項與第二章 2.3 E. H. Lee 段末「這對本研究將HRS界定為相對穩定的特質構成限制，將於第五章討論」是同一件事，兩邊說法要一致。</p></div></li>
@@ -1297,7 +1304,7 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s11-N">
     <div class="entry__rail"><span class="entry__key">N</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「這種「人多反而不出力」的現象，早在一百多年前便已被發現：Ringelmann讓受試者一起拉繩，發現共同拉繩的人數愈多，每個人平均施出的力量反而愈少（Ringelmann, 1913）」</p>
+      <p class="claim">「「人多反而不出力」的現象，早在一百多年前便已被發現：Ringelmann讓受試者一起拉繩，發現共同拉繩的人數愈多，每個人平均施出的力量反而愈少（Ringelmann, 1913）」</p>
       <p class="role"><b>作用</b>情境緣起</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文（法文）· 印刷 p.9</span><p>“Pour l’emploi de l’homme, comme d’ailleurs des animaux de trait, la meilleure utilisation est réalisée quand le moteur travaille seul : <strong>dès qu’on accouple deux ou plusieurs moteurs sur la même résistance, le travail utilisé de chacun d’eux, avec la même fatigue, diminue</strong> par suite du manque de simultanéité de leurs efforts”<br>表格（Nombre de moteurs → Fourni par moteur）：1 → 1,00；2 → 0,93；3 → 0,85；8 → 0,49</p></div>
@@ -1334,36 +1341,44 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s11-B">
     <div class="entry__rail"><span class="entry__key">B</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「Latané等人（1979）將此現象命名為社會懈怠（social loafing），即個體的努力因他人在場而降低，」</p>
+      <p class="claim">「Latané等人（1979）以拍手與吶喊重現此現象，並將其命名為社會懈怠（social loafing），即個體的努力因他人在場而降低。」</p>
       <p class="role"><b>作用</b>既有理論名詞的定義</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.823</span><p>“These reduced efforts can be called <strong>“social loafing”—a decrease in individual effort due to the social presence of other persons</strong>.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「這些降低的努力可稱為『社會懈怠』——<strong>個體努力因他人在社會上的在場而降低</strong>。」</p></div>
       </div>
+      <div class="src">
+        <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.823</span><p>“Therefore, we decided to keep our ears open for other tasks that would allow us to <strong>replicate the Ringelmann finding conceptually</strong> and would provide the basis for extended empirical and theoretical analysis. <strong>We chose cheering and clapping</strong>, two activities …”</p></div>
+        <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「因此，我們留意其他能<strong>在概念上重現 Ringelmann 發現</strong>、並能作為進一步實證與理論分析基礎的作業。<strong>我們選擇了歡呼與拍手</strong>這兩種活動……」</p></div>
+      </div>
       <ul class="locus"><li><b>PDF</b>p. 2 ／ <b>印刷</b>p. 823</li></ul>
-      <p class="support"><b>如何支持論述：</b>定義逐字對應。</p>
+      <p class="support"><b>如何支持論述：</b>「以拍手與吶喊重現此現象」＝ <em class="q">replicate the Ringelmann finding conceptually … cheering and clapping</em>；定義逐字對應。</p>
     </div>
   </article>
 
   <article class="entry" id="s11-C">
     <div class="entry__rail"><span class="entry__key">C</span><span class="chip chip--indirect">間接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「並在其吶喊實驗中發現群體表現的損失，一半來自成員之間協調不良，一半來自每個人少出了力。」</p>
+      <p class="claim">「在這些實驗中，所有成員一起做同一件事，彼此之間沒有分工，而群體表現的損失一半來自成員之間協調不良，一半來自每個人少出了力。」</p>
       <p class="role"><b>作用</b>支持 1.1 第 1 段：協調不良與少出力「各佔一半」之量化依據</p>
+      <div class="src">
+        <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.822（PDF p.1）</span><p>“A unitary task cannot be divided into separate subtasks—<strong>all members work together doing the same thing and no division of labor is possible</strong>.”</p></div>
+        <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「單一性作業無法拆成不同的子任務——<strong>所有成員一起做同一件事，不可能分工</strong>。」</p></div>
+      </div>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.828（PDF p.7）</span><p>“The stippled area defined at the top of Figure 2 by the data from the pseudogroups represents the amount of loss due to social loafing. By subtraction, we can infer that the white area of Figure 2 represents the amount of loss due to faulty coordination. <strong>Since the latter comprises about the same area as the former, we can conclude that, for shouting, half the performance loss decrement is due to incoordination and half is due to social loafing.</strong>”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「Figure 2 上方由偽團體（pseudogroups）資料界定出的斑點區域，代表社會懈怠造成的損失量；以此反推，Figure 2 的白色區域可推知代表協調不良造成的損失量。<strong>由於後者面積與前者大致相當，我們可以推論，就吶喊（shouting）這項作業而言，表現損失中一半是協調不良所致、一半是社會懈怠所致。</strong>」</p></div>
       </div>
-      <ul class="locus"><li><b>PDF</b>p. 7 ／ <b>印刷</b>p. 828</li><li><b>定位</b>Experiment 2（吶喊作業）結果段末</li></ul>
-      <p class="support"><b>如何支持論述：</b>「一半…一半…」逐字對應原文 <em class="q">half the performance loss decrement is due to incoordination and half is due to social loafing</em>。</p>
-      <div class="note note--warn"><span class="note__lab">措辭限度</span>此「各半」結論僅針對<strong>實驗二的吶喊（shouting）作業</strong>，依 Figure 2 面積目測估算，並非普遍適用於所有情境的固定比例。論文已寫明「並在其吶喊實驗中發現……」，限定在實驗語境。</div>
+      <ul class="locus"><li><b>沒有分工</b>PDF p. 1 ／ 印刷 p. 822</li><li><b>PDF</b>p. 7 ／ <b>印刷</b>p. 828</li><li><b>定位</b>Experiment 2（吶喊作業）結果段末</li></ul>
+      <p class="support"><b>如何支持論述：</b>「所有成員一起做同一件事，彼此之間沒有分工」＝ <em class="q">all members work together doing the same thing and no division of labor is possible</em>。「一半…一半…」逐字對應原文 <em class="q">half the performance loss decrement is due to incoordination and half is due to social loafing</em>。</p>
+      <div class="note note--warn"><span class="note__lab">措辭限度</span>此「各半」結論僅針對<strong>實驗二的吶喊（shouting）作業</strong>，依 Figure 2 面積目測估算，並非普遍適用於所有情境的固定比例。論文現在寫「在這些實驗中……一半來自……一半來自……」，把「各半」套到所有實驗（含拍手），比原文寬；口試若被問，要說明各半只出現在吶喊作業。</div>
     </div>
   </article>
 
   <article class="entry" id="s11-D">
     <div class="entry__rail"><span class="entry__key">D</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「Latané等人（1979）直言社會懈怠是一種「社會疾病」，但解方不是取消團體，而是讓團體成為強化個人責任、而非分散責任的手段。」</p>
+      <p class="claim">「他們也直言社會懈怠是一種「社會疾病」，但解方不是取消團體，而是讓團體成為強化個人責任、而非分散責任的手段。」</p>
       <p class="role"><b>作用</b>支持 1.1 第 2 段：社會懈怠研究的立場是強化團體而非否定團體</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 p.831（PDF p.10）</span><p>“<strong>we think social loafing can be regarded as a kind of social disease</strong>. … <strong>Social loafing results in a reduction in human efficiency, which leads to lowered profits and lowered benefits for all</strong>.”</p></div>
@@ -1503,15 +1518,15 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s11-I">
     <div class="entry__rail"><span class="entry__key">I</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「近期研究已開始把社會懈怠延伸到人與AI協作的情境，但結果並不一致（Cymek等人, 2023；Elshan等人, 2025），不過這些研究多將AI設定為團隊中的隊友，與本研究設定之「團隊依然由人組成，但每位成員各自使用AI助手」情境並不相同。」</p>
+      <p class="claim">「近期研究已開始把社會懈怠延伸到人與AI協作的情境，但結果並不一致（Cymek等人, 2023；Elshan等人, 2025），而且這些研究多將AI設定為團隊中的隊友，等於仍是在團隊中多加了一位成員。」</p>
       <p class="role"><b>作用</b>本研究情境與既有研究的差異（研究缺口的白話版）</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p><strong>Cymek 摘要（PDF p.1）：</strong>“Participants in both groups inspected almost the entire board surface, took their time searching, and rated their subjective effort as high. However, participants <strong>working in a team with the robot</strong> found on average 3.3 defects. People working alone found significantly more defects on these 5 occasions–an average of 4.2.”<br><strong>Elshan 摘要（HICSS p.121）：</strong>“We conducted a series of experiments to investigate whether the presence of AI induces social loafing … <strong>its effect on social loafing varies</strong> depending on the perceived presence of AI and individual knowledge self-efficacy.” ／ 正文稱 AI 為 <em class="q">AI teammate</em>。</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「兩組受試者都幾乎檢查了整片電路板、花時間搜尋，並自評努力程度高。然而，<strong>與機器人組隊</strong>的受試者平均只找到 3.3 個瑕疵，單獨作業者在這 5 處顯著找到較多，平均 4.2 個。」<br>「……<strong>其對社會懈怠的效果會隨</strong> AI 在場的知覺程度與個體的知識自我效能感<strong>而變化</strong>。」</p></div>
       </div>
       <ul class="locus"><li><b>Cymek</b>PDF p.1；努力指標不顯著、偵測較少見 <a class="xref" href="#s223-O">2.1 · O 條</a></li><li><b>Elshan</b>HICSS p.121；三研究直接效果不一致見 <a class="xref" href="#s223-T">2.1 · T 條</a></li></ul>
-      <p class="support"><b>如何支持論述：</b>「結果並不一致」：Cymek 的努力指標沒有差異、偵測表現卻較差；Elshan 三個研究的直接效果方向不一。「多將AI設定為隊友」：Cymek 是與機器人組隊，Elshan 是 AI 隊友。</p>
-      <div class="note note--warn"><span class="note__lab">措辭限度</span>Cymek 的協作對象是協作機械臂，不是生成式AI；兩篇的「隊友」都是實驗設定（Elshan 為腳本模擬角色）。這些限度第二章 2.1 已交代。</div>
+      <p class="support"><b>如何支持論述：</b>「結果並不一致」：Cymek 的努力指標沒有差異、偵測表現卻較差；Elshan 三個研究的直接效果方向不一。「多將AI設定為隊友」：Cymek 是與機器人組隊，Elshan 是 AI 隊友。「等於仍是在團隊中多加了一位成員」是本研究的詮釋。</p>
+      <div class="note note--warn"><span class="note__lab">措辭限度</span>Cymek 的協作對象是協作機械臂，不是GAI；兩篇的「隊友」都是實驗設定（Elshan 為腳本模擬角色）。這些限度第二章 2.1 已交代。</div>
     </div>
   </article>
 
@@ -1526,7 +1541,7 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s11-J">
     <div class="entry__rail"><span class="entry__key">J</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「而另一方面，它卻會產生看似合理卻不正確的內容，也就是所謂的AI幻覺（AI hallucination）。……而且AI流暢的輸出容易被當成正確的訊號，反而讓人覺得不需要質疑（Lau等人, 2026）。」</p>
+      <p class="claim">「而另一方面，它卻會產生看似合理卻不正確的內容，也就是所謂的AI幻覺（AI hallucination）。……而且GAI流暢的輸出容易被當成正確的訊號，反而讓人覺得不需要質疑（Lau等人, 2026）。」</p>
       <p class="role"><b>作用</b>第一股力量：AI 會出錯</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · p.3</span><p>“… because even <strong>fluent, logical-sounding outputs can contain omissions, hallucinations, and overconfident claims</strong> (Huang et al., 2025; Lee et al., 2025; Savage et al., 2025). <strong>These cues can easily be read as signals of validity and can reduce the felt need to question what the model says</strong> (Quelle &amp; Bovet, 2024; Sun et al., 2025).”</p></div>
@@ -2484,7 +2499,7 @@ body:not(.show-gone) .is-gone{display:none}
         <li><b>PDF／文章頁</b>p. 1（摘要）· p. 8（§4 Discussion）· p. 9（Limitations 第三點）</li>
       </ul>
       <p class="support"><b>如何支持論述：</b>原文全程使用 <em class="q">suggests</em>／<em class="q">may have</em>／<em class="q">seemed to</em>／<em class="q">it appears</em> 等推測語氣，與你「推論」「可能」的定調一致。</p>
-      <div class="note"><span class="note__lab">另有一個更根本的限制</span>作者自己承認 <strong>Panda 其實沒有真的檢測電路板</strong>（是實驗操弄，機器人只是假裝掃描）。這比「非生成式AI」更根本。</div>
+      <div class="note"><span class="note__lab">另有一個更根本的限制</span>作者自己承認 <strong>Panda 其實沒有真的檢測電路板</strong>（是實驗操弄，機器人只是假裝掃描）。這比「非GAI」更根本。</div>
     </div>
   </article>
 
@@ -2607,8 +2622,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s223-U">
     <div class="entry__rail"><span class="entry__key">U</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「該研究並建議後續研究改以生成式AI隊友進行檢驗」（2.2.6：「如2.1所述，Elshan等人（2025）建議後續研究改以生成式AI隊友進行檢驗」）</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>該研究<del>並</del><ins>指出其AI隊友為預先撰寫腳本的模擬角色，</ins>建議後續研究改以生成式AI隊友進行檢驗。</div>
+      <p class="claim">「該研究並建議後續研究改以GAI隊友進行檢驗」（2.2.6：「如2.1所述，Elshan等人（2025）建議後續研究改以GAI隊友進行檢驗」）</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>該研究<del>並</del><ins>指出其AI隊友為預先撰寫腳本的模擬角色，</ins>建議後續研究改以<del>G</del><ins>生成式</ins>AI隊友進行檢驗。</div>
       <p class="role"><b>作用</b>你用它說明本研究的定位 —— 正是回應這個建議</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · HICSS p.129</span><p>“Additionally, our study relied on <strong>scripted AI teammates</strong>, which may have led participants to perceive the AI as less dynamic or responsive than AI agents in real-world applications. <strong>Future research should consider using more advanced AI systems, such as generative AI-based teammates</strong> that can dynamically adapt their contributions based on team discourse.”</p></div>
@@ -2634,7 +2649,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>PDF</b>p. 9 ／ <b>HICSS</b>p. 129</li></ul>
       <p class="support"><b>如何支持論述：</b>對應 <em class="q">revisiting established social theories like social loafing to evaluate if they hold true in the AI-human collaborative context</em>，論文改寫為「檢驗…是否仍然成立」。</p>
-      <div class="note"><span class="note__lab">與 U 條的關係</span>本句與 <a class="xref" href="#s223-U">U 條</a>的「建議改用生成式AI隊友」同在HICSS p.129，屬同段落相鄰但不同句的兩個獨立主張，分別列條不重複。</div>
+      <div class="note"><span class="note__lab">與 U 條的關係</span>本句與 <a class="xref" href="#s223-U">U 條</a>的「建議改用GAI隊友」同在HICSS p.129，屬同段落相鄰但不同句的兩個獨立主張，分別列條不重複。</div>
       <div class="note"><span class="note__lab">v1.4 改寫</span>原文只寫 <em class="q">highlight the value of revisiting</em>（價值）；「必要」是本段綜合前述研究的判斷，括號引用 Elshan 等人支持的是「價值」與「重新檢驗」。</div>
     </div>
   </article>
@@ -3186,7 +3201,7 @@ body:not(.show-gone) .is-gone{display:none}
 <section class="section" id="s2cap">
   <div class="section__head">
     <span class="section__num">2.2</span>
-    <h2 class="section__title">生成式AI的能力與幻覺</h2>
+    <h2 class="section__title">GAI的能力與幻覺</h2>
     <span class="section__meta">5 篇文獻 · 6 條</span>
   </div>
 
@@ -3207,8 +3222,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s2cap-A">
     <div class="entry__rail"><span class="entry__key">A</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
-      <p class="claim">「發現導入以GPT-3為基礎的生成式AI助手後，每小時解決的問題數增加15.2%」</p>
-      <p class="role"><b>作用</b>2.2：生成式AI提升表現的量化證據（帶完整控制模型的精確數字）</p>
+      <p class="claim">「發現導入以GPT-3為基礎的GAI助手後，每小時解決的問題數增加15.2%」</p>
+      <p class="role"><b>作用</b>2.2：GAI提升表現的量化證據（帶完整控制模型的精確數字）</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p>“As we add controls, our effects fall slightly, so that with agent and tenure fixed effects, we find that the AI deployment increases RPH by 0.30 chats or <strong>15.2%</strong>.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「隨著加入控制變項，效果略為下降；在納入客服代表與年資固定效應後，我們發現AI導入使每小時解決量增加0.30通，即 <strong>15.2%</strong>。」</p></div>
@@ -3222,7 +3237,7 @@ body:not(.show-gone) .is-gone{display:none}
     <div class="entry__rail"><span class="entry__key">B</span><span class="chip chip--gone">已於 v1.7 刪除</span><span class="chip chip--direct">直接支持</span></div>
     <div class="entry__body">
       <p class="claim">「且年資最淺的人員進步最多」</p>
-      <p class="role"><b>作用</b>2.2：說明生成式AI確實能提升表現，且年資最淺的人員進步最多，是AD的背景</p>
+      <p class="role"><b>作用</b>2.2：說明GAI確實能提升表現，且年資最淺的人員進步最多，是AD的背景</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p>“In Figure IV, Panel A, we see a clear monotonic pattern in which <strong>the least experienced agents see the greatest gains in RPH</strong>. Agents with less than one month of tenure improve by 0.7 RPH, with larger effects for less experienced workers. In contrast, <strong>we see no effect for agents with more than a year of tenure</strong>.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「在 Figure IV Panel A 中可見清楚的單調型態：<strong>年資最淺的客服代表在每小時解決量上進步最多</strong>，年資不到一個月者提升0.7次，且年資愈淺效果愈大。相對地，<strong>年資超過一年者則未見效果</strong>。」</p></div>
@@ -3405,7 +3420,7 @@ body:not(.show-gone) .is-gone{display:none}
     <div class="entry__body">
       <p class="claim">「以參考文獻為例，ChatGPT所生成的參考文獻中，GPT-3.5有55%、GPT-4有18%為捏造（Walters &amp; Wilder, 2023）」</p>
       <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
-      <p class="role"><b>作用</b>說明為何查證生成式AI產出的文獻是必要的</p>
+      <p class="role"><b>作用</b>說明為何查證GAI產出的文獻是必要的</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · Abstract</span><p>“…<strong>55% of the GPT-3.5 citations but just 18% of the GPT-4 citations are fabricated</strong>. Likewise, 43% of the real (non-fabricated) GPT-3.5 citations but just 24% of the real GPT-4 citations include substantive citation errors.”</p><p><strong>Conclusion：</strong>“Users of ChatGPT are cautioned to check the citations it generates—and, of course, to evaluate the quality of the cited works themselves.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「GPT-3.5 的引用文獻有 55% 是捏造的，GPT-4 則為 18%。此外，真實存在的引用中，GPT-3.5 有 43%、GPT-4 有 24% 含有實質的引用錯誤。」</p><p>「使用 ChatGPT 的人應檢查其產生的引用文獻，當然也要評估所引文獻本身的品質。」</p></div>
@@ -3427,8 +3442,8 @@ body:not(.show-gone) .is-gone{display:none}
 <article class="entry" id="s2cap-O">
     <div class="entry__rail"><span class="entry__key">O</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「流暢、聽起來合乎邏輯的輸出仍可能包含遺漏、幻覺與過度自信的主張，而這些線索容易被讀成正確性的訊號，降低使用者質疑生成式AI輸出的必要感（Lau等人, 2026）」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「流暢、聽起來合乎邏輯的輸出仍可能包含遺漏、幻覺與過度自信的主張，而這些線索容易被讀成正確性的訊號，降低使用者質疑GAI輸出的必要感（Lau等人, 2026）」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>流暢、聽起來合乎邏輯的輸出仍可能包含遺漏、幻覺與過度自信的主張，而這些線索容易被讀成正確性的訊號，降低使用者質疑<del>G</del><ins>生成式</ins>AI輸出的必要感（Lau等人, 2026）</div>
       <p class="role"><b>作用</b>2.2：兩股力量之一，AI 會出錯且不易被察覺</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · p.3</span><p>“… because even <strong>fluent, logical-sounding outputs can contain omissions, hallucinations, and overconfident claims</strong> (Huang et al., 2025; Lee et al., 2025; Savage et al., 2025). <strong>These cues can easily be read as signals of validity and can reduce the felt need to question what the model says</strong> (Quelle &amp; Bovet, 2024; Sun et al., 2025).”</p></div>
@@ -4293,8 +4308,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s213-C3">
     <div class="entry__rail"><span class="entry__key">C3</span><span class="chip chip--indirect">間接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「不過，上述規範處理的是制度層面的監督機制，且以高風險AI系統及被指派負責監督的人員為對象。而學生以生成式AI完成作業時，並沒有人被指派負責監督」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「不過，上述規範處理的是制度層面的監督機制，且以高風險AI系統及被指派負責監督的人員為對象。而學生以GAI完成作業時，並沒有人被指派負責監督」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>不過，上述規範處理的是制度層面的監督機制，且以高風險AI系統及被指派負責監督的人員為對象。而學生以<del>G</del><ins>生成式</ins>AI完成作業時，並沒有人被指派負責監督</div>
       <p class="role"><b>作用</b>範圍界定：本研究為何測個人的監督傾向</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">法規原文 · AI Act</span><p>Art. 14(4)（p.60）：“natural persons <strong>to whom human oversight is assigned</strong>”</p><p>Annex III, point 3（p.127）：“3. Education and vocational training: (a) AI systems intended to be used to determine access or admission […]; (b) AI systems intended to be used to <strong>evaluate learning outcomes</strong> […]; (c) […] assessing the appropriate level of education […]; (d) AI systems intended to be used for <strong>monitoring and detecting prohibited behaviour of students during tests</strong> […]”</p></div>
@@ -4395,7 +4410,7 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s213-G">
     <div class="entry__rail"><span class="entry__key">G</span><span class="chip chip--none">證據不足</span></div>
     <div class="entry__body">
-      <p class="claim">構念區辨：本研究的 <strong>HOI</strong>（個體<strong>願意</strong>主動監督、查證、檢查及修正生成式AI輸出內容的<strong>意願程度</strong>）是否等同於 Sterz 等人的 <strong>fitting intentions</strong>（相符意圖）？</p>
+      <p class="claim">構念區辨：本研究的 <strong>HOI</strong>（個體<strong>願意</strong>主動監督、查證、檢查及修正GAI輸出內容的<strong>意願程度</strong>）是否等同於 Sterz 等人的 <strong>fitting intentions</strong>（相符意圖）？</p>
       <p class="role"><b>作用</b>核心構念的理論依據 —— 本節構念效度風險所在</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · Sterz §3.1.4（p.5）</span>
@@ -4454,7 +4469,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>PDF</b>p. 10 ／ <b>印刷</b>p. 6447</li><li><b>定位</b>§4.1.4 Post hoc review 第2段</li><li><b>樣本</b>17名經驗豐富的軟體開發者（訪談，2025年7–8月），其中12名任職於同一公司（摘要、p.1）</li></ul>
       <p class="support"><b>如何支持論述：</b>「查證代理的產出、出錯時調整、重新下指令要求修正」三項逐字對應 <em class="q">verifying agent outputs, making adjustments when agents falter, and re-prompting agents to fix issues</em>；17名受訪者見摘要（“interviews with 17 […] developers”）。</p>
-      <div class="note note--warn"><span class="note__lab">限制</span>受訪者為職場軟體工程師（Microsoft相關），非本研究之大學生小組作業情境，且對象為AI程式代理（agentic coding tools）而非泛指生成式AI，援用時須以此為前提；12名同公司之樣本集中亦為原文自陳之限制（p.6451）。</div>
+      <div class="note note--warn"><span class="note__lab">限制</span>受訪者為職場軟體工程師（Microsoft相關），非本研究之大學生小組作業情境，且對象為AI程式代理（agentic coding tools）而非泛指GAI，援用時須以此為前提；12名同公司之樣本集中亦為原文自陳之限制（p.6451）。</div>
     </div>
   </article>
 
@@ -4811,8 +4826,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s214-K">
     <div class="entry__rail"><span class="entry__key">K</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「生成式AI使批判性思考所投入的努力發生三種轉移：由資訊蒐集轉向資訊驗證、由問題解決轉向AI回應整合、由任務執行轉向任務監管」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「GAI使批判性思考所投入的努力發生三種轉移：由資訊蒐集轉向資訊驗證、由問題解決轉向AI回應整合、由任務執行轉向任務監管」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>G</del><ins>生成式</ins>AI使批判性思考所投入的努力發生三種轉移：由資訊蒐集轉向資訊驗證、由問題解決轉向AI回應整合、由任務執行轉向任務監管</div>
       <p class="role"><b>作用</b>質性發現 —— 支撐「監督不是消失而是轉移」</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · §5.2</span><p>“We found that GenAI tools <strong>shift the effort of critical thinking in three distinct ways</strong>: for Knowledge and Comprehension, the effort shifts <strong>from information gathering to information verification</strong>; for Application, effort shifts <strong>from problem-solving to AI response integration</strong>; and for Analysis, Synthesis, and Evaluation, effort shifts <strong>from task execution to task stewardship</strong>.”</p></div>
@@ -5074,8 +5089,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s214-W">
     <div class="entry__rail"><span class="entry__key">W</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「至於當責為何不一定帶來查證，Tetlock（1985b）指出，人們若預期對方會接受自己的說法，往往只會替自己找理由；預期對方不會接受時，才會更嚴格地檢討自己。據此推論，學生若認為「這是AI的錯」這個理由教師不接受，當責較可能促使其查證，而不是把責任推給AI」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>至於當責為何不一定帶來查證，Tetlock（1985b）指出，人們若預期對方會接受自己的說法，往往只會替自己找理由；預期對方不會接受時，才會更嚴格地檢討自己。據此推論，學生若認為「這是AI的錯」這個理由<ins>不會被</ins>教師<del>不</del>接受，當責較可能促使其查證，而不是把責任推給AI</div>
+      <p class="claim">「至於當責為何不一定帶來查證，Tetlock（1985b）指出，人們若預期對方會接受自己的說法，往往只會替自己找理由；預期對方不會接受時，才會更嚴格地檢討自己。據此推論，學生若認為「這是GAI的錯」這個理由教師不接受，當責較可能促使其查證，而不是把責任推給GAI」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>至於當責為何不一定帶來查證，Tetlock（1985b）指出，人們若預期對方會接受自己的說法，往往只會替自己找理由；預期對方不會接受時，才會更嚴格地檢討自己。據此推論，學生若認為「這是<del>G</del>AI的錯」這個理由<ins>不會被</ins>教師<del>不</del>接受，當責較可能促使其查證，而不是把責任推給<del>G</del>AI</div>
       <p class="role"><b>作用</b>給 Stout 的反向結果一個<strong>理論層次的調和</strong>，並把它轉成可檢驗的邊界條件</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 印刷 pp.322–323</span><p><strong>p.322：</strong>“Unlike justifications, excuses are accounting tactics in which individuals acknowledge that their past decisions were somehow bad, wrong or inappropriate, but <strong>try to minimize their responsibility for them</strong>. …”<br><br><strong>p.323：</strong>“This analysis also suggests that the types of accounts people ultimately offer depend on a number of specific features of the social context in which they find themselves. <strong>People will offer self-flattering (blame-denying) accounts if they perceive little danger that others will reject these accounts.</strong> This tends to be true to the degree: (1) self-flattering accounts are highly plausible (cogent justifications or excuses exist); (2) decision-makers believe that those to whom they are accountable are highly sympathetic. <strong>People will become increasingly self-critical to the degree they believe that others will not honor or accept self-flattering accounts</strong> (i.e., the opposites of the above two propositions hold true). Schlenker (1980) has reviewed considerable evidence consistent with these hypotheses.”</p></div>
@@ -5119,7 +5134,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>Study 1</b>p. 4</li><li><b>Study 2</b>p. 6</li><li><b>Study 3（醫療經驗樣本，未顯著）</b>p. 7（樣本說明）· p. 8（係數）</li></ul>
       <p class="support"><b>如何支持論述：</b>選項原文「Allow delegation but all decisions must be verified by you」逐字對應中文「允許委派，但所有決策須由你查證」；三項研究之 OR 值（1.089／1.090／1.012）與顯著性逐位相符。</p>
-      <div class="note note--warn"><span class="note__lab">措辭限度</span>此研究之自變項為<strong>對AI的信任</strong>，而非AD本身；其AI代理人為模擬情境中的決策輔助系統，<strong>非生成式AI</strong>，援用時須以此為前提，不能寫成「Shortland直接檢驗了AD」。</div>
+      <div class="note note--warn"><span class="note__lab">措辭限度</span>此研究之自變項為<strong>對AI的信任</strong>，而非AD本身；其AI代理人為模擬情境中的決策輔助系統，<strong>非GAI</strong>，援用時須以此為前提，不能寫成「Shortland直接檢驗了AD」。</div>
     </div>
   </article>
 
@@ -5172,7 +5187,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>成本效益策略決定</b>p. 3</li><li><b>任務難度→過度依賴</b>p. 14</li><li><b>操作型定義</b>p. 12</li><li><b>設計</b>五項實驗，總樣本 N = 731（p. 3；Study 1 N = 340 操弄任務難度）</li></ul>
       <p class="support"><b>如何支持論述：</b>「過度依賴並非認知上的必然，而是策略性決定」逐字對應p.3；「任務愈困難……愈傾向接受AI的錯誤預測」對應p.14「as tasks increase in difficulty, overreliance…increases」及其成本機制說明。五項實驗、總N=731（p.3「Through 5 studies (N=731)」／「a series of five experiments (N=731)」）與Study 1 N=340操弄任務難度（p.3）</p>
-      <div class="note note--warn"><span class="note__lab">措辭限度</span>此研究之AI為<strong>模擬迷宮解題者</strong>，非生成式AI，援用時須以此為前提，不能寫成「Vasconcelos直接檢驗了生成式AI情境」。</div>
+      <div class="note note--warn"><span class="note__lab">措辭限度</span>此研究之AI為<strong>模擬迷宮解題者</strong>，非GAI，援用時須以此為前提，不能寫成「Vasconcelos直接檢驗了GAI情境」。</div>
     </div>
   </article>
 
@@ -5234,7 +5249,7 @@ body:not(.show-gone) .is-gone{display:none}
         <li><b>樣本</b>181名大學生，五回合W/PANES模擬飛行監控作業（PDF p.5，印刷 p.705）</li>
       </ul>
       <p class="support"><b>如何支持論述：</b>p.712「more likely to verify directives」逐字支持「更可能查證」；p.701摘要「lower rates of automation bias」與遺漏／誤用錯誤較少方向一致；p.711「under specific conditions」「led to a lower omission error rate than…」逐字支持「須為整體表現或決策正確性負責」此一條件限定。</p>
-      <div class="note note--warn"><span class="note__lab">適用範圍限度</span>本研究為1999年之飛行模擬實驗，當責以「事前告知須為某項結果負責」操弄，情境與對象皆非生成式AI／學生報告寫作；援引時僅作「當責→查證」機制之旁證，不可宣稱已直接檢驗生成式AI情境。</div>
+      <div class="note note--warn"><span class="note__lab">適用範圍限度</span>本研究為1999年之飛行模擬實驗，當責以「事前告知須為某項結果負責」操弄，情境與對象皆非GAI／學生報告寫作；援引時僅作「當責→查證」機制之旁證，不可宣稱已直接檢驗GAI情境。</div>
     </div>
   </article>
 
@@ -5489,9 +5504,9 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s223-G">
     <div class="entry__rail"><span class="entry__key">G</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「不過，該研究的AI隊友為預先撰寫腳本的模擬角色，而非真實的生成式AI」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>不過，該研究的</del><ins>但其</ins>AI隊友為預先撰寫腳本的模擬角色，而非真實的生成式AI</div>
-      <p class="role"><b>作用</b>交代該研究的情境，與本研究使用真實生成式AI的差異</p>
+      <p class="claim">「不過，該研究的AI隊友為預先撰寫腳本的模擬角色，而非真實的GAI」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><del>不過，該研究的</del><ins>但其</ins>AI隊友為預先撰寫腳本的模擬角色，而非真實的<del>G</del><ins>生成式</ins>AI</div>
+      <p class="role"><b>作用</b>交代該研究的情境，與本研究使用真實GAI的差異</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p><strong>（印刷 p.529）</strong>“To avoid confounds, Collaboration Space utilized <strong>predetermined texts</strong> for all conditions <strong>instead of a generative AI-based text</strong>.”<br><br><strong>（印刷 p.531）</strong>“The collaborative brainstorming activity <strong>lasted for 5 minutes</strong>.”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「為避免混淆變項，Collaboration Space 在所有條件下皆使用<strong>預先設定的文字</strong>，<strong>而非以生成式 AI 為基礎的文字</strong>。」／「協作腦力激盪活動<strong>持續了 5 分鐘</strong>。」</p></div>
@@ -5519,8 +5534,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s224-A">
     <div class="entry__rail"><span class="entry__key">A</span><span class="chip chip--none">無引註</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「據此，本研究推論，願意查證與修正生成式AI產出的個體，將因查證而引發重新閱讀資料、調整論述與改善成果品質等後續工作，並外溢至整體任務的投入」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
+      <p class="claim">「據此，本研究推論，願意查證與修正GAI產出的個體，將因查證而引發重新閱讀資料、調整論述與改善成果品質等後續工作，並外溢至整體任務的投入」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>據此，本研究推論，願意查證與修正<del>G</del><ins>生成式</ins>AI產出的個體，將因查證而引發重新閱讀資料、調整論述與改善成果品質等後續工作，並外溢至整體任務的投入</div>
       <p class="role"><b>作用</b>H3a 的唯一推導基礎</p>
       <div class="src">
         <div class="src__none">本句<strong>無任何引註</strong>，亦無對應之文獻來源可查；「目前尚無研究直接檢驗……」一句為限定句，明確標示為推論而非已證實之規律。</div>
@@ -5863,8 +5878,8 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s231-I">
     <div class="entry__rail"><span class="entry__key">I</span><span class="chip chip--direct">直接支持</span><span class="vs" role="group" aria-label="論文版本"><button type="button" class="vs__b is-on" data-v="v1.7" aria-pressed="true" title="目前引文的版本">v1.7</button><button type="button" class="vs__b" data-v="v1.6" aria-pressed="false">v1.6</button></span></div>
     <div class="entry__body">
-      <p class="claim">「兩者測的都是威脅感受，本研究所關注的則是個體面對生成式AI時對自身角色的自我肯定」</p>
-      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>兩者測的都是威脅感受，本研究所關注的則是個體面對生成式AI時對自身角色的自我肯定<ins>。</ins></div>
+      <p class="claim">「兩者測的都是威脅感受，本研究所關注的則是個體面對GAI時對自身角色的自我肯定」</p>
+      <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span>兩者測的都是威脅感受，本研究所關注的則是個體面對<del>G</del><ins>生成式</ins>AI時對自身角色的自我肯定<ins>。</ins></div>
       <p class="role"><b>作用</b>否定式區辨 —— 說明 HRS（自我肯定）與 Złotowski、Mirbabaie 兩篇的構念不同，避免被指為重複構念</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p>“Scholars have introduced the concept of IT identity threat as ‘<strong>the anticipation of harm</strong> to an individual's self-beliefs, caused by the use of an IT’ (Craig et al., 2019, p. 269).”<br>Keywords: “Artificial intelligence · IT identity · <strong>Identity threat</strong> · Information systems · Workplace”</p></div>
@@ -6326,7 +6341,7 @@ body:not(.show-gone) .is-gone{display:none}
     <div class="entry__body">
       <p class="claim">「知覺他人的投入已使自身貢獻不必要（Mulvey &amp; Klein, 1998）」</p>
       <div class="vs__p" data-v="v1.6" hidden><span class="vs__h">v1.6</span><span class="vs__none">與 v1.7 相同</span></div>
-      <p class="role"><b>作用</b>HRS 的概念原型 —— 將此「貢獻必要性信念」具體化到生成式AI人機協作情境</p>
+      <p class="role"><b>作用</b>HRS 的概念原型 —— 將此「貢獻必要性信念」具體化到GAI人機協作情境</p>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文</span><p>“Perceived loafing can be distinguished from social loafing and free riding (Comer, 1995)… <strong>Free riding</strong>, a concept similar to social loafing, <strong>occurs when indivisible public goods are involved and one perceives that other group members will put forth sufficient effort to make his/her own contribution unnecessary to receive the public goods (Olson, 1965).</strong>”</p></div>
         <div class="src__zh"><span class="src__lab">中文翻譯</span><p>「知覺性偷懶可與社會性偷懶及搭便車區分開來（Comer, 1995）……<strong>搭便車</strong>是一個與社會性偷懶相似的概念，<strong>發生在涉及不可分割的公共財時，個體知覺其他團體成員將付出足夠的努力，使得自身的貢獻對取得公共財而言變得不必要（Olson, 1965）。</strong>」</p></div>
@@ -6563,7 +6578,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>印刷</b>p. 6（AD量表說明）· p. 13（題項附錄）</li></ul>
       <p class="support"><b>如何支持論述：</b>AD 部分之三題、α 係數與模仿對象皆逐字對應表3-2 AD列之敘述。</p>
-      <div class="note note--stop"><span class="note__lab">構念邊界限度</span>本量表所測為<strong>委派意圖</strong>（intention to delegate），而第三章之AD定義為<strong>個體認為某項任務可以交由生成式AI執行之「程度」判斷</strong>，非委派行為意圖本身；因此AD2、AD5由意圖句改為判斷句，AD3另取Lubars與Tan（2019）「AI leads, human assists」一級轉為李克特陳述（見問卷設計表２-１之改編說明）。</div>
+      <div class="note note--stop"><span class="note__lab">構念邊界限度</span>本量表所測為<strong>委派意圖</strong>（intention to delegate），而第三章之AD定義為<strong>個體認為某項任務可以交由GAI執行之「程度」判斷</strong>，非委派行為意圖本身；因此AD2、AD5由意圖句改為判斷句，AD3另取Lubars與Tan（2019）「AI leads, human assists」一級轉為李克特陳述（見問卷設計表２-１之改編說明）。</div>
       <div class="src">
         <div class="src__en"><span class="src__lab">學術原文 · 當責量表</span>
           <p><strong>印刷 p.5：</strong>“we developed a ten item scale to assess perceived accountability (Cronbach's alpha = .72).”</p>
@@ -6622,7 +6637,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>期刊</b>p. 363 ／ <b>PDF</b>p. 7（量表說明）· <b>期刊</b>p. 367 ／ <b>PDF</b>p. 11（題項附錄）</li><li><b>量表結構</b>時間投入（time commitment）與工作強度（work intensity）各五題，七點量表</li></ul>
       <p class="support"><b>如何支持論述：</b>p.367 逐字確認工作強度分量表的存在與內容（5題，α = .82／.83），作為 IEC1 的概念依據。IEC1 不是任何一題的改編，所以論文寫「依概念自行發展」。</p>
-      <div class="note note--warn"><span class="note__lab">措辭限度</span>該量表測的是傾向而非特定期間行為，與第三章之IEC定義「實際投入心力的程度」在時間框架上有落差。IEC1「有了生成式AI協助，節省了我一些時間」為反向題，以時間節省反映努力強度，並避免填答者因社會期許而不願承認投入減少。口試若問與原量表的關係：概念取自工作強度分量表，題目為本研究自行發展。</div>
+      <div class="note note--warn"><span class="note__lab">措辭限度</span>該量表測的是傾向而非特定期間行為，與第三章之IEC定義「實際投入心力的程度」在時間框架上有落差。IEC1「有了GAI協助，節省了我一些時間」為反向題，以時間節省反映努力強度，並避免填答者因社會期許而不願承認投入減少。口試若問與原量表的關係：概念取自工作強度分量表，題目為本研究自行發展。</div>
     </div>
   </article>
 
@@ -6858,7 +6873,7 @@ body:not(.show-gone) .is-gone{display:none}
       </div>
       <ul class="locus"><li><b>PDF</b>p. 4 ／ <b>印刷</b>p. 51</li><li><b>定位</b>3.1.2 Identity threat 結果段</li></ul>
       <p class="support"><b>如何支持論述：</b>本頁討論自主機器人對「人類獨特性與身分認同（uniqueness and identity）」構成之威脅，概念上與HRS「不可取代」之措辭方向一致；惟原文未出現「不可取代（irreplaceable）」一詞本身，屬概念延伸引用，非逐字引用。</p>
-      <div class="note note--warn"><span class="note__lab">措辭限度</span>本文為機器人（非生成式AI）之身分威脅實驗，量表為5題身分威脅量表（identity threat scale），非「不可取代」之直接測量；第三章僅引用其「不可取代」概念作措辭參考，未稱其為HRS題項或量表來源，用法正確，故列為間接支持。</div>
+      <div class="note note--warn"><span class="note__lab">措辭限度</span>本文為機器人（非GAI）之身分威脅實驗，量表為5題身分威脅量表（identity threat scale），非「不可取代」之直接測量；第三章僅引用其「不可取代」概念作措辭參考，未稱其為HRS題項或量表來源，用法正確，故列為間接支持。</div>
     </div>
   </article>
 
@@ -7514,7 +7529,7 @@ body:not(.show-gone) .is-gone{display:none}
         <div class="src__zh"><span class="src__lab">中文翻譯 · p.79</span><p>「個體的努力對團體成功<strong>愈非必要</strong>，其動機便應愈低。此處將此類效應稱為<strong>搭便車效應</strong>。」</p></div>
       </div>
       <ul class="locus"><li><b>印刷</b>p. 79 ／ <b>PDF</b>p. 2</li></ul>
-      <p class="support"><b>如何支持論述：</b>「愈認為努力並非必要，動機愈低」對應原文。把 HRS 較低者比作這種處境，以及後面「查證與修正生成式AI之產出可能讓他們覺得自己仍有貢獻」，是本研究的推論，本文的對象是人與人的團體，沒有 AI 或監督傾向。</p>
+      <p class="support"><b>如何支持論述：</b>「愈認為努力並非必要，動機愈低」對應原文。把 HRS 較低者比作這種處境，以及後面「查證與修正GAI之產出可能讓他們覺得自己仍有貢獻」，是本研究的推論，本文的對象是人與人的團體，沒有 AI 或監督傾向。</p>
       <div class="note note--warn"><span class="note__lab">推論限度</span>這是看到結果後的解釋，不是事前假說，第二章也沒有以此推方向。口試時要說清楚這是事後解釋，尚待後續研究驗證。</div>
     </div>
   </article>
@@ -7646,11 +7661,11 @@ body:not(.show-gone) .is-gone{display:none}
   <article class="entry" id="s4-X">
     <div class="entry__rail"><span class="entry__key">X</span><span class="chip chip--indirect">間接支持</span></div>
     <div class="entry__body">
-      <p class="claim">4.2 解釋力段：「生成式AI能重現團隊合作之部分好處（Dell'Acqua等人, 2026），本研究推論，部分原本須向組員請教之事可能改由生成式AI處理，使互動之多寡不完全取決於監督傾向」。</p>
+      <p class="claim">4.2 解釋力段：「GAI能重現團隊合作之部分好處（Dell'Acqua等人, 2026），本研究推論，部分原本須向組員請教之事可能改由GAI處理，使互動之多寡不完全取決於監督傾向」。</p>
       <p class="role"><b>作用</b>解釋 TII 解釋力較低的理由之一</p>
       <ul class="locus"><li><b>原文與頁碼</b>見 2.2 的 <a class="xref" href="#s223-I">I 條</a>（配備AI的個人可與未使用AI的團隊相當，印刷 p. 1217、pp. 1224–1225）與 <a class="xref" href="#s223-J2">J2 條</a>（「AI能重現團隊合作的部分好處」）</li></ul>
       <p class="support"><b>如何支持論述：</b>前半句「重現團隊合作之部分好處」與第二章 2.2 的寫法相同，依據是配備 AI 的個人表現與未使用 AI 的團隊相當。</p>
-      <div class="note note--warn"><span class="note__lab">推論限度</span>本文比較的是產出表現，沒有測量成員之間的互動。「部分原本須向組員請教之事可能改由生成式AI處理」是本研究的推論，論文以「本研究推論」標明；第二章 2.2 另寫「團隊互動卻並未因此變得不必要」，所以這裡只說「部分」。</div>
+      <div class="note note--warn"><span class="note__lab">推論限度</span>本文比較的是產出表現，沒有測量成員之間的互動。「部分原本須向組員請教之事可能改由GAI處理」是本研究的推論，論文以「本研究推論」標明；第二章 2.2 另寫「團隊互動卻並未因此變得不必要」，所以這裡只說「部分」。</div>
     </div>
   </article>
 </section>
