@@ -919,7 +919,15 @@ VIEWS.settings = () => {
           ${[...WEEK].map((w, i) => `<label><input type="checkbox" data-days="${k}" data-d="${i}" ${daysOf(k).includes(i) ? 'checked' : ''}><span>${w}</span></label>`).join('')}
         </div>
       </div>`).join('')}
-      <label class="field"><span>習慣的訓練時間（可以不填）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
+      <label class="field"><span>習慣的訓練時間（可以不填；加到行事曆時沒填就用晚上 8 點）</span><input type="time" data-path="settings.trainTime" value="${esc(s.trainTime)}"></label>
+      <h3>加到行事曆</h3>
+      <p class="sub">網頁 app 沒辦法自己定時跳通知，所以改由手機行事曆提醒：依上面的日子和時間建立每週重複的行程。行程裡不會寫是哪套訓練日，點開 app 就會看到今天的搭配。</p>
+      <label class="field"><span>提前多久提醒</span>
+        <select data-path="settings.calRemind" data-type="int">
+          ${[[-1, '不提醒'], [0, '準時'], [10, '10 分鐘前'], [30, '30 分鐘前'], [60, '1 小時前']].map(([v, t]) => `<option value="${v}" ${+s.calRemind === v ? 'selected' : ''}>${t}</option>`).join('')}
+        </select></label>
+      <button type="button" class="btn" data-act="exportIcs">加到行事曆（下載 .ics 檔）</button>
+      <p class="sub">改了日子或時間要重新加一次，並把舊的行程刪掉，不然會重複。iPhone 在主畫面的 app 裡按了沒反應的話，用 Safari 打開這個網站再按一次。</p>
     </section>
     <section class="card">
       <h2>訓練日</h2>
@@ -972,6 +980,102 @@ VIEWS.settings = () => {
       <button type="button" class="btn danger" data-act="clearAll">清除所有資料</button>
     </section>`;
 };
+
+/* ---------- 加到行事曆（.ics，RFC 5545） ---------- */
+const ICS_DAYS = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];   // 0＝星期一，和 bandDays 一樣
+
+/* TEXT 值要跳脫反斜線、分號、逗號和換行 */
+const icsText = s => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+
+/* 每行最多 75 個位元組（UTF-8），超過就折行：CRLF 加一個空白。不能切在中文字中間 */
+function icsFold(line) {
+  const enc = new TextEncoder();
+  const out = [];
+  let cur = '', n = 0;
+  for (const ch of line) {
+    const len = enc.encode(ch).length;
+    if (n + len > (out.length ? 74 : 75)) { out.push(cur); cur = ''; n = 0; }
+    cur += ch; n += len;
+  }
+  out.push(cur);
+  return out.join('\r\n ');
+}
+
+const icsLocal = (d, hh, mm) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hh)}${pad(mm)}00`;
+const icsUtc = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+
+/* 從今天起，第一個落在 days 裡的日期（行事曆的第一次要剛好是重複規則裡的一天） */
+function firstDay(days) {
+  const d = new Date();
+  for (let i = 0; i < 7; i++) {
+    if (days.includes((d.getDay() + 6) % 7)) return d;
+    d.setDate(d.getDate() + 1);
+  }
+  return d;
+}
+
+function icsEvent({ uid, days, hh, mm, minutes, summary, desc, remind }) {
+  const lines = [
+    'BEGIN:VEVENT',
+    `UID:${uid}`,
+    `DTSTAMP:${icsUtc(new Date())}`,
+    `DTSTART:${icsLocal(firstDay(days), hh, mm)}`,
+    `DURATION:PT${Math.max(5, minutes)}M`,
+    `RRULE:FREQ=WEEKLY;BYDAY=${days.slice().sort().map(i => ICS_DAYS[i]).join(',')}`,
+    `SUMMARY:${icsText(summary)}`,
+    `DESCRIPTION:${icsText(desc)}`,
+    `URL:${appUrl()}`
+  ];
+  if (remind >= 0) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText(summary)}`, `TRIGGER:-PT${remind}M`, 'END:VALARM');
+  lines.push('END:VEVENT');
+  return lines;
+}
+
+const appUrl = () => location.origin + location.pathname;
+
+/* 回傳 .ics 內容；沒有可以排的日子就回傳 null */
+function buildIcs() {
+  const s = state.settings;
+  const [hh, mm] = (s.trainTime || '20:00').split(':').map(Number);
+  const remind = Number.isFinite(+s.calRemind) ? +s.calRemind : 10;
+  const host = location.hostname || 'localhost';
+  const events = [];
+  const band = daysOf('bandDays'), tabata = daysOf('tabataDays');
+  if (band.length) {
+    /* 長度用今天推薦的搭配（通常是兩套）估算 */
+    const items = mergedItems(recommend().letters);
+    const mins = items.length ? planMinutes(items) : 30;
+    events.push(...icsEvent({
+      uid: `bandfit-band@${host}`, days: band, hh, mm, minutes: mins, remind,
+      summary: '彈力帶訓練',
+      desc: `打開 app 看今天推薦的訓練日搭配：${appUrl()}\n開始前記得檢查帶子有沒有裂縫。`
+    }));
+  }
+  if (tabata.length) {
+    events.push(...icsEvent({
+      uid: `bandfit-tabata@${host}`, days: tabata, hh, mm, minutes: Math.ceil(tabataTotal() / 60), remind,
+      summary: 'Tabata（選做）',
+      desc: `打開 app 的 Tabata 頁開始計時：${appUrl()}#/tabata\n睡前 2 小時以前做完比較不影響睡眠。`
+    }));
+  }
+  if (!events.length) return null;
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//bandfit//彈力帶訓練//ZH-TW', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', ...events, 'END:VCALENDAR']
+    .map(icsFold).join('\r\n') + '\r\n';
+}
+
+function exportIcs() {
+  const ics = buildIcs();
+  if (!ics) { toast('先在上面選至少一天訓練日'); return; }
+  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'bandfit-schedule.ics';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  toast('已產生行事曆檔，照手機的提示加入行事曆');
+}
 
 function exportPayload() {
   return JSON.stringify({ app: 'bandfit', exportedAt: new Date().toISOString(), data: state }, null, 2);
@@ -1246,6 +1350,7 @@ const actions = {
 
   testSignal: () => Device.signal('end'),
   exportJson: () => exportJson(),
+  exportIcs: () => exportIcs(),
   importPick: () => $('#importFile').click(),
   clearAll: async () => {
     if (!(await confirmBox({ title: '清除所有資料？', body: `會刪掉 ${state.sessions.length} 筆訓練紀錄，並把動作和設定還原成預設值。`, ok: '繼續', danger: true }))) return;
