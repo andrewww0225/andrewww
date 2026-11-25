@@ -22,14 +22,15 @@ const mmss = sec => `${Math.floor(sec / 60)}:${pad(sec % 60)}`;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const weekStart = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
 const bandLabel = kg => (BANDS.find(b => b.kg === kg) || { label: kg + ' kg 帶子' }).label;
-/* 訓練代號：'A'、'AC'（同一天做兩套）這種字母組合，或 'free'（自選）、'menu'（菜單）。
-   可以傳代號，或整筆訓練紀錄（菜單要顯示名稱） */
-const isLetters = p => typeof p === 'string' && p !== 'free' && p !== 'menu';
+/* 訓練代號：'A'、'AC'（同一天做兩套）這種字母組合，或 'free'（自選）、'menu'（菜單）、'lite'（懶人版）。
+   可以傳代號，或整筆訓練紀錄（菜單要顯示名稱，懶人版要顯示是哪幾套） */
+const isLetters = p => typeof p === 'string' && /^[A-Z]+$/.test(p);
 const planKeys = () => Object.keys(state.plans).sort();
 const planLabel = s => {
   const p = typeof s === 'string' ? s : s.plan;
   if (p === 'free') return '自選訓練';
   if (p === 'menu') return '菜單「' + ((s && s.title) || '未命名') + '」';
+  if (p === 'lite') return '懶人版' + (s && s.letters ? '（訓練日 ' + s.letters.split('').join('＋') + '）' : '');
   return '訓練日 ' + String(p).split('').join('＋');
 };
 const exPreset = ex => ({ exId: ex.id, band: ex.band, sets: ex.sets, min: ex.min, max: ex.max });
@@ -45,6 +46,7 @@ function freshState() {
     exercises: clone(DEFAULT_EXERCISES),
     plans: clone(DEFAULT_PLANS),
     routines: clone(DEFAULT_ROUTINES),
+    skips: [],
     sessions: [],
     active: null,
     jj: { done: [] }   // 開合跳：每次做完一筆 { t: 時間戳記, reps: 下數 }
@@ -89,6 +91,11 @@ function normalize(d) {
   }
   if (Array.isArray(d.sessions)) s.sessions = d.sessions.filter(x => x && Array.isArray(x.items) && typeof x.date === 'string');
   if (d.active && Array.isArray(d.active.items) && d.active.items.length) s.active = d.active;
+  /* 「今天跳過」的日期；只留最近 60 天 */
+  if (Array.isArray(d.skips)) {
+    const cut = new Date(); cut.setDate(cut.getDate() - 60);
+    s.skips = [...new Set(d.skips.filter(x => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x) && parseYmd(x) >= cut))].sort();
+  }
   if (d.jj && Array.isArray(d.jj.done)) s.jj.done = d.jj.done.filter(x => x && typeof x.reps === 'number' && x.reps > 0);
   /* 第 4 版把自選和菜單的代號從 F、M 改成 free、menu，讓字母留給訓練日 */
   if ((d.version || 1) < 4) [...s.sessions, s.active].forEach(x => {
@@ -148,6 +155,10 @@ function pickPair(last) {
 }
 
 const pairLabel = ks => ks.join('＋');
+const skippedOn = key => (state.skips || []).includes(key);
+const trainedOn = key => state.sessions.some(s => s.date === key);
+/* 今天是不是排了訓練（彈力帶或 Tabata） */
+const plannedToday = () => { const i = (new Date().getDay() + 6) % 7; return daysOf('bandDays').includes(i) || daysOf('tabataDays').includes(i); };
 const pairTitle = ks => ks.map(k => state.plans[k].title).join(' ＋ ');
 
 function recommend() {
@@ -158,6 +169,7 @@ function recommend() {
   const weekCount = all.filter(s => parseYmd(s.date) >= ws).length;
   const letters = pickPair(lastDoneMap());
   const name = pairLabel(letters);
+  if (skippedOn(today) && !trainedOn(today)) return { letters, note: `今天跳過，好好休息。下一次練訓練日 ${name}。`, weekCount, skipped: true };
   if (!last) return { letters, note: `還沒有訓練紀錄，從訓練日 ${name} 開始。`, weekCount };
   const gap = dayDiff(last.date, today);
   const lp = planLabel(last);
@@ -170,7 +182,7 @@ function recommend() {
 
 /* 所有組都做完、都到次數上限、餘力都在 2 下以內 */
 function canProgress(it) {
-  return it.sets.length > 0 && it.sets.length >= (it.targetSets || 1) &&
+  return !it.lite && it.sets.length > 0 && it.sets.length >= (it.targetSets || 1) &&
     it.sets.every(s => s.done && s.reps >= it.max && s.rir != null && s.rir <= 2);
 }
 
@@ -266,9 +278,10 @@ function weekSchedule() {
     const dt = new Date(ws); dt.setDate(dt.getDate() + i);
     const key = ymd(dt);
     const prev = new Date(dt); prev.setDate(prev.getDate() - 1);
-    const done = all.filter(s => s.date === key).map(s => s.plan === 'free' ? '自' : s.plan === 'menu' ? '菜' : s.plan);
-    const cell = { i, date: dt.getDate(), today: key === today, past: key < today, done, plan: null, missed: false, tabata: tabata.includes(i) };
-    if (!done.length && band.includes(i)) {
+    const done = all.filter(s => s.date === key).map(s => ({ free: '自', menu: '菜', lite: '懶' })[s.plan] || s.plan);
+    const skipped = !done.length && skippedOn(key);
+    const cell = { i, date: dt.getDate(), today: key === today, past: key < today, done, plan: null, missed: false, skipped, tabata: tabata.includes(i) && !skipped };
+    if (!done.length && !skipped && band.includes(i)) {
       if (key < today) cell.missed = true;
       else if (!all.some(s => s.date === ymd(prev))) {
         const pair = pickPair(last);
@@ -308,6 +321,7 @@ function scheduleHtml() {
     c.done.forEach(p => tags.push(`<span class="wk-tag done">${esc(p)} ✓</span>`));
     if (c.plan) tags.push(`<span class="wk-tag plan">${c.plan}</span>`);
     if (c.missed) tags.push('<span class="wk-tag off">—</span>');
+    if (c.skipped) tags.push('<span class="wk-tag off">跳過</span>');
     if (c.tabata && !c.past) tags.push('<span class="wk-tag tb">T</span>');
     if (!tags.length) tags.push('<span class="wk-tag off">休</span>');
     return `<div class="wk ${c.today ? 'today' : ''} ${c.past ? 'past' : ''}"><span class="wk-n">${WEEK[c.i]}</span><span class="wk-d">${c.date}</span>${tags.join('')}</div>`;
@@ -316,7 +330,7 @@ function scheduleHtml() {
   return `<section class="card">
     <h2>本週日程</h2>
     <div class="week">${cells}</div>
-    <p class="sub">字母＝彈力帶訓練日（兩個字母是同一天做兩套）　T＝Tabata（選做）　休＝休息　✓＝已完成</p>
+    <p class="sub">字母＝彈力帶訓練日（兩個字母是同一天做兩套）　懶＝懶人版　跳過＝這天跳過，之後的往後順延　T＝Tabata（選做）　休＝休息　✓＝已完成</p>
     <p class="note">目前排的是：彈力帶在星期${dayList('bandDays') || '（還沒選）'}${daysOf('tabataDays').length ? `，Tabata 在星期${dayList('tabataDays')}` : ''}。做哪幾套會照你實際練到哪裡往下排。</p>
     ${consecutive ? '<div class="hintbox">你排的彈力帶日有連續兩天。同樣的肌群最好中間隔一天，建議到設定頁調整。</div>' : ''}
     <h3>建議訓練時間</h3>
@@ -393,6 +407,16 @@ function planListHtml(key) {
     return `<li><span class="pl-name">${esc(ex.name)}${hint ? ' <span class="badge">可以加難度</span>' : ''}</span>
       <span class="pl-meta">${it.band} kg · ${it.sets} 組 × ${it.min}–${it.max} 下</span></li>`;
   }).join('') + '</ol>';
+}
+
+/* 懶人版：從選的訓練日輪流各挑一個動作，最多 4 個，每個 1 組。約 10 分鐘 */
+function liteItems(letters) {
+  const lists = letters.map(k => (state.plans[k] ? state.plans[k].items : []).filter(it => exById(it.exId)));
+  const seen = new Set(), out = [];
+  for (let r = 0; out.length < 4 && lists.some(l => l.length > r); r++) {
+    lists.forEach(l => { const it = l[r]; if (it && out.length < 4 && !seen.has(it.exId)) { seen.add(it.exId); out.push({ ...it, sets: 1 }); } });
+  }
+  return out;
 }
 
 function lettersHtml() {
@@ -482,6 +506,10 @@ VIEWS.home = () => {
       </div>
       ${homeMode === 'free' ? freeListHtml() : homeMode === 'menu' ? routineListHtml() : lettersHtml()}
       ${startBtn}
+      ${!a && homeMode === 'plan' && sel.length ? `<button type="button" class="btn" data-act="startLite">沒力？做懶人版（${liteItems(sel).length} 個動作各 1 組，約 ${planMinutes(liteItems(sel))} 分鐘）</button>` : ''}
+      ${!a && !trainedOn(ymd(new Date())) ? (rec.skipped
+        ? '<button type="button" class="btn small" data-act="unskip">取消跳過</button>'
+        : plannedToday() ? '<button type="button" class="btn small" data-act="skipToday">今天跳過</button>' : '') : ''}
     </section>
     ${scheduleHtml()}
     ${jjHtml()}
@@ -499,6 +527,8 @@ function startChecklist(plan) {
     </div>`);
 }
 
+let liteLetters = [];   // 懶人版用的是哪幾套訓練日
+
 function createActive(plan) {
   const now = new Date();
   state.active = {
@@ -508,8 +538,10 @@ function createActive(plan) {
     startedAt: now.getTime(),
     idx: 0,
     ...(plan === 'menu' ? { title: currentRoutine().title } : {}),
+    ...(plan === 'lite' ? { letters: liteLetters.join('') } : {}),
     items: (plan === 'free' ? freePick.filter(id => exById(id)).map(id => exPreset(exById(id)))
       : plan === 'menu' ? currentRoutine().items.filter(it => exById(it.exId))
+      : plan === 'lite' ? liteItems(liteLetters)
       : mergedItems(plan.split(''))).map(it => ({
       exId: it.exId,
       name: exById(it.exId).name,
@@ -517,6 +549,7 @@ function createActive(plan) {
       min: it.min,
       max: it.max,
       targetSets: it.sets,
+      ...(plan === 'lite' ? { lite: true } : {}),
       sets: Array.from({ length: it.sets }, () => ({ done: false, reps: null, rir: null }))
     }))
   };
@@ -611,8 +644,8 @@ async function finishWorkout() {
   }
   if (done < total && !(await confirmBox({ title: `還有 ${total - done} 組沒有打勾`, body: '確定要結束並儲存嗎？沒打勾的組不會算進次數。', ok: '儲存並結束', cancel: '繼續訓練' }))) return;
   const session = {
-    id: a.id, date: a.date, startedAt: a.startedAt, endedAt: Date.now(), plan: a.plan, ...(a.title ? { title: a.title } : {}),
-    items: a.items.map(it => ({ exId: it.exId, name: it.name, band: it.band, min: it.min, max: it.max, targetSets: it.targetSets, sets: it.sets }))
+    id: a.id, date: a.date, startedAt: a.startedAt, endedAt: Date.now(), plan: a.plan, ...(a.title ? { title: a.title } : {}), ...(a.letters ? { letters: a.letters } : {}),
+    items: a.items.map(it => ({ exId: it.exId, name: it.name, band: it.band, min: it.min, max: it.max, targetSets: it.targetSets, ...(it.lite ? { lite: true } : {}), sets: it.sets }))
   };
   state.sessions.push(session);
   state.active = null;
@@ -1153,6 +1186,22 @@ const actions = {
     if (!sel.length) { toast('先選一套訓練日'); return; }
     if (!mergedItems(sel).length) { toast('選的訓練日沒有動作，請先到設定頁新增'); return; }
     startChecklist(sel.join(''));
+  },
+  startLite: () => {
+    const sel = currentLetters();
+    if (!liteItems(sel).length) { toast('選的訓練日沒有動作，請先到設定頁新增'); return; }
+    liteLetters = sel;
+    startChecklist('lite');
+  },
+  skipToday: () => {
+    const key = ymd(new Date());
+    state.skips = [...new Set([...(state.skips || []), key])].sort();
+    save(); render(); toast('今天跳過，之後的安排往後順延');
+  },
+  unskip: () => {
+    const key = ymd(new Date());
+    state.skips = (state.skips || []).filter(x => x !== key);
+    save(); render();
   },
   go: el => { closeModal(); createActive(el.dataset.plan); location.hash = '#/workout'; },
   freeToggle: el => {
