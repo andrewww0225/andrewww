@@ -35,6 +35,8 @@ const planLabel = s => {
 };
 const exPreset = ex => ({ exId: ex.id, band: ex.band, sets: ex.sets, min: ex.min, max: ex.max });
 const exMeta = ex => `${ex.band} kg · ${ex.sets} 組 × ${ex.min}–${ex.max} 下`;
+/* 次數範圍：上下限一樣（懶人版）就只寫一個數字 */
+const repRange = it => it.min === it.max ? `${it.max}` : `${it.min}–${it.max}`;
 const rirLabel = r => r === 3 ? '3 以上' : String(r);
 
 /* ---------- 狀態 ---------- */
@@ -409,12 +411,12 @@ function planListHtml(key) {
   }).join('') + '</ol>';
 }
 
-/* 懶人版：從選的訓練日輪流各挑一個動作，最多 4 個，每個 1 組。約 10 分鐘 */
+/* 懶人版：從選的訓練日輪流各挑一個動作，最多 4 個，每個 1 組、直接做到次數範圍的上限。約 10 分鐘 */
 function liteItems(letters) {
   const lists = letters.map(k => (state.plans[k] ? state.plans[k].items : []).filter(it => exById(it.exId)));
   const seen = new Set(), out = [];
   for (let r = 0; out.length < 4 && lists.some(l => l.length > r); r++) {
-    lists.forEach(l => { const it = l[r]; if (it && out.length < 4 && !seen.has(it.exId)) { seen.add(it.exId); out.push({ ...it, sets: 1 }); } });
+    lists.forEach(l => { const it = l[r]; if (it && out.length < 4 && !seen.has(it.exId)) { seen.add(it.exId); out.push({ ...it, sets: 1, min: it.max }); } });
   }
   return out;
 }
@@ -506,7 +508,7 @@ VIEWS.home = () => {
       </div>
       ${homeMode === 'free' ? freeListHtml() : homeMode === 'menu' ? routineListHtml() : lettersHtml()}
       ${startBtn}
-      ${!a && homeMode === 'plan' && sel.length ? `<button type="button" class="btn" data-act="startLite">沒力？做懶人版（${liteItems(sel).length} 個動作各 1 組，約 ${planMinutes(liteItems(sel))} 分鐘）</button>` : ''}
+      ${!a && homeMode === 'plan' && sel.length ? `<button type="button" class="btn" data-act="startLite">沒力？做懶人版（${liteItems(sel).length} 個動作各 1 組、做到最多下，約 ${planMinutes(liteItems(sel))} 分鐘）</button>` : ''}
       ${!a && !trainedOn(ymd(new Date())) ? (rec.skipped
         ? '<button type="button" class="btn small" data-act="unskip">取消跳過</button>'
         : plannedToday() ? '<button type="button" class="btn small" data-act="skipToday">今天跳過</button>' : '') : ''}
@@ -583,7 +585,7 @@ VIEWS.workout = () => {
     <div class="dots" aria-hidden="true">${a.items.map((x, k) => `<i class="${k === i ? 'on' : ''} ${itemDone(x) >= x.sets.length ? 'full' : ''}"></i>`).join('')}</div>
     <section class="card">
       <h2 class="ex-name">${esc(it.name)}</h2>
-      <div class="chips"><span class="chip strong">${esc(bandLabel(it.band))}</span><span class="chip">${it.targetSets} 組 × ${it.min}–${it.max} 下</span></div>
+      <div class="chips"><span class="chip strong">${esc(bandLabel(it.band))}</span><span class="chip">${it.targetSets} 組 × ${repRange(it)} 下</span></div>
       ${hint ? `<div class="hintbox"><strong>可以加難度</strong>
         <p>上次（${fmtDate(hint.session.date)}）每一組都做到 ${it.max} 下，餘力也不多。這次挑一種方式試試：</p>
         <ul>${PROGRESS_WAYS.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
@@ -840,7 +842,7 @@ VIEWS.history = () => {
       <summary><span class="s-title">${fmtDate(s.date)}　${esc(planLabel(s))}</span>
         <span class="s-meta">${sets} 組・共 ${reps} 下${mins ? '・' + mins + ' 分鐘' : ''}</span></summary>
       ${s.items.map(it => `<div class="h-item">
-        <div class="h-name">${esc(it.name)} <span class="muted">${it.band} kg・目標 ${it.min}–${it.max} 下</span></div>
+        <div class="h-name">${esc(it.name)} <span class="muted">${it.band} kg・目標 ${repRange(it)} 下</span></div>
         <div class="h-sets">${it.sets.map((x, j) => x.done
           ? `<span>第 ${j + 1} 組 ${x.reps} 下${x.rir != null ? `（餘力 ${rirLabel(x.rir)}）` : ''}</span>`
           : `<span class="muted">第 ${j + 1} 組 沒做</span>`).join('')}</div>
