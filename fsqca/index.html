@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0}</style></head><body>
+<title>兩條路與一個大點</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one stage, text column + picture column, stepped like a talk; arrow keys / click advance */
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --ink:#18212b; --muted:#5f6b77; --faint:#c9d0d7; --line:#d9dee3;
+  --hoi:#2f5bd3; --ad:#d9822b; --hrs:#178f74; --both:#3a4a5c; --bad:#9aa4ae;
+  --slide-bg:#ffffff; --slide-ink:#111111; --slide-line:#9a9a9a;
+  --f-body:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
+  --f-num:"Space Grotesk","Noto Sans TC",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171d; --panel:#1a2129; --ink:#e7ecf1; --muted:#9aa6b2; --faint:#33404c; --line:#2b3540;
+  --hoi:#7d9cff; --ad:#f0a457; --hrs:#41c7a3; --both:#9fb0c2; --bad:#5d6874;
+  --slide-bg:#f7f7f7; --slide-ink:#111111; --slide-line:#9a9a9a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171d; --panel:#1a2129; --ink:#e7ecf1; --muted:#9aa6b2; --faint:#33404c; --line:#2b3540;
+  --hoi:#7d9cff; --ad:#f0a457; --hrs:#41c7a3; --both:#9fb0c2; --bad:#5d6874;
+  --slide-bg:#f7f7f7; --slide-ink:#111111; --slide-line:#9a9a9a; color-scheme:dark}
+html{font-size:16px}
+@media (min-width:900px){html{font-size:21px}}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.65;display:flex;flex-direction:column}
+.deck{flex:1;min-height:0;overflow:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 16px}
+.scene{display:none;max-width:1360px;margin:0 auto;gap:32px;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;min-height:100%}
+.scene.on{display:grid}
+.scene.full{grid-template-columns:minmax(0,1fr)}
+.txt{min-width:0}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+h2{font-size:clamp(1.6rem,3.4vw,2.5rem);line-height:1.25;margin:.2em 0 .5em;font-weight:900;text-wrap:balance}
+.txt p{margin:0 0 .8em;max-width:34em}
+.num{font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums}
+.k-hoi{color:var(--hoi)} .k-ad{color:var(--ad)} .k-hrs{color:var(--hrs)}
+[data-s]{transition:opacity .5s,transform .5s}
+[data-s]:not(.vis){opacity:0;transform:translateY(8px)}
+.pic{min-width:0}
+.small{font-size:.92rem;color:var(--muted)}
+/* boring slide */
+.scene.full{justify-items:center;align-content:center}
+.scene.full .txt{width:min(900px,100%)}
+.slide{background:var(--slide-bg);color:var(--slide-ink);font-family:Calibri,Arial,sans-serif;aspect-ratio:16/9;width:min(900px,100%,calc(44vh * 16 / 9));padding:6% 7%;box-shadow:0 1px 3px rgba(0,0,0,.25);display:flex;flex-direction:column;justify-content:center}
+.slide h3{font-weight:400;font-size:clamp(1rem,2.6vw,1.6rem);margin:0 0 1em}
+.slide table{border-collapse:collapse;width:100%;font-size:clamp(.62rem,1.6vw,1rem)}
+.slide td,.slide th{border:1px solid var(--slide-line);padding:.35em .5em;text-align:center;font-weight:400;color:var(--slide-ink);font-family:inherit}
+.slide h3{color:var(--slide-ink)}
+.slide tr{transition:transform .7s cubic-bezier(.5,0,.9,.4),opacity .7s}
+.slide.break tr:nth-child(odd){transform:translateY(120%) rotate(-6deg);opacity:0}
+.slide.break tr:nth-child(even){transform:translateY(160%) rotate(5deg);opacity:0}
+.slide.break h3{transition:opacity .4s;opacity:0}
+.quip{font-size:clamp(1.3rem,3vw,2rem);font-weight:700;margin:.6em 0 .2em}
+/* condition chips */
+.chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:end;justify-items:center;padding:24px 0}
+.chip{display:flex;flex-direction:column;align-items:center;gap:10px}
+.chip i{display:block;border-radius:50%;background:var(--muted);width:56px;height:56px;transition:all .8s cubic-bezier(.2,.8,.2,1)}
+.chip b{font-family:var(--f-num);font-size:1.05rem}
+.chips.go .chip i{width:22px;height:22px;background:var(--both)}
+.chips.go .chip.hoi i{width:130px;height:130px;background:var(--hoi)}
+.chips.lone .chip:not(.hoi){opacity:.18}
+.legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+/* config rows */
+.cfg{width:100%;border-collapse:separate;border-spacing:0 10px;font-size:1rem}
+.cfg th{font-family:var(--f-num);font-weight:500;color:var(--muted);font-size:.85rem;padding:0 6px}
+.cfg td{background:var(--panel);text-align:center;padding:14px 6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cfg td:first-child{border-left:1px solid var(--line);border-radius:10px 0 0 10px;font-family:var(--f-num);font-weight:700}
+.cfg td:last-child{border-right:1px solid var(--line);border-radius:0 10px 10px 0}
+.dotB{display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--hoi);vertical-align:middle}
+.dotS{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--both);vertical-align:middle}
+.flip{display:inline-block;min-width:2.6em;padding:2px 8px;border:1.5px dashed var(--muted);border-radius:6px;font-weight:700;color:var(--muted)}
+.flip::after{content:"高";animation:flip 2.4s steps(1) infinite}
+@keyframes flip{0%{content:"高"}50%{content:"低"}}
+/* dots stage */
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--ink);font-family:var(--f-body)}
+svg .mut{fill:var(--muted)}
+.dot{fill:var(--muted);transition:transform .9s cubic-bezier(.3,.7,.2,1),fill .6s,opacity .6s}
+.dot.g1111{fill:var(--both)} .dot.g0111{fill:var(--hrs)} .dot.g1110{fill:var(--ad)} .dot.g1101{fill:var(--bad)}
+#dots.grid .dot{fill:var(--muted)}
+.dot.out{fill:var(--faint)!important}
+#dots.hrsview .dot.g0111{opacity:.15}
+#dots.hrsview .dot.g1111{fill:var(--hrs)}
+.lay{transition:opacity .6s;opacity:0}
+.lay.vis{opacity:1}
+.ring{fill:none;stroke-width:2;stroke-dasharray:6 5}
+/* bars */
+.bars{display:flex;flex-direction:column;gap:18px}
+.bar-row .lab{font-size:.95rem;margin-bottom:4px}
+.track{position:relative;height:22px;margin:3px 0}
+.track .z{position:absolute;top:-4px;bottom:-4px;width:1px;background:var(--muted)}
+.track .th{position:absolute;top:-6px;bottom:-6px;width:0;border-left:2px dotted var(--ink)}
+.track .b{position:absolute;top:2px;height:18px;border-radius:3px}
+.track .b.ad{background:var(--ad)} .track .b.hrs{background:var(--hrs)}
+.track .v{position:absolute;top:0;font-family:var(--f-num);font-weight:700;font-size:.9rem;white-space:nowrap}
+.key{display:flex;gap:18px;font-size:.88rem;color:var(--muted);margin-bottom:6px}
+.key span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+/* item cards */
+.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:.98rem}
+.item code{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);display:block;margin-bottom:4px}
+.item mark{background:none;color:var(--ad);font-weight:700}
+.concl{display:grid;gap:14px}
+.concl li{margin-bottom:.4em}
+.limits{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:.9rem;color:var(--muted)}
+.limits ol{margin:.3em 0 0;padding-left:1.3em}
+/* nav */
+nav{display:flex;align-items:center;gap:12px;padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-top:1px solid var(--line);background:var(--bg)}
+nav button{font:inherit;font-size:.95rem;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer}
+nav button:focus-visible{outline:2px solid var(--hoi);outline-offset:2px}
+nav button:disabled{opacity:.4;cursor:default}
+.prog{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--hoi);width:0;transition:width .4s}
+.cnt{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);min-width:4.5em;text-align:right}
+@media (max-width:760px){
+  .scene.on{grid-template-columns:minmax(0,1fr);align-content:start;gap:18px}
+  .items{grid-template-columns:minmax(0,1fr)}
+  .chip b{font-size:.9rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<main class="deck" id="deck">
+
+<!-- 0 boring -->
+<section class="scene full" data-steps="1">
+  <div class="slide" id="boring">
+    <h3>表4-8　IEC之組態分析結果</h3>
+    <table>
+      <tr><th>組態</th><th>AD</th><th>當責</th><th>HOI</th><th>HRS</th><th>原始覆蓋率</th><th>唯一覆蓋率</th><th>一致性</th></tr>
+      <tr><td>C1</td><td>•</td><td>•</td><td>●</td><td></td><td>0.697</td><td>0.026</td><td>0.966</td></tr>
+      <tr><td>C2</td><td></td><td>•</td><td>●</td><td>•</td><td>0.895</td><td>0.225</td><td>0.956</td></tr>
+      <tr><td>整體解</td><td></td><td></td><td></td><td></td><td>0.921</td><td></td><td>0.949</td></tr>
+    </table>
+  </div>
+  <div class="txt">
+    <p class="quip">這張表很無聊。</p>
+    <p class="small">但它其實只在講三件事：大點是誰、空白是什麼意思、兩條路各帶走多少人。按 → 或點畫面開始。</p>
+  </div>
+</section>
+
+<!-- 1 big dot -->
+<section class="scene" data-steps="3">
+  <div class="txt">
+    <div class="eyebrow">第一件事</div>
+    <h2>大點只有一個：<span class="k-hoi">HOI</span></h2>
+    <p data-s="1">●（大點）＝核心條件。把研究者的假設全部拿掉（簡約解），它還在。•（小點）＝邊緣條件，搭配 HOI 時才出現。</p>
+    <p data-s="2">簡約解只剩 HOI 一個條件：光靠「會查證」，一致性就有 <span class="num">.924</span>（IEC）、<span class="num">.882</span>（TII）。</p>
+  </div>
+  <div class="pic">
+    <div class="chips" id="chips">
+      <div class="chip"><i></i><b>AD</b></div>
+      <div class="chip"><i></i><b>當責</b></div>
+      <div class="chip hoi"><i></i><b>HOI</b></div>
+      <div class="chip"><i></i><b>HRS</b></div>
+    </div>
+    <div class="legend"><span>● 核心條件</span><span>• 邊緣條件</span></div>
+  </div>
+</section>
+
+<!-- 2 blank -->
+<section class="scene" data-steps="3">
+  <div class="txt">
+    <div class="eyebrow">第二件事</div>
+    <h2>空白不是「沒有」</h2>
+    <p>表裡的空白代表<b>高低都可以</b>。C1 沒有說 HRS 要低，C2 也沒有說 AD 要低。</p>
+    <p data-s="2">兩條路合起來：<b>HOI 高＋當責高，再加上 <span class="k-ad">AD 高</span>或 <span class="k-hrs">HRS 高</span>，至少一個。</b></p>
+  </div>
+  <div class="pic">
+    <table class="cfg">
+      <tr><th></th><th>AD</th><th>當責</th><th>HOI</th><th>HRS</th></tr>
+      <tr><td>C1</td><td><span class="dotS" style="background:var(--ad)"></span></td><td><span class="dotS"></span></td><td><span class="dotB"></span></td><td><span class="flip" aria-label="高或低"></span></td></tr>
+      <tr data-s="1"><td>C2</td><td><span class="flip" aria-label="高或低"></span></td><td><span class="dotS"></span></td><td><span class="dotB"></span></td><td><span class="dotS" style="background:var(--hrs)"></span></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 3 people -->
+<section class="scene" data-steps="4" data-vis="dots">
+  <div class="txt">
+    <div class="eyebrow">第三件事・之一</div>
+    <h2>207 個人怎麼分</h2>
+    <p>每一點是一位受測者。</p>
+    <p data-s="1"><span class="num">20</span> 人有某個條件剛好 4 分（隸屬度 .5，不算高也不算低），軟體不把他們放進真值表。</p>
+    <p data-s="2">另 <span class="num">5</span> 人所屬的組合不到 3 人，未達頻次門檻。</p>
+    <p data-s="3">剩下 <span class="num">182</span> 人分成四群。第四群 HOI 低，PRI 一致性不足，判為不成立。</p>
+  </div>
+  <div class="pic" data-slot="dots"></div>
+</section>
+
+<!-- 4 two paths -->
+<section class="scene" data-steps="3" data-vis="dots">
+  <div class="txt">
+    <div class="eyebrow">第三件事・之二</div>
+    <h2>兩條路，共用一大群人</h2>
+    <p><span class="k-hrs">C2</span> 圈住「AD 低、HRS 高」的 47 人和四項都高的 124 人。</p>
+    <p data-s="1"><span class="k-ad">C1</span> 圈住同樣那 124 人，再加上「AD 高、HRS 低」的 7 人。</p>
+    <p data-s="2">只有 C1 解釋得到的只有 <span class="num k-ad">7</span> 人，只有 C2 的有 <span class="num k-hrs">47</span> 人。這就是唯一覆蓋率 <span class="num">.026</span> 對 <span class="num">.225</span>。</p>
+  </div>
+  <div class="pic" data-slot="dots"></div>
+</section>
+
+<!-- 5 myth -->
+<section class="scene" data-steps="2" data-vis="dots">
+  <div class="txt">
+    <div class="eyebrow">常見誤讀</div>
+    <h2>「AD 高，就是 HRS 低」？</h2>
+    <p>C1 的 <span class="num">131</span> 人裡，<span class="num k-hrs">124</span> 人 HRS 也高，HRS 低的只有 <span class="num k-ad">7</span> 人。</p>
+    <p data-s="1">AD 和 HRS 的相關只有 <span class="num">−.11</span>，幾乎無關。覺得作業適合交給 GAI，不代表覺得自己可以被取代。</p>
+  </div>
+  <div class="pic" data-slot="dots"></div>
+</section>
+
+<!-- 6 weight -->
+<section class="scene" data-steps="5">
+  <div class="txt">
+    <div class="eyebrow">老師要的數字</div>
+    <h2>同樣是小點，份量差很多</h2>
+    <p>HRS 和查證、投入都有中度以上的關聯，是必要條件，獨自多解釋 47 人。</p>
+    <p data-s="4">AD 和 HOI、IEC、TII 都幾乎無關，不是必要條件，只多解釋 7 人。</p>
+    <p class="small" data-s="4">相關係數以 207 人的題目平均計算；必要條件門檻 .90（Schneider &amp; Wagemann, 2012）。</p>
+  </div>
+  <div class="pic">
+    <div class="key"><span style="--c:var(--ad)">AD</span><span style="--c:var(--hrs)">HRS</span></div>
+    <div class="bars" id="bars"></div>
+  </div>
+</section>
+
+<!-- 7 two groups -->
+<section class="scene" data-steps="2">
+  <div class="txt">
+    <div class="eyebrow">只走一條路的人</div>
+    <h2>7 人對 47 人</h2>
+    <p>兩群的平均都在 4 分以上，所以兩條路都通。HRS 那群的 IEC 高約 0.65 分，TII 只差 0.14 分。</p>
+    <p data-s="1" class="small">7 人太少，只能描述，不能檢定兩群有沒有差異。</p>
+  </div>
+  <div class="pic">
+    <svg viewBox="0 0 640 230" role="img" aria-label="兩群的 IEC 與 TII 平均">
+      <g id="dp"></g>
+    </svg>
+  </div>
+</section>
+
+<!-- 8 items -->
+<section class="scene" data-steps="2">
+  <div class="txt">
+    <div class="eyebrow">回到題目</div>
+    <h2>AD 問的是作業，不是 AI 有多強</h2>
+    <p>AD 高＝判斷<b>這份作業</b>很多部分可以交給 GAI。題目沒有比較 AI 和人誰比較強。</p>
+    <p data-s="1">AD 和 HOI 的相關是 <span class="num">−.08</span>，也不能讀成「AD 高的人不查證」。</p>
+  </div>
+  <div class="pic items">
+    <div class="item"><code>AD2</code>我認為這份作業<mark>適合交由</mark>生成式AI來完成。</div>
+    <div class="item"><code>AD3</code>我<mark>傾向讓</mark>生成式AI<mark>主導</mark>完成大部分作業。</div>
+    <div class="item"><code>AD4</code>這份作業中，可以交給生成式AI<mark>獨立完成的部分</mark>相當多。</div>
+    <div class="item"><code>AD5</code>通常來說，我認為這份作業可以交由生成式AI執行的<mark>程度</mark>很高。</div>
+  </div>
+</section>
+
+<!-- 9 conclusion -->
+<section class="scene" data-steps="1">
+  <div class="txt">
+    <div class="eyebrow">所以</div>
+    <h2>一個大點，兩條路，一條比較寬</h2>
+    <ul class="concl">
+      <li><b class="k-hoi">HOI</b> 是核心：會查證，才會有高投入與高互動。</li>
+      <li>當責高，再加上 <b class="k-hrs">HRS 高</b>或 <b class="k-ad">AD 高</b>其中一個就夠。</li>
+      <li>HRS 那條路帶走 47 人，AD 那條路只多 7 人。C1 的 AD 比較像少數人的補充路徑，不是有影響力的條件。</li>
+    </ul>
+  </div>
+  <div class="pic">
+    <div class="limits"><b>讀這些數字時要記得</b>
+      <ol>
+        <li>7 人太少，兩群平均只能描述。</li>
+        <li>IEC 有 188 人、TII 有 182 人屬於高，每種組合的原始一致性都在 .94 以上。這張表只能說哪些條件常和高結果一起出現，不能說 AD 造成高結果。</li>
+        <li>HRS 有 192 人屬於高，必要一致性高有一部分來自條件本身普遍偏高。</li>
+        <li>相關係數用題目平均算，不是 SmartPLS 的潛在變項相關；寫進論文時改用報表數字。</li>
+        <li>相關不是因果；HRS 在模型中是調節變項，不解讀它的主效果。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<div hidden>
+  <svg id="dotsvg" viewBox="0 0 800 430" role="img" aria-label="207 位受測者的分群">
+    <g id="rings">
+      <g class="lay" id="ringC2"><rect class="ring" x="112" y="52" width="368" height="200" rx="18" style="stroke:var(--hrs)"/><text x="124" y="44" style="fill:var(--hrs);font-weight:700">C2</text></g>
+      <g class="lay" id="ringC1"><rect class="ring" x="296" y="40" width="352" height="224" rx="18" style="stroke:var(--ad)"/><text x="618" y="32" style="fill:var(--ad);font-weight:700">C1</text></g>
+    </g>
+    <g id="dots"></g>
+    <g class="lay" id="clLabels">
+      <text x="170" y="290" text-anchor="middle" class="num" style="font-size:34px;fill:var(--hrs)">47</text>
+      <text x="170" y="312" text-anchor="middle" class="mut" style="font-size:17px">AD 低、HRS 高</text>
+      <text x="388" y="290" text-anchor="middle" class="num" style="font-size:34px">124</text>
+      <text x="388" y="312" text-anchor="middle" class="mut" style="font-size:17px">四項都高</text>
+      <text x="600" y="290" text-anchor="middle" class="num" style="font-size:34px;fill:var(--ad)">7</text>
+      <text x="600" y="312" text-anchor="middle" class="mut" style="font-size:17px">AD 高、HRS 低</text>
+      <text x="730" y="290" text-anchor="middle" class="num" style="font-size:34px;fill:var(--bad)">4</text>
+      <text x="730" y="312" text-anchor="middle" class="mut" style="font-size:17px">HOI 低，不成立</text>
+    </g>
+    <g class="lay" id="binLabel"><text x="40" y="372" class="mut" style="font-size:17px">不進真值表：剛好 4 分 20 人＋組合不足 3 人 5 人</text></g>
+  </svg>
+</div>
+</main>
+
+<nav>
+  <button id="prev" type="button" aria-label="上一步">←</button>
+  <button id="next" type="button" aria-label="下一步">→</button>
+  <div class="prog"><i id="bar"></i></div>
+  <span class="cnt" id="cnt"></span>
+</nav>
+
+<script>
+(function(){
+  const scenes=[...document.querySelectorAll('.scene')];
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let sc=0, st=0;
+
+  /* ---------- dots ---------- */
+  const NS='http://www.w3.org/2000/svg';
+  const svg=document.getElementById('dotsvg'), g=document.getElementById('dots');
+  const groups=[['g1111',124],['g0111',47],['g1110',7],['g1101',4],['below',5],['half',20]];
+  const D=[]; groups.forEach(([k,n])=>{for(let i=0;i<n;i++)D.push({k})});
+  let seed=7; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  const order=D.map((d,i)=>i).sort(()=>rnd()-.5);
+  order.forEach((di,pos)=>{D[di].gx=224+(pos%23)*16; D[di].gy=120+Math.floor(pos/23)*16;});
+  const pack=(k,cx,top,cols)=>{const L=D.filter(d=>d.k===k);const w=(cols-1)*14;L.forEach((d,i)=>{d.cx=cx-w/2+(i%cols)*14;d.cy=top+Math.floor(i/cols)*14;});};
+  pack('g0111',170,74,6); pack('g1111',388,74,11); pack('g1110',600,74,3); pack('g1101',730,74,2);
+  let bi=0; D.filter(d=>d.k==='half').concat(D.filter(d=>d.k==='below')).forEach(d=>{d.bx=46+bi*13+(d.k==='below'?14:0); d.by=392; bi++;});
+  D.forEach((d,i)=>{const c=document.createElementNS(NS,'circle');c.setAttribute('r',5);c.setAttribute('class','dot '+d.k);c.style.transitionDelay=(reduce?0:(i%40)*8)+'ms';d.el=c;g.appendChild(c);});
+  const lay=(id,on)=>document.getElementById(id).classList.toggle('vis',on);
+  function dots(mode,stp){
+    const outHalf = mode!=='grid' || stp>=1, outBelow = mode!=='grid' || stp>=2, cluster = mode!=='grid' || stp>=3;
+    g.setAttribute('class','');
+    g.id='dots';
+    if(!cluster) g.classList.add('grid');
+    D.forEach(d=>{
+      let x=d.gx,y=d.gy,out=false;
+      if(d.k==='half'&&outHalf){x=d.bx;y=d.by;out=true}
+      else if(d.k==='below'&&outBelow){x=d.bx;y=d.by;out=true}
+      else if(cluster&&d.cx!==undefined){x=d.cx;y=d.cy}
+      d.el.style.transform=`translate(${x}px,${y}px)`;
+      d.el.classList.toggle('out',out);
+    });
+    lay('binLabel',outHalf); lay('clLabels',cluster);
+    lay('ringC2',mode==='paths'); lay('ringC1',mode==='paths'&&stp>=1);
+    if(mode==='myth'){g.classList.add('hrsview'); lay('ringC1',true);}
+    // unique emphasis
+    D.forEach(d=>{d.el.style.opacity='';});
+    if(mode==='paths'&&stp>=2){D.forEach(d=>{if(d.k==='g1111'||d.k==='g1101')d.el.style.opacity=.22;});}
+  }
+
+  /* ---------- bars ---------- */
+  const rows=[
+    ['與 HOI 的相關 r',-.08,.57,-.2,1],
+    ['與 IEC 的相關 r',-.08,.52,-.2,1],
+    ['與 TII 的相關 r',.05,.26,-.2,1],
+    ['必要條件一致性（IEC；虛線 = .90 門檻）',.72,.95,0,1,.9],
+    ['只靠這條路解釋的人數',7,47,0,50]
+  ];
+  const fmt=v=>Number.isInteger(v)?String(v):(v<0?'−':'')+Math.abs(v).toFixed(2).replace(/^0/,'');
+  const bars=document.getElementById('bars');
+  rows.forEach((r,i)=>{
+    const [lab,a,h,lo,hi,th]=r; const p=v=>(v-lo)/(hi-lo)*100;
+    const tr=(v,cls)=>{const z=p(0),e=p(v),l=Math.min(z,e),w=Math.abs(e-z);
+      const vx = v<0 ? `right:${100-l+1}%` : `left:${l+w+1.2}%`;
+      return `<div class="track"><span class="z" style="left:${z}%"></span>${th?`<span class="th" style="left:${p(th)}%"></span>`:''}<span class="b ${cls}" style="left:${l}%;width:${w}%"></span><span class="v" style="${vx}">${fmt(v)}</span></div>`;};
+    const d=document.createElement('div'); d.className='bar-row'; d.dataset.s=i;
+    d.innerHTML=`<div class="lab">${lab}</div>${tr(a,'ad')}${tr(h,'hrs')}`; bars.appendChild(d);
+  });
+
+  /* ---------- dot plot ---------- */
+  (function(){
+    const dp=document.getElementById('dp'), x=v=>80+(v-4.5)/2*520;
+    let h='';
+    [4.5,5,5.5,6,6.5].forEach(v=>{h+=`<line x1="${x(v)}" x2="${x(v)}" y1="30" y2="190" style="stroke:var(--line)"/><text x="${x(v)}" y="212" text-anchor="middle" class="mut" style="font-size:15px">${v.toFixed(1)}</text>`;});
+    [['IEC',70,5.19,5.84],['TII',150,5.29,5.43]].forEach(([n,y,a,b])=>{
+      h+=`<text x="0" y="${y+5}" style="font-size:19px;font-weight:700">${n}</text>`;
+      h+=`<line x1="${x(a)}" x2="${x(b)}" y1="${y}" y2="${y}" style="stroke:var(--muted);stroke-width:2"/>`;
+      h+=`<circle cx="${x(a)}" cy="${y}" r="8" style="fill:var(--ad)"/><text x="${x(a)}" y="${y-16}" text-anchor="middle" style="font-size:17px;fill:var(--ad)">${a.toFixed(2)}（7 人）</text>`;
+      h+=`<circle cx="${x(b)}" cy="${y}" r="11" style="fill:var(--hrs)"/><text x="${x(b)}" y="${y+30}" text-anchor="middle" style="font-size:17px;fill:var(--hrs)">${b.toFixed(2)}（47 人）</text>`;
+    });
+    dp.innerHTML=h;
+  })();
+
+  /* ---------- engine ---------- */
+  const total=scenes.reduce((s,e)=>s+(+e.dataset.steps),0);
+  const chips=document.getElementById('chips');
+  function render(){
+    scenes.forEach((s,i)=>s.classList.toggle('on',i===sc));
+    const s=scenes[sc];
+    s.querySelectorAll('[data-s]').forEach(e=>e.classList.toggle('vis',st>=+e.dataset.s));
+    const slot=s.querySelector('[data-slot="dots"]');
+    if(slot && svg.parentNode!==slot) slot.appendChild(svg);
+    if(sc===1){chips.classList.toggle('go',st>=1); chips.classList.toggle('lone',st>=2);}
+    if(sc===3) dots('grid',st);
+    if(sc===4) dots('paths',st);
+    if(sc===5) dots('myth',st);
+    let done=0; for(let i=0;i<sc;i++)done+=+scenes[i].dataset.steps; done+=st+1;
+    document.getElementById('bar').style.width=(done/total*100)+'%';
+    document.getElementById('cnt').textContent=(sc+1)+' / '+scenes.length;
+    document.getElementById('prev').disabled=(sc===0&&st===0);
+    document.getElementById('next').disabled=(sc===scenes.length-1&&st===+scenes[sc].dataset.steps-1);
+    const deck=document.getElementById('deck'); if(st===0) deck.scrollTop=0;
+  }
+  let busy=false;
+  function next(){
+    if(busy) return;
+    const n=+scenes[sc].dataset.steps;
+    if(st<n-1){st++;render();return;}
+    if(sc>=scenes.length-1) return;
+    if(sc===0 && !reduce){busy=true;const b=document.getElementById('boring');b.classList.add('break');
+      setTimeout(()=>{busy=false;sc=1;st=0;render();b.classList.remove('break');},750);return;}
+    sc++;st=0;render();
+  }
+  function prev(){
+    if(busy) return;
+    if(st>0){st--;render();return;}
+    if(sc===0) return;
+    sc--; st=+scenes[sc].dataset.steps-1; render();
+  }
+  document.getElementById('next').addEventListener('click',next);
+  document.getElementById('prev').addEventListener('click',prev);
+  document.getElementById('deck').addEventListener('click',e=>{if(!e.target.closest('button,a'))next();});
+  addEventListener('contextmenu',e=>{e.preventDefault();prev();});
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next();}
+    if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev();}
+  });
+  // place svg once so first dot render has a parent
+  document.querySelector('[data-slot="dots"]').appendChild(svg);
+  dots('grid',0);
+  render();
+})();
+</script>
+
+</body></html>
