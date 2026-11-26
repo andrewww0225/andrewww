@@ -666,6 +666,9 @@ const DEFAULT_SETTINGS = {
   bandDays: [0, 2, 4], tabataDays: [1, 5], trainTime: ''
 };
 
+/* 骨盆底肌（凱格爾）：慢收縮收緊 hold 秒、放鬆 hold 秒做 reps 次，再快收縮 fast 次；一天做 perDay 次 */
+const DEFAULT_PELVIC = { hold: 5, reps: 10, fast: 10, perDay: 3, showHome: true };
+
 const DEFAULT_TABATA = {
   work: 20,
   rest: 10,

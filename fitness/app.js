@@ -49,6 +49,7 @@ function freshState() {
     plans: clone(DEFAULT_PLANS),
     routines: clone(DEFAULT_ROUTINES),
     skips: [],
+    pelvic: { ...clone(DEFAULT_PELVIC), log: {} },
     sessions: [],
     active: null,
     jj: { done: [] }   // 開合跳：每次做完一筆 { t: 時間戳記, reps: 下數 }
@@ -60,6 +61,19 @@ function normalize(d) {
   if (!d || typeof d !== 'object') return s;
   if (d.settings && typeof d.settings === 'object') s.settings = { ...s.settings, ...d.settings };
   if (d.tabata && typeof d.tabata === 'object') s.tabata = { ...s.tabata, ...d.tabata };
+  /* 骨盆底肌：設定照存；log 是「日期 → 當天做了幾次」，只留最近 60 天 */
+  if (d.pelvic && typeof d.pelvic === 'object') {
+    const p = d.pelvic, num = (v, lo, hi, def) => Number.isFinite(+v) ? clamp(Math.round(+v), lo, hi) : def;
+    const cut = new Date(); cut.setDate(cut.getDate() - 60);
+    s.pelvic = {
+      hold: num(p.hold, 3, 10, DEFAULT_PELVIC.hold), reps: num(p.reps, 3, 15, DEFAULT_PELVIC.reps),
+      fast: num(p.fast, 0, 20, DEFAULT_PELVIC.fast), perDay: num(p.perDay, 1, 5, DEFAULT_PELVIC.perDay),
+      showHome: p.showHome !== false, log: {}
+    };
+    if (p.log && typeof p.log === 'object') Object.keys(p.log).forEach(k => {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(k) && parseYmd(k) >= cut && +p.log[k] > 0) s.pelvic.log[k] = Math.round(+p.log[k]);
+    });
+  }
   /* 第 1 版的資料：Tabata 還是舊預設（2 輪、輪間休息 60 秒）就換成影片的 4 輪、30 秒 */
   if ((d.version || 1) < 2 && s.tabata.rounds === 2 && s.tabata.roundRest === 60) {
     s.tabata.rounds = DEFAULT_TABATA.rounds;
@@ -245,13 +259,14 @@ function route() {
   let name = routeName();
   if (name === 'workout' && !state.active) { location.replace('#/'); return; }
   if (current === 'tabata' && name !== 'tabata') tabataStop(true);
+  if (current === 'pelvic' && name !== 'pelvic') pelvicStop(true);
   current = name;
   document.body.dataset.route = name;
   document.querySelectorAll('#tabs a').forEach(a => {
     if (a.dataset.tab === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
   restbar.hidden = !(name === 'workout' && rest.timer);
-  Device.keepAwake(name === 'workout' || tb.running);
+  Device.keepAwake(name === 'workout' || tb.running || pv.running);
   render();
   window.scrollTo(0, 0);
 }
@@ -514,6 +529,7 @@ VIEWS.home = () => {
         : plannedToday() ? '<button type="button" class="btn small" data-act="skipToday">今天跳過</button>' : '') : ''}
     </section>
     ${scheduleHtml()}
+    ${pelvicHomeHtml()}
     ${jjHtml()}
     <p class="foot muted">本週已練 ${rec.weekCount} 次。目標每週 2 到 3 次，中間至少隔一天。</p>`;
 };
@@ -792,8 +808,143 @@ function tabataRunHtml() {
   </section>`;
 }
 
+/* ---------- 骨盆底肌（凱格爾） ---------- */
+const pv = { running: false, paused: false, phases: [], i: 0, endAt: 0, leftMs: 0, timer: null, lastTick: 0, finished: false };
+const pelvicToday = () => state.pelvic.log[ymd(new Date())] || 0;
+
+/* 慢收縮：收緊 hold 秒、放鬆 hold 秒，做 reps 次；接著快收縮：收 1 秒、放 1 秒，做 fast 次 */
+function pelvicPhases() {
+  const p = state.pelvic;
+  const ph = [{ kind: 'prep', sec: 3 }];
+  for (let i = 1; i <= p.reps; i++) {
+    ph.push({ kind: 'squeeze', sec: p.hold, n: i, of: p.reps });
+    ph.push({ kind: 'relax', sec: p.hold, n: i, of: p.reps });
+  }
+  for (let i = 1; i <= p.fast; i++) {
+    ph.push({ kind: 'fast', sec: 1, n: i, of: p.fast });
+    ph.push({ kind: 'fastrelax', sec: 1, n: i, of: p.fast });
+  }
+  return ph;
+}
+const pelvicTotal = () => pelvicPhases().reduce((n, p) => n + p.sec, 0) - 3;
+const PV_LABEL = { prep: '準備', squeeze: '收緊、往上提', relax: '放鬆', fast: '快速收緊', fastrelax: '放鬆' };
+
+function pelvicStart() {
+  pv.phases = pelvicPhases();
+  pv.i = 0; pv.running = true; pv.paused = false; pv.finished = false; pv.lastTick = 0;
+  pv.endAt = Date.now() + pv.phases[0].sec * 1000;
+  Device.keepAwake(true);
+  pv.timer = setInterval(pelvicTick, 100);
+  render();
+}
+function pelvicTick() {
+  let changed = false;
+  while (pv.running && Date.now() >= pv.endAt) {
+    pv.i++;
+    if (pv.i >= pv.phases.length) {
+      const key = ymd(new Date());
+      state.pelvic.log[key] = (state.pelvic.log[key] || 0) + 1;
+      save();
+      Device.signal('end');
+      pelvicStop(true);
+      pv.finished = true;
+      if (current === 'pelvic') render();
+      return;
+    }
+    pv.endAt += pv.phases[pv.i].sec * 1000;
+    pv.lastTick = 0;
+    changed = true;
+  }
+  if (changed) {
+    const k = pv.phases[pv.i].kind;
+    /* 快收縮每秒一次，只用短促的提示音，不震動 */
+    const sig = { squeeze: 'go', relax: 'rest', fast: 'tick' }[k];
+    if (sig) Device.signal(sig);
+    render();
+    return;
+  }
+  const el = $('.tb-time');
+  const left = Math.ceil((pv.endAt - Date.now()) / 1000);
+  if (el && el.textContent !== String(left)) el.textContent = left;
+}
+function pelvicStop(silent) {
+  clearInterval(pv.timer);
+  pv.timer = null; pv.running = false; pv.paused = false;
+  Device.keepAwake(current === 'workout');
+  if (!silent) render();
+}
+
+function pelvicHomeHtml() {
+  const p = state.pelvic;
+  if (!p.showHome) return '';
+  const n = pelvicToday();
+  return `<section class="card pv-card">
+    <div class="pv-head"><h2>骨盆底肌（凱格爾）</h2><span class="pv-count ${n >= p.perDay ? 'done' : ''}">今天 ${n}／${p.perDay} 次</span></div>
+    <p class="sub">每次約 ${Math.ceil(pelvicTotal() / 60)} 分鐘，躺著、坐著、站著都可以做。</p>
+    <a class="btn small" href="#/pelvic">開始</a>
+  </section>`;
+}
+
+function pelvicRunHtml() {
+  const ph = pv.phases[pv.i];
+  const left = pv.paused ? Math.ceil(pv.leftMs / 1000) : Math.ceil((pv.endAt - Date.now()) / 1000);
+  const meta = ph.kind === 'prep' ? '放鬆、自然呼吸'
+    : ph.kind === 'squeeze' || ph.kind === 'relax' ? `慢收縮 第 ${ph.n}／${ph.of} 次`
+    : `快收縮 第 ${ph.n}／${ph.of} 次`;
+  const active = ph.kind === 'squeeze' || ph.kind === 'fast';
+  return `<section class="tb-run" data-kind="${active ? 'work' : 'rest'}">
+    <p class="tb-meta">${meta}</p>
+    <p class="tb-phase">${PV_LABEL[ph.kind]}${pv.paused ? '（已暫停）' : ''}</p>
+    <p class="tb-time" aria-live="off">${Math.max(0, left)}</p>
+    <p class="tb-move">${active ? '不要憋氣，肚子和屁股放鬆' : ''}</p>
+    <div class="btn-row">
+      <button type="button" class="btn big" data-act="pvPause">${pv.paused ? '繼續' : '暫停'}</button>
+      <button type="button" class="btn big" data-act="pvStop">停止</button>
+    </div>
+  </section>`;
+}
+
 const numField = (label, path, min, max, val) =>
   `<label class="field"><span>${label}</span><input type="number" inputmode="numeric" min="${min}" max="${max}" data-path="${path}" data-type="int" value="${val}"></label>`;
+
+VIEWS.pelvic = () => {
+  const head = '<header class="top"><h1>骨盆底肌</h1><a class="toplink" href="#/">回首頁</a></header>';
+  if (pv.running) { view.innerHTML = head + pelvicRunHtml(); return; }
+  const p = state.pelvic, n = pelvicToday();
+  view.innerHTML = head + `
+    ${pv.finished ? `<section class="card notice"><h2>完成一次</h2><p>今天做了 ${n}／${p.perDay} 次。${n >= p.perDay ? '今天的份量完成了。' : '可以隔幾個小時再做下一次。'}</p></section>` : ''}
+    <section class="card">
+      <p class="note">慢收縮：收緊 ${p.hold} 秒、放鬆 ${p.hold} 秒，做 ${p.reps} 次${p.fast ? `；接著快收縮：快速收緊、放開 ${p.fast} 次` : ''}。每次換階段會有提示音和震動。</p>
+      <p class="tb-total">今天 <strong>${n}／${p.perDay}</strong> 次・每次約 <strong>${mmss(pelvicTotal())}</strong></p>
+      <button type="button" class="btn primary big" data-act="pvStart">開始</button>
+    </section>
+    <section class="card">
+      <h2>怎麼做</h2>
+      <ul class="plain">
+        <li><b>找到肌肉</b>：想像同時要憋住尿和憋住放屁，會往上、往內收的那群肌肉就是。第一次可以在小便時短暫試著停一下來確認，但不要養成在小便時練習的習慣。</li>
+        <li><b>只收那裡</b>：肚子、屁股、大腿都放鬆，不要用力夾腿或縮小腹。</li>
+        <li><b>正常呼吸</b>：收緊的時候也照常呼吸，不要憋氣。可以數出聲音來提醒自己。</li>
+        <li><b>姿勢</b>：一開始躺著最容易找到感覺，熟了以後坐著、站著都能做。</li>
+        <li><b>慢慢加</b>：收緊撐不到設定的秒數就先縮短，之後每週加一點，最多到 10 秒。</li>
+        <li><b>不要過量</b>：一天大約 3 次就夠，練太多肌肉反而會疲勞。</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>多久會有效</h2>
+      <p>通常要每天練、持續 2 到 3 個月才感覺得到變化，3 到 6 個月效果最好；停下來效果會慢慢退。</p>
+      <p class="muted">練了會痛，或練了 3 個月都沒改善，請找醫師或骨盆底物理治療師。</p>
+    </section>
+    <section class="card">
+      <h2>設定</h2>
+      <div class="grid2">
+        ${numField('每次收緊（秒，3 到 10）', 'pelvic.hold', 3, 10, p.hold)}
+        ${numField('慢收縮次數', 'pelvic.reps', 3, 15, p.reps)}
+        ${numField('快收縮次數（0＝不做）', 'pelvic.fast', 0, 20, p.fast)}
+        ${numField('一天幾次', 'pelvic.perDay', 1, 5, p.perDay)}
+      </div>
+      <label class="switch"><input type="checkbox" data-path="pelvic.showHome" data-type="bool" ${p.showHome ? 'checked' : ''}><span>在首頁顯示這張卡片</span></label>
+    </section>`;
+};
 
 VIEWS.tabata = () => {
   if (tb.running) { view.innerHTML = `<header class="top"><h1>Tabata</h1></header>` + tabataRunHtml(); return; }
@@ -1293,6 +1444,22 @@ const actions = {
   restSkip: () => restStop(),
 
   tbStart: () => tabataStart(),
+  pvStart: () => pelvicStart(),
+  pvStop: () => pelvicStop(),
+  pvPause: () => {
+    if (!pv.running) return;
+    if (pv.paused) {
+      pv.paused = false;
+      pv.endAt = Date.now() + pv.leftMs;
+      pv.timer = setInterval(pelvicTick, 100);
+    } else {
+      pv.paused = true;
+      pv.leftMs = pv.endAt - Date.now();
+      clearInterval(pv.timer);
+      pv.timer = null;
+    }
+    render();
+  },
   tbPreset: el => {
     const p = TABATA_PRESETS.find(x => x.id === el.dataset.id);
     if (!p || !p.moves.length) return;
