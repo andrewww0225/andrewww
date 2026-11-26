@@ -1106,6 +1106,44 @@ body:not(.show-gone) .is-gone{display:none}
     </tbody>
   </table></div>
   <p style="font-size:.88rem;color:var(--ink-2)">● 核心條件（簡約解只剩 HOI），• 邊緣條件，空白為不影響；整體解列的覆蓋率與一致性填在「原始覆蓋率」與「一致性」欄。必要條件：當責、HOI、HRS 的一致性對 IEC 為 .959、.970、.945，對 TII 為 .965、.967、.941，都高於 .90；AD 為 .724、.742。</p>
+  <details class="fold" id="res-fsqca-read">
+  <summary class="subhead fold__sum">怎麼讀表4-8、4-9：大點、小點與 AD／HRS 的份量</summary>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>符號。</b>●（大點）＝核心條件，同時出現在簡約解與中間解，證據最強；簡約解只剩 HOI 一個條件（一致性 IEC .924、TII .882）。•（小點）＝邊緣條件，只出現在中間解，是搭配 HOI 才出現的補充條件。<b>空白＝高低都可以</b>，不是「沒有」：C1 沒有說 HRS 低，C2 也沒有說 AD 低。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>欄位。</b>原始覆蓋率＝高結果者中，有多少能被這個組態解釋；唯一覆蓋率＝只有這個組態解釋得到的部分；一致性＝符合這個組態的人，有多大比例真的是高結果（≥ .80 才可靠）。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>兩個組態。</b>C1＝會查證（HOI）＋覺得要負責（當責）＋覺得作業適合交給 GAI（AD）；C2＝會查證＋覺得要負責＋覺得自己不可取代（HRS）。合起來的意思是：<b>HOI 高＋當責高，再加上 AD 高或 HRS 高至少一個</b>。</p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>AD</th><th>當責</th><th>HOI</th><th>HRS</th><th>人數</th><th>屬於</th></tr></thead>
+    <tbody>
+      <tr><td>高</td><td>高</td><td>高</td><td>高</td><td>124</td><td>C1 與 C2 共用</td></tr>
+      <tr><td>低</td><td>高</td><td>高</td><td>高</td><td>47</td><td>只有 C2</td></tr>
+      <tr><td>高</td><td>高</td><td>高</td><td>低</td><td>7</td><td>只有 C1</td></tr>
+      <tr><td>低</td><td>高</td><td>高</td><td>低</td><td>2</td><td>未達頻次門檻，無法判斷</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)">C1 的 131 人中有 124 人 HRS 也高，所以「AD 高（隱含 HRS 低）」不是組態本身的意思。唯一覆蓋率 .026 對 .225，就是 7 人對 47 人。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>AD 與 HRS 都是小點，但份量不同。</b></p>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>指標</th><th>AD</th><th>HRS</th><th>怎麼讀</th></tr></thead>
+    <tbody>
+      <tr><td>與 HOI 的相關 r</td><td>−.08</td><td>.57</td><td>AD 和會不會查證幾乎無關（與 H1 不顯著一致）；HRS 中高度相關</td></tr>
+      <tr><td>與 IEC 的相關 r</td><td>−.08</td><td>.52</td><td>AD 和投入無關；HRS 中度相關</td></tr>
+      <tr><td>與 TII 的相關 r</td><td>.05</td><td>.26</td><td>TII 本來就難解釋（R² .229），HRS 也只剩弱相關</td></tr>
+      <tr><td>必要條件一致性（IEC／TII）</td><td>.72／.74</td><td>.95／.94</td><td>≥ .90 才是必要條件：高結果者幾乎都 HRS 高，但很多人 AD 低</td></tr>
+      <tr><td>只有該組態解釋得到的人數</td><td>7</td><td>47</td><td>AD 那條路只多解釋 7 人</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qi-wrap"><table class="qi">
+    <thead><tr><th>只屬於一個組態的人</th><th>人數</th><th>IEC 平均</th><th>TII 平均</th></tr></thead>
+    <tbody>
+      <tr><td>AD 高、HRS 低（C1）</td><td>7</td><td>5.19</td><td>5.29</td></tr>
+      <tr><td>AD 低、HRS 高（C2）</td><td>47</td><td>5.84</td><td>5.43</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>AD 高代表什麼。</b>四題問的是「這份作業」適合交由 GAI、可交給 GAI 獨立完成的部分多、可交由 GAI 執行的程度高，以及傾向讓 GAI 主導。所以 AD 高＝判斷作業很多部分可以交給 GAI；題目沒有問 AI 和人誰比較強，AD 與 HRS 的相關也只有 −.11，不能讀成「相信 AI、不相信自己」。</p>
+  <p style="font-size:.88rem;color:var(--ink-2)"><b>結論。</b>HRS 和 HOI、IEC 都有中度以上關聯、是必要條件、獨自多解釋 47 人；AD 和 HOI、IEC、TII 都幾乎無關、不是必要條件、只多解釋 7 人。C1 的 AD 比較像「少數 HRS 偏低的人也能達成高結果」的補充路徑，不是有影響力的條件。</p>
+  <div class="note note--warn"><span class="note__lab">限制</span>① 7 人太少，兩群的平均只能描述，不能檢定差異。② 結果變項普遍偏高（約九成屬於高），每種組合的原始一致性都在 .94 以上，這張表只能說「哪些條件常和高結果一起出現」，不能說 AD 造成高結果。③ HRS 約 95% 的人屬於高，必要一致性高有一部分是因為條件本身普遍偏高。④ 相關係數是以 207 人的題目平均計算的皮爾森相關，不是 SmartPLS 的潛在變項相關；寫進論文時改用 SmartPLS 報表的數字。⑤ 相關不是因果；HRS 在模型中是調節變項，不解讀它的主效果。</div>
+  </details>
+
 
   <details class="fold" id="res-types">
   <summary class="subhead fold__sum">刪除問卷的判斷依據：「低」「很低」與三種類型</summary>
